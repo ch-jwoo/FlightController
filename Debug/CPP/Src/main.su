@@ -1,0 +1,7 @@
+mpu6050.h:432:17:void MPU6050::getMotionIT()	24	static
+mpu6050.h:435:17:void MPU6050::updateMotionIT()	32	static
+main.cpp:15:6:void CppMain()	8	static
+main.cpp:74:6:void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef*)	16	static
+main.cpp:87:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	16	static
+main.cpp:98:1:void __static_initialization_and_destruction_0(int, int)	16	static
+main.cpp:98:1:cpp)	8	static

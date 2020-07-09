@@ -1,0 +1,14 @@
+mpu6050.cpp:55:7:float map(float, float, float, float, float)	32	static
+mpu6050.cpp:74:1:MPU6050::MPU6050(I2C_HandleTypeDef*, uint8_t)	24	static
+mpu6050.cpp:80:6:void MPU6050::initialize()	16	static
+mpu6050.cpp:89:6:bool MPU6050::testConnection()	16	static
+mpu6050.cpp:92:6:void MPU6050::updateRawMotion()	24	static
+mpu6050.cpp:103:6:void MPU6050::setClockSource(uint8_t)	24	static
+mpu6050.cpp:106:6:void MPU6050::setFullScaleGyroRange(uint8_t)	24	static
+mpu6050.cpp:109:6:void MPU6050::setFullScaleAccelRange(uint8_t)	24	static
+mpu6050.cpp:112:6:void MPU6050::setSleepEnabled(bool)	24	static
+mpu6050.cpp:117:6:void MPU6050::CalibAccelGyro()	48	static
+mpu6050.cpp:258:9:uint8_t MPU6050::getDeviceID()	32	static
+mpu6050.cpp:263:9:uint8_t MPU6050::getDLPFMode()	32	static
+mpu6050.cpp:268:6:void MPU6050::setDLPFMode(uint8_t)	24	static
+mpu6050.cpp:272:6:void MPU6050::setRate(uint8_t)	16	static
