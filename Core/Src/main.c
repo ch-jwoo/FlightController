@@ -100,7 +100,12 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
   MX_I2C1_Init();
+  MX_TIM10_Init();
   MX_TIM11_Init();
+  MX_TIM3_Init();
+  MX_TIM4_Init();
+  MX_UART7_Init();
+  MX_USART2_UART_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();

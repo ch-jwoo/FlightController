@@ -10,6 +10,7 @@
 
 
 #include <stdint.h>
+#include <math.h>
 #include "I2Cdev.h"
 
 extern uint32_t stm_millis;
@@ -398,7 +399,7 @@ extern uint32_t stm_millis;
 /***********************************************************/
 
 
-const float Accel_Z_corrector = 14418.0;
+#define RAD_TO_DEG 57.295779513082320876798154814105
 
 class MPU6050{
 public:
@@ -422,8 +423,14 @@ public:
 
     float Temperature;
 
-    bool status; // true = IT mode, false = don't working
-    uint8_t hz;
+    const float alpha = 0.96;
+    float roll;
+    float pitch;
+    float yaw;
+
+    float p;
+    float q;
+    float r;
 
     MPU6050(I2C_HandleTypeDef *I2Cx, uint8_t address=MPU6050_DEFAULT_ADDRESS);
 
@@ -433,7 +440,10 @@ public:
     inline void getMotionIT(){
     	HAL_I2C_Mem_Read_IT(i2c.I2Cdev_hi2c, MPU6050_ADDR, MPU6050_RA_ACCEL_XOUT_H, 1, buffer, 14);
     }
-    inline bool updateMotionIT(){
+    inline void updateMotionIT(){
+    	static uint32_t lastTime = HAL_GetTick();
+    	float dt = (HAL_GetTick() - lastTime)/1000.0;
+
     	int16_t temp;
     	rawAx = (((int16_t)buffer[0]) << 8) | buffer[1];
     	rawAy = (((int16_t)buffer[2]) << 8) | buffer[3];
@@ -443,27 +453,83 @@ public:
     	rawGy = (((int16_t)buffer[10]) << 8) | buffer[11];
     	rawGz = (((int16_t)buffer[12]) << 8) | buffer[13];
 
-    	printf("%d %d %d, %d %d %d\r\n", !rawAx, !rawAy, !rawAz, rawGx, rawGy, rawGz);
-    	if((!rawAx && !rawAy && !rawAy) || (!rawGx && !rawGy && !rawGz)){
-    		return false;
-    	}
-
-    	Ax = rawAx;//-baseAcX;
+    	Ax = rawAx-baseAcX;
     	Ay = rawAy-baseAcY;
-    	Az = rawAz-baseAcZ;
+    	Az = rawAz-(15384-baseAcZ);
     	Temperature = (float) ((int16_t) temp / (float) 340.0 + (float) 36.53);
     	Gx = (rawGx-baseGyX) / 131.0;
     	Gy = (rawGy-baseGyY) / 131.0;
     	Gz = (rawGz-baseGyZ) / 131.0;
-    	return true;
+//    	printf("%d %d\r\n", rawAz, baseAcZ);
+
+    	//cal Accel angle
+		float accel_yz = sqrt(Ay*Ay + Az*Az);
+		float accel_xz = sqrt(Ax*Ax + Az*Az);
+
+		float aPitch = atan(-Ax / accel_yz)*RAD_TO_DEG;
+		float aRoll = atan(Ay / accel_xz)*RAD_TO_DEG;
+
+		//karman filter
+		float temp_angle_x = roll + Gx*dt;
+		float temp_angle_y = pitch + Gy*dt;
+		float temp_angle_z = yaw + Gz*dt;
+
+		float curRoll = alpha*temp_angle_x + (1-alpha)*aRoll;
+		float curPitch = alpha*temp_angle_y + (1-alpha)*aPitch;
+		float curYaw = temp_angle_z;
+
+		p = (curRoll - roll)/dt;
+		q = (curPitch - pitch)/dt;
+		r = (curYaw - yaw)/dt;
+
+		roll = curRoll;
+		pitch = curPitch;
+		yaw = curYaw;
+
+		lastTime = HAL_GetTick();
     }
 
     inline void getData(float* ax, float* ay, float* az, float* gx, float* gy, float* gz){
     	*ax = Ax; *ay = Ay; *az = Az;
-    	*gx = Gx; *gy = Gy; *gz = Az;
+    	*gx = Gx; *gy = Gy; *gz = Gz;
     }
+    inline void printRawData(){
+    	printf("%u %u %u, %u %u %u\r\n", rawAx, rawAy, rawAz, rawGx, rawGy, rawGz);
+    }
+    inline void printFilteredData(){
+		printf("%f %f %f, %f %f %f\r\n", Ax, Ay, Az, Gx, Gy, Gz);
+	}
+    inline void calAccelAngle(){
+	}
+    void CalibrateGyro(uint8_t Loops = 15); // Fine tune after setting offsets with less Loops.
+	void CalibrateAccel(uint8_t Loops = 15);// Fine tune after setting offsets with less Loops.
+	void PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops);  // Does the math
 
 
+    // XA_OFFS_* registers
+    int16_t getXAccelOffset();
+    void setXAccelOffset(int16_t offset);
+    // YA_OFFS_* register
+    int16_t getYAccelOffset();
+    void setYAccelOffset(int16_t offset);
+    // ZA_OFFS_* register
+    int16_t getZAccelOffset();
+    void setZAccelOffset(int16_t offset);
+    // XG_OFFS_USR* registers
+    int16_t getXGyroOffset();
+    void setXGyroOffset(int16_t offset);
+    // YG_OFFS_USR* register
+    int16_t getYGyroOffset();
+    void setYGyroOffset(int16_t offset);
+    // ZG_OFFS_USR* register
+    int16_t getZGyroOffset();
+    void setZGyroOffset(int16_t offset);
+    void PrintActiveOffsets();
+
+	void reset();
+	void resetFIFO();
+    // for testConnection
+    uint8_t getDeviceID();
 private:
     uint8_t devAddr;
     uint8_t buffer[14];
@@ -486,13 +552,7 @@ private:
 
     // calibration
     void CalibAccelGyro();
-//	void CalibrateGyro(uint8_t Loops = 15); // Fine tune after setting offsets with less Loops.
-//	void CalibrateAccel(uint8_t Loops = 15);// Fine tune after setting offsets with less Loops.
-//	void PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops);  // Does the math
-//	void PrintActiveOffsets();
 
-    // for testConnection
-    uint8_t getDeviceID();
 
     uint8_t getDLPFMode();
     void setDLPFMode(uint8_t mode);
