@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include "I2Cdev.h"
 
-//#include "MadgwickAHRS.h"
+extern uint32_t stm_millis;
 
 /**************************************************************
  ***************** register ***********************************
@@ -422,7 +422,8 @@ public:
 
     float Temperature;
 
-    //bool status; // true = IT mode, false = don't working
+    bool status; // true = IT mode, false = don't working
+    uint8_t hz;
 
     MPU6050(I2C_HandleTypeDef *I2Cx, uint8_t address=MPU6050_DEFAULT_ADDRESS);
 
@@ -432,7 +433,7 @@ public:
     inline void getMotionIT(){
     	HAL_I2C_Mem_Read_IT(i2c.I2Cdev_hi2c, MPU6050_ADDR, MPU6050_RA_ACCEL_XOUT_H, 1, buffer, 14);
     }
-    inline void updateMotionIT(){
+    inline bool updateMotionIT(){
     	int16_t temp;
     	rawAx = (((int16_t)buffer[0]) << 8) | buffer[1];
     	rawAy = (((int16_t)buffer[2]) << 8) | buffer[3];
@@ -442,6 +443,11 @@ public:
     	rawGy = (((int16_t)buffer[10]) << 8) | buffer[11];
     	rawGz = (((int16_t)buffer[12]) << 8) | buffer[13];
 
+    	printf("%d %d %d, %d %d %d\r\n", !rawAx, !rawAy, !rawAz, rawGx, rawGy, rawGz);
+    	if((!rawAx && !rawAy && !rawAy) || (!rawGx && !rawGy && !rawGz)){
+    		return false;
+    	}
+
     	Ax = rawAx;//-baseAcX;
     	Ay = rawAy-baseAcY;
     	Az = rawAz-baseAcZ;
@@ -449,6 +455,7 @@ public:
     	Gx = (rawGx-baseGyX) / 131.0;
     	Gy = (rawGy-baseGyY) / 131.0;
     	Gz = (rawGz-baseGyZ) / 131.0;
+    	return true;
     }
 
     inline void getData(float* ax, float* ay, float* az, float* gx, float* gy, float* gz){
@@ -456,19 +463,6 @@ public:
     	*gx = Gx; *gy = Gy; *gz = Az;
     }
 
-    //inline bool getStatus(){ return status; }
-    //    double KalmanAngleX;
-    //    double KalmanAngleY;
-
-//    void getQuaternion(Quaternion *q){
-//    	MadgwickAHRSupdateIMU(q, Gx, Gy, Gz, Ax, Ay, Az);
-//private:
-
-//    uint8_t Init(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
-//    void Read_Accel(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
-//    void Read_Gyro(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
-//    void Read_Temp(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
-//    void Read_All(I2C_HandleTypeDef *I2Cx);
 
 private:
     uint8_t devAddr;

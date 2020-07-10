@@ -7,10 +7,21 @@
 #include "mpu6050.h"
 #include "Estimator.h"
 
+#include "utils.h"
+
 float ax, ay, az, gx, gy, gz;
 
 MPU6050 mpu(&hi2c1);
 Estimator esti;
+
+extern uint32_t stm_millis; // boot time ?
+
+bool mpu_set = false;
+uint8_t mpu_hz = 0;
+uint32_t mpu_hz_time = 0;
+uint16_t mpu_hz_cnt = 0;
+uint8_t mpu_start = RESET;
+uint8_t mpu_error = 0;
 
 void CppMain()
 {
@@ -44,21 +55,45 @@ void CppMain()
 
 	printf("asdf\r\n");
 
-	mpu.initialize();
 //    mpu.getMotionIT();
 
     /* mpu it start*/
-	HAL_TIM_Base_Start_IT(&htim10);
+//	HAL_TIM_Base_Start_IT(&htim10);
 	HAL_TIM_Base_Start_IT(&htim11);
+
+	mpu.initialize();
+	mpu_start = SET;
 
 //	HAL_Delay(100);
 	while(1)
 	{
+		if(mpu_set == SET){ // mpu check
+			uint8_t result = mpu.updateMotionIT();
+			printf("%d\r\n", result);
+			if( !result ){//update
+				mpu_error++;
+			}
+			mpu_error = 0;
+			mpu_hz_cnt++;
+			if(stm_millis - mpu_hz_time > 1000){ // calc mpu hz
+				mpu_hz = mpu_hz_cnt;
+				mpu_hz_cnt = 0;
+				mpu_hz_time = stm_millis;
+			}
+			mpu_set = RESET;
+		}
+		else if(mpu_error > 30){ //error check,,
+			mpu_set = RESET;
+			mpu_start = RESET; // mpu disconnect
+			mpu_hz = 0;
+			mpu.initialize();
+			mpu_start = SET; // mpu connect
+		}
+//		printf("%d\r\n", mpu_hz);
 //		esti.calGyroAngle();
 //		printf("%f, %f\r\n", esti.roll, esti.pitch)
-		printf("%u\r\n", TIM11->CNT);
-//		printf("hello\r\n");
-		HAL_Delay(1000);
+//		printf("%u\r\n", mpu.hz);
+//		HAL_Delay(1000);
 		//main while
 //		ax=0; ay=0; az=0; gx=0; gy=0, gz=0;
 //		mpu.getMotion6(&ax,&ay,&az,&gx,&gy,&gz);
@@ -72,27 +107,38 @@ void CppMain()
 }
 
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
-	static uint8_t cnt = 0;
 	if(hi2c->Instance == I2C1){
-		cnt++;
-		mpu.updateMotionIT();
-		if(cnt>10){
-//			printf("%f, %f, %f, %f, %f, %f\r\n", mpu.Ax, mpu.Ay, mpu.Az, mpu.Gx, mpu.Gy, mpu.Gz);
-//			printf("%d, %d, %d, %d, %d, %d\r\n", mpu.rawAx, mpu.rawAy, mpu.rawAz, mpu.rawGx, mpu.rawGy, mpu.rawGz);
-			cnt = 0;
-		}
+		mpu_set = SET;
 	}
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-	static uint8_t a = 0;
-	if(htim->Instance == TIM10){ // 60hz test
-		a++;
-		mpu.getMotionIT();
-		if(a >2){
-//			printf("%d\r\n", a);
-//			mpu.getMotionIT();
-			a = 0;
+//	static uint8_t a = 0;
+//	if(htim->Instance == TIM10){ // 60hz
+//		a++;
+//		mpu.getMotionIT();
+//		if(a >2){
+////			printf("%d\r\n", a);
+////			mpu.getMotionIT();
+//			a = 0;
+//		}
+//	}
+
+	if(htim->Instance == TIM11){ // 1000hz
+		static uint8_t imuTime = 0;
+		stm_millis++;
+		imuTime++;
+		if(imuTime>16 && mpu_start == SET){// 58.8hz
+			mpu.getMotionIT();
+			imuTime = 0;
 		}
+
+		//sec test
+//		static uint16_t sec = 0;
+//		sec++;
+//		if(sec>999){
+//			printf("%u\r\n", stm_millis);
+//			sec = 0;
+//		}
 	}
 }
