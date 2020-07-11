@@ -83,7 +83,7 @@ void MPU6050::initialize(){
     setFullScaleAccelRange(MPU6050_ACCEL_FS_2);
     setSleepEnabled(false); // thanks to Jack Elston for pointing this one out!
     setDLPFMode(2);
-    setRate(7);
+    setRate(2);
 	CalibAccelGyro();
 }
 bool MPU6050::testConnection(){

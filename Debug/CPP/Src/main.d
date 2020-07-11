@@ -34,9 +34,12 @@ CPP/Src/main.o: ../CPP/Src/main.cpp ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
  ../Core/Inc/i2c.h ../Core/Inc/main.h ../Core/Inc/tim.h \
- C:/STM/CPPTEST/CPP/Inc/mpu6050.h C:/STM/CPPTEST/CPP/Inc/I2Cdev.h \
- C:/STM/CPPTEST/CPP/Inc/Estimator.h C:/STM/CPPTEST/CPP/Inc/mpu6050.h \
- C:/STM/CPPTEST/CPP/Inc/utils.h
+ C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/mpu6050.h \
+ C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/I2Cdev.h \
+ C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/Estimator.h \
+ C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/mpu6050.h \
+ C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/utils.h \
+ C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/MPU9250.h
 
 ../Core/Inc/main.h:
 
@@ -114,12 +117,14 @@ CPP/Src/main.o: ../CPP/Src/main.cpp ../Core/Inc/main.h \
 
 ../Core/Inc/tim.h:
 
-C:/STM/CPPTEST/CPP/Inc/mpu6050.h:
+C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/mpu6050.h:
 
-C:/STM/CPPTEST/CPP/Inc/I2Cdev.h:
+C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/I2Cdev.h:
 
-C:/STM/CPPTEST/CPP/Inc/Estimator.h:
+C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/Estimator.h:
 
-C:/STM/CPPTEST/CPP/Inc/mpu6050.h:
+C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/mpu6050.h:
 
-C:/STM/CPPTEST/CPP/Inc/utils.h:
+C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/utils.h:
+
+C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/MPU9250.h:

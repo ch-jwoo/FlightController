@@ -505,7 +505,6 @@ public:
 	void CalibrateAccel(uint8_t Loops = 15);// Fine tune after setting offsets with less Loops.
 	void PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops);  // Does the math
 
-
     // XA_OFFS_* registers
     int16_t getXAccelOffset();
     void setXAccelOffset(int16_t offset);
@@ -561,29 +560,4 @@ private:
 };
 
 
-// Kalman structure
-typedef struct {
-    double Q_angle;
-    double Q_bias;
-    double R_measure;
-    double angle;
-    double bias;
-    double P[2][2];
-} Kalman_t;
-
-
-
-//uint8_t MPU6050_Init(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
-//
-//void MPU6050_Read_Accel(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
-//
-//void MPU6050_Read_Gyro(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
-//
-//void MPU6050_Read_Temp(I2C_HandleTypeDef *I2Cx, MPU6050_t *DataStruct);
-//
-//void MPU6050_Read_All(I2C_HandleTypeDef *I2Cx);
-//
-//double Kalman_getAngle(Kalman_t *Kalman, double newAngle, double newRate, double dt);
-//
-//void MPU6050_update();
 #endif /* INC_GY521_H_ */
