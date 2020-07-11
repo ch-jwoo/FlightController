@@ -33,8 +33,7 @@ CPP/Src/mpu6050.o: ../CPP/Src/mpu6050.cpp ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/mpu6050.h \
- C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/I2Cdev.h
+ C:/STM/CPPTEST/CPP/Inc/mpu6050.h C:/STM/CPPTEST/CPP/Inc/I2Cdev.h
 
 ../Core/Inc/main.h:
 
@@ -106,6 +105,6 @@ CPP/Src/mpu6050.o: ../CPP/Src/mpu6050.cpp ../Core/Inc/main.h \
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h:
 
-C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/mpu6050.h:
+C:/STM/CPPTEST/CPP/Inc/mpu6050.h:
 
-C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/I2Cdev.h:
+C:/STM/CPPTEST/CPP/Inc/I2Cdev.h:

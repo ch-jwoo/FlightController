@@ -27,6 +27,7 @@ OBJCOPY_BIN :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+CPP/Inc/px4demo_attitude_control_ert_rtw \
 CPP/Src \
 Core/Src \
 Core/Startup \

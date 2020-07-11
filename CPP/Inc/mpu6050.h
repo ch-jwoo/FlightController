@@ -494,7 +494,7 @@ public:
     	*gx = Gx; *gy = Gy; *gz = Gz;
     }
     inline void printRawData(){
-    	printf("%u %u %u, %u %u %u\r\n", rawAx, rawAy, rawAz, rawGx, rawGy, rawGz);
+    	printf("%d %d %d, %d %d %d\r\n", rawAx, rawAy, rawAz, rawGx, rawGy, rawGz);
     }
     inline void printFilteredData(){
 		printf("%f %f %f, %f %f %f\r\n", Ax, Ay, Az, Gx, Gy, Gz);

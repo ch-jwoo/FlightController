@@ -1,5 +1,4 @@
-CPP/Src/I2Cdev.o: ../CPP/Src/I2Cdev.cpp \
- C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/I2Cdev.h \
+CPP/Src/I2Cdev.o: ../CPP/Src/I2Cdev.cpp C:/STM/CPPTEST/CPP/Inc/I2Cdev.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -35,7 +34,7 @@ CPP/Src/I2Cdev.o: ../CPP/Src/I2Cdev.cpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 
-C:/Users/junwoo/Desktop/STM32/CPPTEST/CPP/Inc/I2Cdev.h:
+C:/STM/CPPTEST/CPP/Inc/I2Cdev.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 

@@ -1,3 +1,5 @@
+"CPP/Inc/px4demo_attitude_control_ert_rtw/px4demo_attitude_control.o"
+"CPP/Inc/px4demo_attitude_control_ert_rtw/px4demo_attitude_control_data.o"
 "CPP/Src/I2Cdev.o"
 "CPP/Src/main.o"
 "CPP/Src/mpu6050.o"
