@@ -13,6 +13,8 @@
 extern "C"{
 #include "px4demo_attitude_control.h"
 #include "rtwtypes.h"
+#include "sbus.h"
+#include "motor.h"
 }
 
 #define DEG2RAD 0.0174532f
@@ -87,6 +89,7 @@ void CppMain()
 		if(flagMpu == SET){ // mpu check
 			mpu.updateMotionIT();
 //			mpu.printFilteredData();
+			mpu.printRawData();
 //			mpu.getData(&ax, &ay, &az, &gx, &gy, &gz);
 //			calAccelAngle();
 //			calGyroAngle();
@@ -112,7 +115,7 @@ void CppMain()
 		        rt_OneStep();
 
 		  	    __enable_irq();
-		  	    printOut(&px4demo_attitude_control_Y);
+//		  	    printOut(&px4demo_attitude_control_Y);
 		  	    stopRequested = !(
 		  	                      rtmGetErrorStatus(px4demo_attitude_control_M) == (NULL));
 		  	    runModel = !(stopRequested);

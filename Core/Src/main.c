@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "eth.h"
 #include "i2c.h"
 #include "tim.h"
@@ -96,6 +97,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ETH_Init();
   MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
@@ -180,6 +182,9 @@ static void MX_NVIC_Init(void)
   /* I2C1_ER_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(I2C1_ER_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
+  /* UART7_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(UART7_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(UART7_IRQn);
 }
 
 /* USER CODE BEGIN 4 */

@@ -2,13 +2,14 @@ cmath:125:3:constexpr float std::atan(float)	16	static
 cmath:463:3:constexpr float std::sqrt(float)	16	static
 mpu6050.h:440:17:void MPU6050::getMotionIT()	24	static
 mpu6050.h:443:17:void MPU6050::updateMotionIT()	72	static
+mpu6050.h:496:17:void MPU6050::printRawData()	16	static
 utils.h:7:6:void time_tic()	4	static
 utils.h:10:10:uint32_t time_toc()	4	static
 main.cpp:28:6:void rt_OneStep()	8	static
 main.cpp:53:6:void printOut(ExtY_px4demo_attitude_control_T*)	40	static
 main.cpp:58:6:void printIn(ExtU_px4demo_attitude_control_T*)	120	static
 main.cpp:63:6:void CppMain()	8	static,ignoring_inline_asm
-main.cpp:144:6:void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef*)	16	static
-main.cpp:151:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	16	static
-main.cpp:161:1:void __static_initialization_and_destruction_0(int, int)	16	static
-main.cpp:161:1:cpp)	8	static
+main.cpp:145:6:void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef*)	16	static
+main.cpp:152:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	16	static
+main.cpp:162:1:void __static_initialization_and_destruction_0(int, int)	16	static
+main.cpp:162:1:cpp)	8	static
