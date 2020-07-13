@@ -8,6 +8,13 @@
 #ifndef INC_SBUS_H_
 #define INC_SBUS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "usart.h"
+
+
 #define SBUS_BUF_SIZE 25 // require research
 #define SBUS_CHANNEL_NUMBER 18 // digtal signal unimplementation
 
@@ -16,7 +23,7 @@ uint16_t sbus_rcValue[SBUS_CHANNEL_NUMBER];
 uint16_t sbus_comp_rcValue[SBUS_CHANNEL_NUMBER];
 
 void sbus_start(UART_HandleTypeDef *huart) {
-	HAL_UART_Receive_DMA(&huart7, sbus_rxBuf, SBUS_BUF_SIZE);
+	HAL_UART_Receive_DMA(huart, sbus_rxBuf, SBUS_BUF_SIZE);
 }
 
 void sbus_callback() { // input to HAL_UART_RxCpltCallback
@@ -41,7 +48,6 @@ void sbus_callback() { // input to HAL_UART_RxCpltCallback
 	if (((uint16_t)sbus_rxBuf[23]) & 0x0001)       sbus_rcValue[16] = 2000; else sbus_rcValue[16] = 1000;
 	if (((uint16_t)sbus_rxBuf[23] >> 1) & 0x0001)  sbus_rcValue[17] = 2000; else sbus_rcValue[17] = 1000;
 
-
 	for (int i = 0; i < SBUS_CHANNEL_NUMBER; i++) {
 		sbus_comp_rcValue[i] = (sbus_rcValue[i]) * 5 / 8 + 880;
 	}
@@ -58,5 +64,9 @@ uint16_t sbus_getChannel(uint8_t chan) { // start from 1
 	return sbus_comp_rcValue[chan - 1];
 }
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_SBUS_H_ */
