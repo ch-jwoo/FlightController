@@ -31,6 +31,12 @@ float invSqrt(float x) {
 	return y;
 }
 
+void quat2eul(float* q, float* roll, float* pitch, float* yaw){
+	*roll = atan2(2*(q[0]*q[1] + q[2]* q[3]), q[0]*q[0] - q[1]*q[1] - q[2]*q[2] + q[3]*q[3]);
+	*pitch = asin(-2*(q[1]*q[3] - q[0]*q[2]));
+	*yaw = atan2(2*(q[1]*q[2] + q[0]*q[3]), q[0]*q[0] + q[1]*q[1] - q[2]*q[2] - q[3]*q[3]);
+}
+
 void junTimer_tic(struct junTimer* t){
    t->last_time = HAL_GetTick();
    t->start = 1;

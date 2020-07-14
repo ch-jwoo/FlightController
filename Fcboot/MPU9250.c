@@ -11,9 +11,23 @@
 
 const uint16_t MPU9250_gyrosensitivity  = 131;   // = 131 LSB/degrees/sec
 const uint16_t MPU9250_accelsensitivity = 16384;  // = 16384 LSB/g
+const float MPU9250_DEG2RAD = 0.017453292519f;
+
+const uint16_t DEFAULT_TIMEOUT = 500;
+//const int16_t attachAngle[3] = {-1, 1, -1};
+
+
+uint16_t MPU9250_hzcnt = 0;
 
 // mpu global instance
 struct MPU9250 iMPU9250 = {0, };
+
+
+uint16_t MPU9250_getHz(){ // call this func 1hz
+	uint16_t temp = MPU9250_hzcnt;
+	MPU9250_hzcnt = 0;
+	return temp;
+}
 
 void MPU9250_init(struct MPU9250* obj, I2C_HandleTypeDef *phi2c){
 //	obj->gyroBias[3] = {0, 0, 0}
@@ -34,7 +48,7 @@ void MPU9250_init(struct MPU9250* obj, I2C_HandleTypeDef *phi2c){
 	obj->status = MPU9250_disable;
 
 	MPU9250_resetMPU9250(obj);
-	MPU9250_calibrateMPU9250(obj);
+//	MPU9250_calibrateMPU9250(obj);
 
 	MPU9250_initMPU9250(obj); // calculate ay, ac bias
 	MPU9250_initAK8963(obj);
@@ -55,7 +69,7 @@ uint16_t MPU9250_writeByte(struct MPU9250* obj, uint8_t address, uint8_t subAddr
 	// copy array
 	memcpy(dynBuffer+1, &data, sizeof(uint8_t) * SIZE);
 
-	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(obj->phi2c, address, dynBuffer, SIZE+1, 1000);
+	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(obj->phi2c, address, dynBuffer, SIZE+1, DEFAULT_TIMEOUT);
 	free(dynBuffer);
 	return status == HAL_OK;
 }
@@ -72,7 +86,7 @@ void MPU9250_readBytes(struct MPU9250* obj, uint8_t address, uint8_t subAddress,
 	HAL_I2C_Master_Transmit(obj->phi2c, address, (uint8_t*)data_write, 1, DEFAULT_TIMEOUT);
 	HAL_I2C_Master_Receive(obj->phi2c, address, (uint8_t*)data, count, DEFAULT_TIMEOUT);
 	for(int ii = 0; ii < count; ii++) {
-	 dest[ii] = data[ii];
+		dest[ii] = data[ii];
 	}
 }
 
@@ -109,17 +123,18 @@ uint8_t MPU9250_callbackMPU9250IT(struct MPU9250* obj){
 //	Gz = (rawGz-baseGyZ) / 131.0;
 
 	// Now we'll calculate the accleration value into actual g's
-	obj->ax = (float)obj->accelCount[0]*obj->aRes - obj->accelBias[0];  // get actual g value, this depends on scale being set
-	obj->ay = (float)obj->accelCount[1]*obj->aRes - obj->accelBias[1];
-	obj->az = (float)obj->accelCount[2]*obj->aRes - obj->accelBias[2];
+	obj->ax = ((float)obj->accelCount[0]*obj->aRes - obj->accelBias[0]);  // get actual g value, this depends on scale being set
+	obj->ay = ((float)obj->accelCount[1]*obj->aRes - obj->accelBias[1]);
+	obj->az = ((float)obj->accelCount[2]*obj->aRes - obj->accelBias[2]);
 
 	obj->tmp = (float) ((int16_t) obj->tmpCount / (float) 340.0 + (float) 36.53);
 
 	// Calculate the gyro value into actual degrees per second
-	obj->gx = (float)obj->gyroCount[0]*obj->gRes - obj->gyroBias[0];  // get actual gyro value, this depends on scale being set
-	obj->gy = (float)obj->gyroCount[1]*obj->gRes - obj->gyroBias[1];
-	obj->gz = (float)obj->gyroCount[2]*obj->gRes - obj->gyroBias[2];
+	obj->gx = MPU9250_DEG2RAD*((float)obj->gyroCount[0]*obj->gRes - obj->gyroBias[0]);  // get actual gyro value, this depends on scale being set
+	obj->gy = MPU9250_DEG2RAD*((float)obj->gyroCount[1]*obj->gRes - obj->gyroBias[1]);
+	obj->gz = MPU9250_DEG2RAD*((float)obj->gyroCount[2]*obj->gRes - obj->gyroBias[2]);
 
+	MPU9250_hzcnt++;
 	return 1;
 }
 
@@ -544,6 +559,6 @@ void MPU9250_print(struct MPU9250* obj, uint8_t type){//type 0: raw, 1:after cal
 		printf("\r\n");
 	}
 	else if(type == 1){
-		printf("%f %f %f, %f %f %f\r\n", obj->ax, obj->ay, obj->az, obj->gx, obj->gx, obj->gx);
+		printf("%f %f %f, %f %f %f\r\n", obj->ax, obj->ay, obj->az, obj->gx, obj->gy, obj->gz);
 	}
 }

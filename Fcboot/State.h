@@ -28,7 +28,24 @@ struct bootState{
 	enum state estimator;
 };
 
+extern uint16_t imu_hz, mag_hz, sbus_hz, gps_hz, estimator_hz;
+void sensorHz_update();
 
+enum vehicleState{
+	VEHICLE_INIT = 0,
+	VEHICLE_PREARM,
+	VEHICLE_DISARM,
+	VEHICLE_ARM
+};
+
+enum flightMode{
+	FLIGHT_ATTITUDE = 0,
+	FLIGHT_POSITION,
+	FLIGHT_MISSION
+};
+
+uint8_t vehicleState;
+uint8_t flightMode;
 
 #ifdef __cplusplus
 }

@@ -4,7 +4,6 @@
 #define MOTOR_PWM_MIN 1000
 #define MOTOR_PWM_MAX 2000
 
-
 struct motor{
 	TIM_HandleTypeDef* pTim;
 	uint32_t Channel;
@@ -31,5 +30,12 @@ void motor_write(struct motor *m, uint16_t pwm){
 void motor_deinit(struct motor *m){
 	HAL_TIM_PWM_Stop(m->pTim, m->Channel);
 }
+
+struct motor iMotor1;
+struct motor iMotor2;
+struct motor iMotor3;
+struct motor iMotor4;
+struct motor iMotor5;
+struct motor iMotor6;
 
 #endif

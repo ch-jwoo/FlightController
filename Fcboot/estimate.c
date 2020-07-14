@@ -6,7 +6,15 @@
  */
 
 #include "estimate.h"
+#include "algorithmCollection.h"
+
 struct estimate iEstimate = {{1, 0, 0, 0}, 0, 0, 0, 0, 0, 0};
+
+uint16_t estimate_getHz(struct estimate* e){ // call this func 1hz
+	uint16_t temp = e->estimate_hzcnt;
+	e->estimate_hzcnt = 0;
+	return temp;
+}
 
 //---------------------------------------------------------------------------------------------------
 // IMU algorithm update
@@ -17,6 +25,33 @@ struct estimate iEstimate = {{1, 0, 0, 0}, 0, 0, 0, 0, 0, 0};
 
 volatile float beta = betaDef;
 
+void estimate_update(struct estimate* e, struct MPU9250* mpu9250){
+	static struct junTimer timer;
+	if(!timer.start){
+		junTimer_tic(&timer);
+		return;
+	}
+
+	MadgwickAHRSupdateIMU(e, mpu9250->gx, mpu9250->gy, mpu9250->gz
+						, mpu9250->ax, mpu9250->ay, mpu9250->az, junTimer_toc(&timer)/1000.0);
+
+	float roll, pitch, yaw;
+	quat2eul(e->bodyQ, &roll, &pitch, &yaw);
+	e->roll = -1*roll;//rpy vector
+	e->pitch = pitch;
+	e->yaw = -1*yaw;
+
+	e->p = -mpu9250->gx;
+	e->q = -mpu9250->gy;
+	e->r = -mpu9250->gz;
+
+	e->estimate_hzcnt++;
+	junTimer_tic(&timer);
+}
+
+void estimate_print(struct estimate* e){
+	printf("%f %f %f\r\n", e->roll, e->pitch, e->yaw);
+}
 void MadgwickAHRSupdateIMU(struct estimate* e, float gx, float gy, float gz, float ax, float ay, float az , float dt) { // dt : second
 	float recipNorm;
 	float s0, s1, s2, s3;

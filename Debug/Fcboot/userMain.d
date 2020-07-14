@@ -35,7 +35,12 @@ Fcboot/userMain.o: ../Fcboot/userMain.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
  ../Core/Inc/usart.h ../Core/Inc/main.h ../Core/Inc/i2c.h \
  ../Core/Inc/tim.h ../Fcboot/MPU9250.h ../Fcboot/sbus.h \
- ../Fcboot/estimate.h C:/STM/CPPTEST/C/algorithmCollection.h
+ ../Fcboot/estimate.h C:/STM/CPPTEST/C/algorithmCollection.h \
+ ../Fcboot/motor.h \
+ C:/STM/CPPTEST/Fcboot/Second_att_control_codeblock_ert_rtw/Second_att_control_codeblock.h \
+ C:/STM/CPPTEST/Fcboot/Second_att_control_codeblock_ert_rtw/rtwtypes.h \
+ C:/STM/CPPTEST/Fcboot/Second_att_control_codeblock_ert_rtw/Second_att_control_codeblock_types.h \
+ ../Fcboot/State.h
 
 ../Core/Inc/main.h:
 
@@ -122,3 +127,13 @@ Fcboot/userMain.o: ../Fcboot/userMain.c ../Core/Inc/main.h \
 ../Fcboot/estimate.h:
 
 C:/STM/CPPTEST/C/algorithmCollection.h:
+
+../Fcboot/motor.h:
+
+C:/STM/CPPTEST/Fcboot/Second_att_control_codeblock_ert_rtw/Second_att_control_codeblock.h:
+
+C:/STM/CPPTEST/Fcboot/Second_att_control_codeblock_ert_rtw/rtwtypes.h:
+
+C:/STM/CPPTEST/Fcboot/Second_att_control_codeblock_ert_rtw/Second_att_control_codeblock_types.h:
+
+../Fcboot/State.h:

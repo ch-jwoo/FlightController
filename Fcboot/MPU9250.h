@@ -172,7 +172,6 @@ extern "C" {
 #define MPU9250_ADDRESS 0x68<<1  // Device address when ADO = 0
 #endif  
 
-#define DEFAULT_TIMEOUT 1000
 
 //const uint16_t MPU9250_attachAngle[3][3] = {{1, 0, 0}, {0, -1, 0}, {0, 0, -1}};
 
@@ -238,6 +237,7 @@ struct MPU9250{
 
 extern struct MPU9250 iMPU9250;
 
+uint16_t MPU9250_getHz();
 
 void MPU9250_resetMPU9250(struct MPU9250* obj);
 void MPU9250_calibrateMPU9250(struct MPU9250* obj);

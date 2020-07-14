@@ -1,1 +1,4 @@
-estimate.c:20:6:MadgwickAHRSupdateIMU	144	static
+estimate.c:13:10:estimate_getHz	24	static
+estimate.c:28:6:estimate_update	64	static
+estimate.c:52:6:estimate_print	48	static
+estimate.c:55:6:MadgwickAHRSupdateIMU	144	static

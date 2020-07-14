@@ -18,9 +18,11 @@ extern "C" {
 #define SBUS_BUF_SIZE 25 // require research
 #define SBUS_CHANNEL_NUMBER 18 // digtal signal unimplementation
 
-uint8_t sbus_rxBuf[SBUS_BUF_SIZE];
-uint16_t sbus_rcValue[SBUS_CHANNEL_NUMBER];
-uint16_t sbus_comp_rcValue[SBUS_CHANNEL_NUMBER];
+static uint8_t sbus_rxBuf[SBUS_BUF_SIZE];
+static uint16_t sbus_rcValue[SBUS_CHANNEL_NUMBER];
+static uint16_t sbus_comp_rcValue[SBUS_CHANNEL_NUMBER];
+
+uint16_t sbus_hzcnt = 0;
 
 void sbus_start(UART_HandleTypeDef *huart) {
 	HAL_UART_Receive_DMA(huart, sbus_rxBuf, SBUS_BUF_SIZE);
@@ -51,6 +53,13 @@ void sbus_callback() { // input to HAL_UART_RxCpltCallback
 	for (int i = 0; i < SBUS_CHANNEL_NUMBER; i++) {
 		sbus_comp_rcValue[i] = (sbus_rcValue[i]) * 5 / 8 + 880;
 	}
+	sbus_hzcnt++;
+}
+
+uint16_t sbus_getHz(){ // call this func 1hz
+	uint16_t temp = sbus_hzcnt;
+	sbus_hzcnt = 0;
+	return temp;
 }
 
 void sbus_print() {
