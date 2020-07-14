@@ -15,19 +15,12 @@ extern "C" {
 #include "MPU9250.h"
 
 enum state{
-	Disable,
-	Able
+	STATE_DISABLE,
+	STATE_UNSTABLE,
+	STATE_STABLE
 };
 
-struct bootState{
-	enum state imu;
-	enum state mag;
-	enum state sbus;
-	enum state gps;
-	enum state telemetry;
-	enum state estimator;
-};
-
+extern uint16_t imu_state, mag_state, sbus_state, gps_state, estimator_state;
 extern uint16_t imu_hz, mag_hz, sbus_hz, gps_hz, estimator_hz;
 void sensorHz_update();
 
@@ -44,8 +37,8 @@ enum flightMode{
 	FLIGHT_MISSION
 };
 
-uint8_t vehicleState;
-uint8_t flightMode;
+extern uint8_t vehicleState;
+extern uint8_t flightMode;
 
 #ifdef __cplusplus
 }

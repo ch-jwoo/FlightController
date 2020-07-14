@@ -25,6 +25,8 @@
 #include "Second_att_control_codeblock.h"
 #include "State.h"
 
+#define SAFTY_SWITCH() (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_SET)
+
 //global variable
 //__IO ITStatus flagMpu = RESET;
 //__IO ITStatus flagControl = RESET;
@@ -77,11 +79,11 @@ void userMain(){
     setvbuf(stdout, NULL, _IONBF, 0);
 
     printf("boot complete\r\n");
-    MPU9250_init(&iMPU9250, &hi2c1);
+//    MPU9250_init(&iMPU9250, &hi2c1);
 
-    sbus_start(&huart7);
 
-    HAL_TIM_Base_Start_IT(&htim11); // start mpu9250 it
+//    sbus_start(&huart7);
+//    HAL_TIM_Base_Start_IT(&htim11); // start mpu9250 it
 
     motor_init(&iMotor1, &htim4, TIM_CHANNEL_1);
     motor_init(&iMotor2, &htim4, TIM_CHANNEL_2);
@@ -96,52 +98,113 @@ void userMain(){
     motor_start(&iMotor4);
     motor_start(&iMotor5);
     motor_start(&iMotor6);
+
+
+
 	while(1){
-		sensorHz_print();
+//		sensorHz_print();
+//		MPU9250_print(&iMPU9250,1);
+
+	    static uint8_t cnt = 0;
+
+	    if(SAFTY_SWITCH()){
+	    	printf("switch set\r\n");
+	    }
+//		sbus_print();
+		HAL_Delay(300);
 		//boot essential part
 		if(iMPU9250.itSet == SET){
 			estimate_update(&iEstimate, &iMPU9250);
 //			estimate_print(&iEstimate);
 			iMPU9250.itSet = RESET;
-			if(runModel){
-//				junTimer_tic(&debugTimer);
-				Second_att_control_codeblock_U.Roll = iEstimate.roll;
-				Second_att_control_codeblock_U.Pitch = iEstimate.pitch;
-				Second_att_control_codeblock_U.p = iEstimate.p;
-				Second_att_control_codeblock_U.q = iEstimate.q;
-				Second_att_control_codeblock_U.r = iEstimate.r;
-				Second_att_control_codeblock_U.set_thrust = sbus_getChannel(1);
-				Second_att_control_codeblock_U.set_roll = sbus_getChannel(2);
-				Second_att_control_codeblock_U.set_pitch = sbus_getChannel(3);
-				Second_att_control_codeblock_U.set_yaw = sbus_getChannel(4);
-				Second_att_control_codeblock_U.Arm_cmd = sbus_getChannel(11);
+		}
 
-				__disable_irq();
-				rt_OneStep();
-				__enable_irq();
+		if(sbus_getChannel(10) > 1500){ // kill switch on
+			motor_write(&iMotor1, MOTOR_PWM_MIN);
+			motor_write(&iMotor2, MOTOR_PWM_MIN);
+			motor_write(&iMotor3, MOTOR_PWM_MIN);
+			motor_write(&iMotor4, MOTOR_PWM_MIN);
+			motor_write(&iMotor5, MOTOR_PWM_MIN);
+			motor_write(&iMotor6, MOTOR_PWM_MIN);
+		}
+		else{
+			if(vehicleState == VEHICLE_INIT){ // can HAL_Delay
+				static struct junTimer init_timer = {0,};
 
-				motor_write(&iMotor1, Second_att_control_codeblock_Y.PWM_OUT[0]);
-				motor_write(&iMotor2, Second_att_control_codeblock_Y.PWM_OUT[1]);
-				motor_write(&iMotor3, Second_att_control_codeblock_Y.PWM_OUT[2]);
-				motor_write(&iMotor4, Second_att_control_codeblock_Y.PWM_OUT[3]);
-				motor_write(&iMotor5, Second_att_control_codeblock_Y.PWM_OUT[4]);
-				motor_write(&iMotor6, Second_att_control_codeblock_Y.PWM_OUT[5]);
+				if(imu_state && estimator_state && sbus_state){
+					vehicleState = VEHICLE_PREARM;
+				}
+				else if(junTimer_toc(&init_timer)>3000 || !init_timer.start){
+					if(!imu_state){ // imu problem
+						HAL_TIM_Base_Stop_IT(&htim11);
+						HAL_Delay(50);
+						MPU9250_init(&iMPU9250, &hi2c1);
+						HAL_TIM_Base_Start_IT(&htim11);
+					}
+					if(!estimator_hz){
+						// this problem from mpu
+					}
+					if(!sbus_state){
+						// must turn on RC
+						HAL_UART_DMAStop(&huart7);
+						HAL_Delay(50);
+						sbus_start(&huart7);
+					}
+				}
 			}
-//			printIn(&Second_att_control_codeblock_U);
-//			printOut(&Second_att_control_codeblock_Y);
-		}
-		MPU9250_print(&iMPU9250,1);
-		if(vehicleState == VEHICLE_INIT){
+			// prearm
+			else if(vehicleState == VEHICLE_PREARM){
+				if(!(imu_state && estimator_state && sbus_state)){
+					vehicleState = VEHICLE_INIT;
+				}
+				else if(SAFTY_SWITCH()){
+					vehicleState = VEHICLE_DISARM;
 
-		}
-		else if(vehicleState == VEHICLE_PREARM){
+					motor_write(&iMotor1, MOTOR_PWM_MIN);
+					motor_write(&iMotor2, MOTOR_PWM_MIN);
+					motor_write(&iMotor3, MOTOR_PWM_MIN);
+					motor_write(&iMotor4, MOTOR_PWM_MIN);
+					motor_write(&iMotor5, MOTOR_PWM_MIN);
+					motor_write(&iMotor6, MOTOR_PWM_MIN);
+				}
+			}
+			else if(vehicleState == VEHICLE_DISARM){
+				if(!(imu_state && estimator_state && sbus_state)){
+					vehicleState = VEHICLE_INIT;
+				}
+				else if(sbus_getChannel(11)>1500 && abs(iEstimate.pitch)<0.5 && abs(iEstimate.roll) < 0.5){ // roll, pitch up to 30degree
+					vehicleState = VEHICLE_ARM;
+				}
+			}
+			else if(vehicleState == VEHICLE_ARM){
 
-		}
-		else if(vehicleState == VEHICLE_DISARM){
+				if(runModel){
+	//				junTimer_tic(&debugTimer);
+					Second_att_control_codeblock_U.Roll = iEstimate.roll;
+					Second_att_control_codeblock_U.Pitch = iEstimate.pitch;
+					Second_att_control_codeblock_U.p = iEstimate.p;
+					Second_att_control_codeblock_U.q = iEstimate.q;
+					Second_att_control_codeblock_U.r = iEstimate.r;
+					Second_att_control_codeblock_U.set_thrust = sbus_getChannel(1);
+					Second_att_control_codeblock_U.set_roll = sbus_getChannel(2);
+					Second_att_control_codeblock_U.set_pitch = sbus_getChannel(3);
+					Second_att_control_codeblock_U.set_yaw = sbus_getChannel(4);
+					Second_att_control_codeblock_U.Arm_cmd = sbus_getChannel(11);
 
-		}
-		else if(vehicleState == VEHICLE_ARM){
+					__disable_irq();
+					rt_OneStep();
+					__enable_irq();
 
+					motor_write(&iMotor1, Second_att_control_codeblock_Y.PWM_OUT[0]);
+					motor_write(&iMotor2, Second_att_control_codeblock_Y.PWM_OUT[1]);
+					motor_write(&iMotor3, Second_att_control_codeblock_Y.PWM_OUT[2]);
+					motor_write(&iMotor4, Second_att_control_codeblock_Y.PWM_OUT[3]);
+					motor_write(&iMotor5, Second_att_control_codeblock_Y.PWM_OUT[4]);
+					motor_write(&iMotor6, Second_att_control_codeblock_Y.PWM_OUT[5]);
+				}
+	//			printIn(&Second_att_control_codeblock_U);
+	//			printOut(&Second_att_control_codeblock_Y);
+			}
 		}
 	}
 }
@@ -174,6 +237,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == UART7){
+//		sbus_parse();
 		sbus_callback();
 	}
 	if(huart->Instance == USART2){
