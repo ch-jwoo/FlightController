@@ -17,23 +17,23 @@ void motor_init(struct motor *m, TIM_HandleTypeDef *htim, uint32_t Channel){
 	m->pwm = MOTOR_PWM_MIN;
 }
 
+void motor_write(struct motor *m, uint16_t pwm){
+	if(pwm < MOTOR_PWM_MIN) pwm = MOTOR_PWM_MIN;
+	else if(pwm > MOTOR_PWM_MAX) pwm = MOTOR_PWM_MAX;
+	m->pwm = pwm;
+
+	pwm *= 2; // scale the signal for time
+	__HAL_TIM_SET_COMPARE(m->pTim, m->Channel, pwm);
+}
 void motor_start(struct motor *m){
     HAL_TIM_PWM_Start(m->pTim, m->Channel);
     motor_write(m, m->pwm);
 }
 
-void motor_write(struct motor *m, uint16_t pwm){
-	if(pwm < MOTOR_PWM_MIN) pwm = MOTOR_PWM_MIN;
-	else if(pwm > MOTOR_PWM_MAX) pwm = MOTOR_PWM_MAX;
-
-	pwm *= 2; // scale the signal for time
-	__HAL_TIM_SET_COMPARE(m->pTim, m->Channel, pwm);
-	m->pwm = pwm;
-}
 
 void motor_deinit(struct motor *m){
 	HAL_TIM_PWM_Stop(m->pTim, m->Channel);
-	pwm = MOTOR_PWM_MIN;
+	m->pwm = MOTOR_PWM_MIN;
 }
 
 struct motor iMotor1;
