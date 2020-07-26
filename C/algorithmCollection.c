@@ -21,15 +21,6 @@
 
 #define DEG2PI 0.01745329251F
 
-float invSqrt(float x) {
-	float halfx = 0.5f * x;
-	float y = x;
-	long i = *(long*)&y;
-	i = 0x5f3759df - (i>>1);
-	y = *(float*)&i;
-	y = y * (1.5f - (halfx * y * y));
-	return y;
-}
 
 void quat2eul(float* q, float* roll, float* pitch, float* yaw){
 	*roll = atan2(2*(q[0]*q[1] + q[2]* q[3]), q[0]*q[0] - q[1]*q[1] - q[2]*q[2] + q[3]*q[3]);

@@ -43,7 +43,6 @@ static uint8_t _curByte, _prevByte;
 
 void sbus_start(UART_HandleTypeDef *huart) {
 	sbus_phuart = huart;
-//	HAL_UART_Receive_DMA(huart, sbus_rxBuf, SBUS_BUF_SIZE);
 	HAL_UART_Receive_DMA(huart, sbus_dmaBuf, SBUS_DMA_BUF_SIZE);
 }
 
@@ -113,12 +112,10 @@ void sbus_callback(){
 			if ((_parserState) == SBUS_BUF_SIZE) {
 				if ((_curByte == SBUS_FOOTER) || ((_curByte & SBUS2MASK) == SBUS_FOOTER)) {
 					_parserState = 0;
-//					return true;
 					sbus_decoding();
 				}
 				else {
 					_parserState = 0;
-//					return false;
 				}
 			}
 		}

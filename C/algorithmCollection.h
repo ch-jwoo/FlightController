@@ -18,7 +18,6 @@ extern "C" {
 
 #define DEG2PI 0.01745329251f
 
-float invSqrt(float x);
 
 /*
  * input : quaternion

@@ -1,0 +1,16 @@
+tm_stm32_gps.c:158:6:TM_GPS_Init	16	static
+tm_stm32_gps.c:204:17:TM_GPS_Update	16	static
+tm_stm32_gps.c:230:6:GPS_calHz	4	static
+tm_stm32_gps.c:261:7:TM_GPS_ConvertSpeed	16	static
+tm_stm32_gps.c:290:6:TM_GPS_ConvertFloat	32	static
+tm_stm32_gps.c:306:6:TM_GPS_DistanceBetween	72	static
+tm_stm32_gps.c:332:17:TM_GPS_INT_Do	24	static
+tm_stm32_gps.c:382:6:TM_GPS_INT_CheckTerm	40	static
+tm_stm32_gps.c:638:17:TM_GPS_INT_Return	24	static
+tm_stm32_gps.c:682:9:TM_GPS_INT_StringStartsWith	16	static
+tm_stm32_gps.c:691:9:TM_GPS_INT_Atoi	24	static
+tm_stm32_gps.c:701:10:TM_GPS_INT_Pow	24	static
+tm_stm32_gps.c:709:9:TM_GPS_INT_Hex2Dec	16	static
+tm_stm32_gps.c:720:9:TM_GPS_INT_FlagsOk	24	static
+tm_stm32_gps.c:733:6:TM_GPS_INT_ClearFlags	24	static
+tm_stm32_gps.c:742:6:TM_GPS_INT_CheckEmpty	16	static
