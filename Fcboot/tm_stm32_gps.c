@@ -202,6 +202,7 @@ void TM_GPS_Init(UART_HandleTypeDef* huart) {
 }
 
 TM_GPS_Result_t TM_GPS_Update() {
+
 	/* Check for data in USART */
 //	while (!GPS_USART_BUFFER_EMPTY) {
 

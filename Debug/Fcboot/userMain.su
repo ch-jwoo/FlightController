@@ -5,8 +5,10 @@ sbus.h:93:6:sbus_callback	8	static
 sbus.h:125:10:sbus_getHz	16	static
 sbus.h:131:6:sbus_print	16	static
 sbus.h:138:10:sbus_getChannel	16	static
-userMain.c:30:5:_write	24	static
-userMain.c:67:6:BME280_main	48	static
-userMain.c:95:6:userMain	16	static
-userMain.c:142:6:HAL_I2C_MemRxCpltCallback	16	static
-userMain.c:152:6:HAL_UART_RxCpltCallback	16	static
+userMain.c:36:5:_write	24	static
+userMain.c:43:6:GPS_main	8	static
+userMain.c:57:6:IST8310_main	8	static
+userMain.c:75:6:BME280_main	16	static
+userMain.c:118:6:userMain	16	static
+userMain.c:167:6:HAL_I2C_MemRxCpltCallback	16	static
+userMain.c:181:6:HAL_UART_RxCpltCallback	16	static

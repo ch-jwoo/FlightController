@@ -7,6 +7,11 @@
 #include "main.h"
 #include "IST8310.h"
 
+/*
+ *  i2c shared width bme280
+ */
+#include "bme280.h"
+
 #define IST8310_I2C ist8310.hi2c
 
 #define IST8310_MAX_VAL_XY ((1600 / IST8310_RESOLUTION) + 1)
@@ -30,10 +35,20 @@ void IST8310_calHz(){
  *  150hz gogo
  */
 void IST8310_updataIT(){
-	HAL_I2C_Mem_Read_IT(IST8310_I2C, IST8310_BUS_I2C_ADDR, IST8310_ADDR_DATA_OUT_X_LSB, 1, (uint8_t*)&ist8310.buf, sizeof(ist8310.buf));
+	while(1){
+		if(bm_i2cFlag == bm_i2cIdle){
+			HAL_I2C_Mem_Read_IT(IST8310_I2C, IST8310_BUS_I2C_ADDR, IST8310_ADDR_DATA_OUT_X_LSB, 1, (uint8_t*)&ist8310.buf, sizeof(ist8310.buf));
+			bm_i2cFlag = bm_i2cIST8310;
+			return;
+		}
+		else osDelay(1);
+	}
 }
 void IST8310_rxCpltCallback(I2C_HandleTypeDef *hi2c){
 	if(hi2c->Instance != ist8310.hi2c->Instance) return;
+	if(bm_i2cFlag != bm_i2cIST8310) return;
+
+	bm_i2cFlag = bm_i2cIdle;
 
 	/* swap the data we just received */
 	ist8310.count.x = (((int16_t)ist8310.buf.x[1]) << 8) | (int16_t)ist8310.buf.x[0];

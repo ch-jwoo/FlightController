@@ -8,6 +8,7 @@
 #ifndef BME280_H_
 #define BME280_H_
 
+
 /* 06/16/2017 Copyright Tlera Corporation
  *
  *  Created by Kris Winer
@@ -50,6 +51,7 @@
 #define  P_OSR_08 0x04
 #define  P_OSR_16 0x05
 
+#define  H_OSR_00 0x01
 #define  H_OSR_01 0x01
 #define  H_OSR_02 0x02
 #define  H_OSR_04 0x03
@@ -84,13 +86,28 @@
 
 #define BME_DEFAULT_TIMEOUT 100
 
-typedef struct{
+typedef enum {
+	bm_i2cIdle = 0,
+	bm_i2cBME280 = 1,
+	bm_i2cIST8310 = 2,
+}baro_mag_i2cFlag_t;
 
-} BME280_count;
+baro_mag_i2cFlag_t bm_i2cFlag;
 
 typedef struct{
 	I2C_HandleTypeDef *hi2c;
 
+	int32_t countT;
+	uint32_t countP, countH;
+
+	float T, P, H;
+
+	float base_P;
+	float alt;
+
+	uint16_t hz, hzCnt;
+
+	uint8_t buf[9];
 	uint8_t  _dig_H1, _dig_H3, _dig_H6;
 	uint16_t _dig_T1, _dig_P1, _dig_H4, _dig_H5;
 	int16_t  _dig_T2, _dig_T3, _dig_P2, _dig_P3, _dig_P4, _dig_P5, _dig_P6, _dig_P7, _dig_P8, _dig_P9, _dig_H2;
@@ -101,8 +118,11 @@ BME280_t bme280;
 
 
 void BME280(I2C_HandleTypeDef *hi2c);
-uint8_t BME280_getChipID();
-void BME280_reset();
+
+void BME280_calHz();
+
+void BME280_updateIT();
+void BME280_rxCpltCallback(I2C_HandleTypeDef *hi2c);
 
 int32_t BME280_readTemperature();
 int32_t BME280_readPressure();
@@ -113,6 +133,9 @@ void BME280_init(uint8_t Posr, uint8_t Hosr, uint8_t Tosr, uint8_t Mode, uint8_t
 int32_t BME280_compensate_T(int32_t adc_T);
 uint32_t BME280_compensate_P(int32_t adc_P);
 uint32_t BME280_compensate_H(int32_t adc_H);
+
+uint8_t BME280_getChipID();
+void BME280_reset();
 
 void BME280_writeByte(uint8_t address, uint8_t subAddress, uint8_t data);
 uint8_t BME280_readByte(uint8_t address, uint8_t subAddress);

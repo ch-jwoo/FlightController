@@ -243,7 +243,7 @@ typedef struct {
 
 MPU9250_t mpu9250;
 
-void RTOS_MPU9250();
+void MPU9250_main();
 
 
 /*

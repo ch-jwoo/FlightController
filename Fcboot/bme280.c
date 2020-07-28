@@ -7,6 +7,7 @@
 
 #include "main.h"
 #include "bme280.h"
+#include "math.h"
 
 #define BME280_I2C bme280.hi2c
 
@@ -14,6 +15,37 @@ void BME280(I2C_HandleTypeDef *hi2c){
 	bme280.hi2c = hi2c;
 	BME280_reset();
 }
+
+void BME280_updateIT(){
+	while(1){
+		if(bm_i2cFlag == bm_i2cIdle){
+			HAL_I2C_Mem_Read_IT(BME280_I2C, BME280_ADDRESS, BME280_PRESS_MSB, 1, bme280.buf, 3);
+			bm_i2cFlag = bm_i2cBME280;
+			return;
+		}
+		else osDelay(1);
+	}
+}
+
+void BME280_rxCpltCallback(I2C_HandleTypeDef *hi2c){
+	if(hi2c->Instance != bme280.hi2c->Instance) return;
+	if(bm_i2cFlag != bm_i2cBME280) return;
+    bme280.countP = (int32_t) (((int32_t) bme280.buf[0] << 24 | (int32_t) bme280.buf[1] << 16 | (int32_t) bme280.buf[2] << 8) >> 12);
+
+    // change to hPa
+    bme280.P = BME280_compensate_P(bme280.countP)/25600.0;
+
+    bme280.alt = 44330 * (1.0 - pow(bme280.P / bme280.base_P, 0.1903));
+
+    bme280.hzCnt++;
+    bm_i2cFlag = bm_i2cIdle;
+}
+
+void BME280_calHz(){
+	bme280.hz = bme280.hzCnt;
+	bme280.hzCnt = 0;
+}
+
 uint8_t BME280_getChipID(){
 	  uint8_t c = BME280_readByte(BME280_ADDRESS, BME280_ID);
 	  return c;
@@ -71,6 +103,17 @@ void BME280_init(uint8_t Posr, uint8_t Hosr, uint8_t Tosr, uint8_t Mode, uint8_t
 	  bme280._dig_H4 = ( int16_t)(((( int16_t) calib[3] << 8) | (0x0F & calib[4]) << 4) >> 4);
 	  bme280._dig_H5 = ( int16_t)(((( int16_t) calib[5] << 8) | (0xF0 & calib[4]) ) >> 4 );
 	  bme280._dig_H6 = calib[6];
+
+	  /* base altitude set */
+	  int32_t p = 0;
+	  float comP = 0;
+	  double sum = 0;
+	  for(int i=0; i<10; i++){
+		  p = BME280_readPressure();
+		  comP = BME280_compensate_P(p)/25600.0;
+		  sum += comP;
+	  }
+	  bme280.base_P = (float)sum/10;
 }
 
 // Returns temperature in DegC, resolution is 0.01 DegC. Output value of

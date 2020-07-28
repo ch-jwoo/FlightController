@@ -14,7 +14,7 @@
 
 #define MPU9250_I2C mpu9250.hi2c
 
-void RTOS_MPU9250(){
+void MPU9250_main(){
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = 5;
 

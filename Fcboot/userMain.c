@@ -26,6 +26,12 @@
 //TM_GPS_t gps;
 //uint8_t tempBuf;
 
+#define USE_IST8310
+#define USE_GPS
+#define USE_MPU9250
+#define USE_BME280
+#define USE_SBUS
+
 //we can use printf
 int _write(int file, unsigned char* p, int len) // for debug through uart3
 {
@@ -34,8 +40,8 @@ int _write(int file, unsigned char* p, int len) // for debug through uart3
 }
 
 #ifdef USE_GPS
-void debugTask(){
-    TM_GPS_Init(&huart4);
+void GPS_main(){
+    TM_GPS_Init(&huart5);
 //	HAL_UART_Receive_DMA(&huart4, &gps.dmaBuf, 1);
 	while(1){
 //		printf("run\r\n");
@@ -49,7 +55,9 @@ void debugTask(){
 
 #ifdef USE_IST8310
 void IST8310_main(){
+	taskENTER_CRITICAL();
 	IST8310(&hi2c2);
+	taskEXIT_CRITICAL();
 
 //	IST8310_tempBuf tempBuffer;
 //	IST8310_raw rawBuf;
@@ -65,30 +73,45 @@ void IST8310_main(){
 float globalT, globalP, globalH;
 
 void BME280_main(){
+	taskENTER_CRITICAL();
 	BME280(&hi2c2);
-	BME280_init(P_OSR_16, H_OSR_16, T_OSR_16, normal, BW0_042ODR,t_125ms);
-	osDelay(100);
+
+	/*
+	 * recommended mode : gaming
+	 * Sensor mode : normal mode, standby = 0.5ms
+	 * oversampling : pressureX4, temperatureX1, humidityX0
+	 * IIR filter coefficient : 16
+	 * RMS Noise : 0.3Pa/2.5cm
+	 * Data output rate : 83hz
+	 * Filter bandwidth : 1.75 Hz
+	 * response time : 0.3s
+	 */
+	BME280_init(P_OSR_04, H_OSR_00, T_OSR_01, normal, BW0_021ODR,t_00_5ms);
+	taskEXIT_CRITICAL();
+//	osDelay(100);
 	while(1){
 //		uint8_t id = 0;
 //		id = BME280_getChipID();
 //		printf("%u\r\n", id);
-		int32_t t = 0, p = 0, h = 0;
-		t = BME280_readTemperature();
-		p = BME280_readPressure();
-		h = BME280_readHumidity();
+//		int32_t t = 0, p = 0, h = 0;
+//		t = BME280_readTemperature();
+//		p = BME280_readPressure();
+//		h = BME280_readHumidity();
+//
+//		uint32_t comP, comH;
+//		int32_t comT;
+//		comT = BME280_compensate_T(t);
+//		comP = BME280_compensate_P(p);
+//		comH = BME280_compensate_H(h);
+//		printf("%d %u %u\r\n", comT, comP, comH);
 
-		uint32_t comP, comH;
-		int32_t comT;
-		comT = BME280_compensate_T(t);
-		comP = BME280_compensate_P(p);
-		comH = BME280_compensate_H(h);
-
-		printf("%d %u %d\r\n", comT, comP, h);
-
-		globalT = comT/100.0;
-		globalP = comP/256.0/100.0;
-		globalH = comH/1024.0;
-		osDelay(125);
+		BME280_updateIT();
+//		printf("%d\r\n", bme280.countP);
+//
+//		globalT = comT/100.0;
+//		globalP = comP/256.0/100.0;
+//		globalH = comH/1024.0;
+		osDelay(20);
 	}
 }
 
@@ -101,12 +124,14 @@ void userMain(){
 	sbus_start(&huart7);
 #endif
 
+#ifdef USE_BME280
 	xTaskCreate(BME280_main,
 				"BME280_main",
 				configMINIMAL_STACK_SIZE,
 				NULL,
 				4,
 				NULL);
+#endif
 
 #ifdef USE_IST8310
 	xTaskCreate(IST8310_main,
@@ -118,8 +143,8 @@ void userMain(){
 #endif
 
 #ifdef USE_GPS
-	xTaskCreate(debugTask,
-				"debugTask",
+	xTaskCreate(GPS_main,
+				"GPS_main",
 				configMINIMAL_STACK_SIZE,
 				NULL,
 				4,
@@ -127,8 +152,8 @@ void userMain(){
 #endif
 
 #ifdef USE_MPU9250
-    xTaskCreate(RTOS_MPU9250,
-    		    "MPU9250",
+    xTaskCreate(MPU9250_main,
+    		    "MPU9250_main",
 				configMINIMAL_STACK_SIZE,
 				NULL,
 				4,
@@ -147,17 +172,25 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 #ifdef USE_IST8310
 	IST8310_rxCpltCallback(hi2c);
 #endif
+
+#ifdef USE_BME280
+	BME280_rxCpltCallback(hi2c);
+#endif
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
+#ifdef USE_SBUS
 	if(huart->Instance == UART7){
 		sbus_callback();
 	}
+#endif
 	if(huart->Instance == USART2){
 		// telemetry
 	}
-	if(huart->Instance == UART4){
+#ifdef USE_GPS
+	if(huart->Instance == UART5){
 		TM_GPS_Update();
 	}
+#endif
 }

@@ -45,8 +45,7 @@ Fcboot/userMain.o: ../Fcboot/userMain.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- ../Fcboot/MPU9250.h ../Fcboot/sbus.h \
- C:/STM/CPPTEST/C/algorithmCollection.h ../Fcboot/tm_stm32_gps.h \
+ ../Fcboot/MPU9250.h ../Fcboot/sbus.h ../Fcboot/tm_stm32_gps.h \
  ../Fcboot/IST8310.h ../Fcboot/bme280.h
 
 ../Core/Inc/main.h:
@@ -150,8 +149,6 @@ Fcboot/userMain.o: ../Fcboot/userMain.c ../Core/Inc/main.h \
 ../Fcboot/MPU9250.h:
 
 ../Fcboot/sbus.h:
-
-C:/STM/CPPTEST/C/algorithmCollection.h:
 
 ../Fcboot/tm_stm32_gps.h:
 

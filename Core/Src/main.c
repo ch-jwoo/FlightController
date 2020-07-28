@@ -102,9 +102,9 @@ int main(void)
   MX_TIM4_Init();
   MX_UART7_Init();
   MX_USART2_UART_Init();
-  MX_TIM9_Init();
   MX_I2C2_Init();
-  MX_UART4_Init();
+  MX_TIM10_Init();
+  MX_UART5_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -188,9 +188,6 @@ static void MX_NVIC_Init(void)
   /* UART7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(UART7_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(UART7_IRQn);
-  /* UART4_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(UART4_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(UART4_IRQn);
 }
 
 /* USER CODE BEGIN 4 */
