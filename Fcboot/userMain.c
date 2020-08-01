@@ -6,11 +6,13 @@
  */
 
 //essential
+#include <fc_usec.h>
 #include "main.h"
 #include "usart.h"
 #include "i2c.h"
 #include "tim.h"
 #include "cmsis_os.h"
+#include "fatfs.h"
 
 //additional
 #include "stdio.h"
@@ -23,14 +25,11 @@
 #include "IST8310.h"
 #include "bme280.h"
 
-//TM_GPS_t gps;
-//uint8_t tempBuf;
-
-#define USE_IST8310
-#define USE_GPS
-#define USE_MPU9250
-#define USE_BME280
-#define USE_SBUS
+//#define USE_IST8310
+//#define USE_GPS
+//#define USE_MPU9250
+//#define USE_BME280
+//#define USE_SBUS
 
 //we can use printf
 int _write(int file, unsigned char* p, int len) // for debug through uart3
@@ -39,12 +38,14 @@ int _write(int file, unsigned char* p, int len) // for debug through uart3
 	return len;
 }
 
+
 #ifdef USE_GPS
 void GPS_main(){
-    TM_GPS_Init(&huart5);
-//	HAL_UART_Receive_DMA(&huart4, &gps.dmaBuf, 1);
+	taskENTER_CRITICAL();
+    TM_GPS_Init(&huart8);
+	taskEXIT_CRITICAL();
+
 	while(1){
-//		printf("run\r\n");
 		GPS_calHz();
 		printf("%u\r\n", gps.hz);
 		osDelay(1000);
@@ -52,15 +53,12 @@ void GPS_main(){
 }
 #endif
 
-
 #ifdef USE_IST8310
 void IST8310_main(){
 	taskENTER_CRITICAL();
 	IST8310(&hi2c2);
 	taskEXIT_CRITICAL();
 
-//	IST8310_tempBuf tempBuffer;
-//	IST8310_raw rawBuf;
 	while(1){
 
 		IST8310_updataIT();
@@ -70,8 +68,8 @@ void IST8310_main(){
 }
 #endif
 
-float globalT, globalP, globalH;
 
+#ifdef USE_BME280
 void BME280_main(){
 	taskENTER_CRITICAL();
 	BME280(&hi2c2);
@@ -88,40 +86,106 @@ void BME280_main(){
 	 */
 	BME280_init(P_OSR_04, H_OSR_00, T_OSR_01, normal, BW0_021ODR,t_00_5ms);
 	taskEXIT_CRITICAL();
-//	osDelay(100);
-	while(1){
-//		uint8_t id = 0;
-//		id = BME280_getChipID();
-//		printf("%u\r\n", id);
-//		int32_t t = 0, p = 0, h = 0;
-//		t = BME280_readTemperature();
-//		p = BME280_readPressure();
-//		h = BME280_readHumidity();
-//
-//		uint32_t comP, comH;
-//		int32_t comT;
-//		comT = BME280_compensate_T(t);
-//		comP = BME280_compensate_P(p);
-//		comH = BME280_compensate_H(h);
-//		printf("%d %u %u\r\n", comT, comP, comH);
 
+	while(1){
 		BME280_updateIT();
-//		printf("%d\r\n", bme280.countP);
-//
-//		globalT = comT/100.0;
-//		globalP = comP/256.0/100.0;
-//		globalH = comH/1024.0;
 		osDelay(20);
+	}
+}
+#endif
+
+#ifdef USE_MPU9250
+void MPU9250_main(){
+	TickType_t xLastWakeTime;
+	const TickType_t xFrequency = 5;
+
+	taskENTER_CRITICAL();
+	MPU9250(&hi2c1);
+	taskEXIT_CRITICAL();
+
+	xLastWakeTime = xTaskGetTickCount();
+	while(1){
+		vTaskDelayUntil(&xLastWakeTime, xFrequency);
+		MPU9250_updateDMA();
+	}
+}
+#endif
+
+uint32_t tim;
+uint32_t temp;
+
+void debug_main(){
+//	BYTE buf[32] = "Hello world";
+//	uint32_t bw, br;
+//	uint8_t flag = 0;
+//	if(flag == 0 && (retSD = f_mount(&SDFatFS, &SDPath[0], 1)) == FR_OK){
+//		printf("f_mount OK %d\r\n", retSD);
+//		printf("??\r\n");
+//		flag = 1;
+//	}
+//	printf("Test %d\r\n", retSD);
+	BYTE buf[32]="hello world";
+	   uint32_t bw;
+
+	   retSD=f_mount(&SDFatFS ,&SDPath[0],1);
+
+//	   printf("f_mount OK %d \n \r",retSD);
+
+	   if(retSD==FR_OK){
+	      printf("f_mount OK %d \n \r",retSD);
+	   }
+	   else printf("f_mount Fail: %d \n \r",retSD);
+
+	   retSD=f_open(&SDFile,"123.txt",FA_CREATE_NEW |FA_WRITE);
+	   if(retSD==FR_OK){
+	      printf("f_open OK &d \n \r",retSD);
+	   }
+	   else printf("f_open Fail: %d \n \r",retSD);
+	   osDelay(10);
+
+	   retSD=f_write(&SDFile,buf,sizeof(buf),&bw);
+	      if(retSD==FR_OK){
+	         printf("f_wirte OK &d \n \r",retSD);
+	      }
+	   else printf("f_write Fail: %d \n \r",retSD);
+
+	   retSD=f_close(&SDFile);
+	   if(retSD==FR_OK){
+	      printf("f_close cplt: %d \n \r",retSD);
+	   }
+	   else printf("f_close fail: &d \n \r",retSD);
+
+	   retSD=f_mount(NULL,"0:/",1);
+
+	   printf("dismount result %d \r \n",retSD);
+	osDelay(1000);
+	while(1){
+//		uint32_t last = (uint32_t)FC_usec();
+//		temp = fcMicroSecond();
+//		taskENTER_CRITICAL();
+
+
+
+		osDelay(1000);
+//		tim = (uint32_t)FC_usec() - last;
 	}
 }
 
 void userMain(){
     setvbuf(stdout, NULL, _IONBF, 0);
+	HAL_TIM_Base_Start_IT(&htim2);
 
     printf("boot complete\r\n");
 
+	xTaskCreate(debug_main,
+				"debug_main",
+				configMINIMAL_STACK_SIZE,
+				NULL,
+				5,
+				NULL);
+
 #ifdef USE_SBUS
-	sbus_start(&huart7);
+	SBUS_init(&huart7);
 #endif
 
 #ifdef USE_BME280
@@ -159,6 +223,7 @@ void userMain(){
 				4,
 				NULL);
 #endif
+
 }
 
 
@@ -166,31 +231,30 @@ void userMain(){
 //callback
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 #ifdef USE_MPU9250
-	MPU9250_rxCpltCallback(hi2c);
+	MPU9250_i2cRxCpltCallback(hi2c);
 #endif
 
 #ifdef USE_IST8310
-	IST8310_rxCpltCallback(hi2c);
+	IST8310_i2cRxCpltCallback(hi2c);
 #endif
 
 #ifdef USE_BME280
-	BME280_rxCpltCallback(hi2c);
+	BME280_i2cRxCpltCallback(hi2c);
 #endif
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 #ifdef USE_SBUS
-	if(huart->Instance == UART7){
-		sbus_callback();
-	}
+	SBUS_uartRxCpltCallback(huart);
 #endif
-	if(huart->Instance == USART2){
-		// telemetry
-	}
 #ifdef USE_GPS
 	if(huart->Instance == UART5){
 		TM_GPS_Update();
 	}
 #endif
+
+	if(huart->Instance == USART2){
+		// telemetry
+	}
 }

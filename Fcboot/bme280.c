@@ -27,7 +27,7 @@ void BME280_updateIT(){
 	}
 }
 
-void BME280_rxCpltCallback(I2C_HandleTypeDef *hi2c){
+void BME280_i2cRxCpltCallback(I2C_HandleTypeDef *hi2c){
 	if(hi2c->Instance != bme280.hi2c->Instance) return;
 	if(bm_i2cFlag != bm_i2cBME280) return;
     bme280.countP = (int32_t) (((int32_t) bme280.buf[0] << 24 | (int32_t) bme280.buf[1] << 16 | (int32_t) bme280.buf[2] << 8) >> 12);

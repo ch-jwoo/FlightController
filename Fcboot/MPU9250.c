@@ -14,19 +14,6 @@
 
 #define MPU9250_I2C mpu9250.hi2c
 
-void MPU9250_main(){
-	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = 5;
-
-	MPU9250(&hi2c1);
-
-	xLastWakeTime = xTaskGetTickCount();
-	while(1){
-		vTaskDelayUntil(&xLastWakeTime, xFrequency);
-		MPU9250_updateDMA();
-//		printf("%d %d %d\r\n", (int)(mpu9250.mag[0]), (int)(mpu9250.mag[1]), (int)(mpu9250.mag[2]));
-	}
-}
 
 void MPU9250(I2C_HandleTypeDef *hi2c){
 	//configuration
@@ -88,7 +75,7 @@ void MPU9250_updateDMA(){
 }
 
 
-void MPU9250_rxCpltCallback(I2C_HandleTypeDef *hi2c){
+void MPU9250_i2cRxCpltCallback(I2C_HandleTypeDef *hi2c){
 	if(hi2c->Instance != MPU9250_I2C->Instance) return;
 
 	if(mpu9250.dmaFlag == MPU9250_dmaMPU9250){

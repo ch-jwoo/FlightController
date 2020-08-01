@@ -1,6 +1,6 @@
 bme280.c:14:6:BME280	16	static
 bme280.c:19:6:BME280_updateIT	16	static
-bme280.c:30:6:BME280_rxCpltCallback	24	static
+bme280.c:30:6:BME280_i2cRxCpltCallback	24	static
 bme280.c:44:6:BME280_calHz	4	static
 bme280.c:49:9:BME280_getChipID	16	static
 bme280.c:53:6:BME280_reset	8	static

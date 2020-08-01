@@ -177,7 +177,7 @@ IST8310_t ist8310;
 void IST8310(I2C_HandleTypeDef *phi2c);
 void IST8310_calHz();
 void IST8310_updataIT();
-void IST8310_rxCpltCallback(I2C_HandleTypeDef *hi2c);
+void IST8310_i2cRxCpltCallback(I2C_HandleTypeDef *hi2c);
 /**
  * Write a register.
  *

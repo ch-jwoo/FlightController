@@ -22,7 +22,9 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "dma.h"
+#include "fatfs.h"
 #include "i2c.h"
+#include "sdio.h"
 #include "tim.h"
 #include "usart.h"
 #include "usb_otg.h"
@@ -30,6 +32,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "fc_usec.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -103,8 +106,11 @@ int main(void)
   MX_UART7_Init();
   MX_USART2_UART_Init();
   MX_I2C2_Init();
+  MX_TIM2_Init();
   MX_TIM10_Init();
-  MX_UART5_Init();
+  MX_UART8_Init();
+  MX_SDIO_SD_Init();
+  MX_FATFS_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -188,6 +194,30 @@ static void MX_NVIC_Init(void)
   /* UART7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(UART7_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(UART7_IRQn);
+  /* I2C2_EV_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(I2C2_EV_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(I2C2_EV_IRQn);
+  /* I2C2_ER_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(I2C2_ER_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(I2C2_ER_IRQn);
+  /* SDIO_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(SDIO_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(SDIO_IRQn);
+  /* DMA1_Stream3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream3_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);
+  /* DMA1_Stream6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
+  /* DMA1_Stream5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
+  /* DMA2_Stream3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
+  /* DMA2_Stream6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream6_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream6_IRQn);
 }
 
 /* USER CODE BEGIN 4 */
@@ -205,7 +235,10 @@ static void MX_NVIC_Init(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
-
+	/* microseond timer */
+  if(htim->Instance == TIM2){
+	  fcMsOverFlow();
+  }
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM6) {
     HAL_IncTick();

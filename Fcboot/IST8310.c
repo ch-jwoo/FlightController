@@ -44,7 +44,7 @@ void IST8310_updataIT(){
 		else osDelay(1);
 	}
 }
-void IST8310_rxCpltCallback(I2C_HandleTypeDef *hi2c){
+void IST8310_i2cRxCpltCallback(I2C_HandleTypeDef *hi2c){
 	if(hi2c->Instance != ist8310.hi2c->Instance) return;
 	if(bm_i2cFlag != bm_i2cIST8310) return;
 

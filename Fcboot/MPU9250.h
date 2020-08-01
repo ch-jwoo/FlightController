@@ -243,8 +243,6 @@ typedef struct {
 
 MPU9250_t mpu9250;
 
-void MPU9250_main();
-
 
 /*
  *  initialize mpu9250 object
@@ -270,7 +268,7 @@ void MPU9250_updateDMA();
  *  called by rxCpltCallback
  *  this function check
  */
-void MPU9250_rxCpltCallback(I2C_HandleTypeDef *hi2c);
+void MPU9250_i2cRxCpltCallback(I2C_HandleTypeDef *hi2c);
 
 /*
  *  copy mpu9250 dma buffer to mpu9250 accel, gyro raw buffer
