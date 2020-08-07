@@ -17,7 +17,6 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
@@ -25,6 +24,7 @@
 #include "fatfs.h"
 #include "i2c.h"
 #include "sdio.h"
+#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "usb_otg.h"
@@ -32,7 +32,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "fc_usec.h"
+#include "Usec.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,7 +100,6 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
   MX_I2C1_Init();
-  MX_TIM11_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
   MX_UART7_Init();
@@ -111,19 +110,26 @@ int main(void)
   MX_UART8_Init();
   MX_SDIO_SD_Init();
   MX_FATFS_Init();
+  MX_TIM9_Init();
+  MX_TIM13_Init();
+  MX_TIM14_Init();
+  MX_TIM5_Init();
+  MX_TIM8_Init();
+  MX_TIM12_Init();
+  MX_SPI1_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
-  userMain();
+  cppMain();
   /* USER CODE END 2 */
 
   /* Init scheduler */
   osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
-  MX_FREERTOS_Init(); 
+  MX_FREERTOS_Init();
   /* Start scheduler */
   osKernelStart();
- 
+
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -146,11 +152,12 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage 
+  /** Configure the main internal regulator output voltage
   */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
@@ -164,7 +171,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -185,11 +192,8 @@ void SystemClock_Config(void)
   */
 static void MX_NVIC_Init(void)
 {
-  /* I2C1_EV_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(I2C1_EV_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
   /* I2C1_ER_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(I2C1_ER_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(I2C1_ER_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
   /* UART7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(UART7_IRQn, 5, 0);
@@ -210,7 +214,7 @@ static void MX_NVIC_Init(void)
   HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
   /* DMA1_Stream5_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
   /* DMA2_Stream3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 5, 0);
@@ -218,13 +222,22 @@ static void MX_NVIC_Init(void)
   /* DMA2_Stream6_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream6_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream6_IRQn);
+  /* TIM1_BRK_TIM9_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(TIM1_BRK_TIM9_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(TIM1_BRK_TIM9_IRQn);
+  /* TIM2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(TIM2_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(TIM2_IRQn);
+  /* UART8_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(UART8_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(UART8_IRQn);
 }
 
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
 
- /**
+/**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
@@ -237,7 +250,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 	/* microseond timer */
   if(htim->Instance == TIM2){
-	  fcMsOverFlow();
+	  msOverFlow();
   }
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM6) {
@@ -269,7 +282,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

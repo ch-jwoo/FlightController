@@ -14,16 +14,13 @@ RM := rm -rf
 -include Middlewares/Third_Party/FreeRTOS/Source/subdir.mk
 -include Middlewares/Third_Party/FatFs/src/option/subdir.mk
 -include Middlewares/Third_Party/FatFs/src/subdir.mk
--include Fcboot/Second_att_control_codeblock_ert_rtw/subdir.mk
--include Fcboot/subdir.mk
 -include FATFS/Target/subdir.mk
 -include FATFS/App/subdir.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
--include CPP/Src/subdir.mk
--include CPP/Inc/px4demo_attitude_control_ert_rtw/subdir.mk
--include C/subdir.mk
+-include CPP/Driver/subdir.mk
+-include CPP/subdir.mk
 -include subdir.mk
 -include objects.mk
 
@@ -39,6 +36,12 @@ ifneq ($(strip $(C_UPPER_DEPS)),)
 endif
 ifneq ($(strip $(CXX_DEPS)),)
 -include $(CXX_DEPS)
+endif
+ifneq ($(strip $(S_DEPS)),)
+-include $(S_DEPS)
+endif
+ifneq ($(strip $(S_UPPER_DEPS)),)
+-include $(S_UPPER_DEPS)
 endif
 ifneq ($(strip $(C_DEPS)),)
 -include $(C_DEPS)

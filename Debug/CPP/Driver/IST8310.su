@@ -1,0 +1,8 @@
+IST8310.c:24:6:IST8310	16	static
+IST8310.c:33:6:IST8310_updataIT	16	static
+IST8310.c:43:6:IST8310_i2cRxCpltCallback	8	static
+IST8310.c:71:6:IST8310_write	32	static
+IST8310.c:75:6:IST8310_write_reg	16	static
+IST8310.c:79:6:IST8310_read	32	static
+IST8310.c:83:6:IST8310_read_reg	16	static
+IST8310.c:87:6:IST8310_reset	8	static

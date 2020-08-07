@@ -1,3 +1,0 @@
-px4demo_attitude_control.c:41:6:px4demo_attitude_control_step	96	static
-px4demo_attitude_control.c:562:6:px4demo_attitude_control_initialize	8	static
-px4demo_attitude_control.c:586:6:px4demo_attitude_control_terminate	4	static

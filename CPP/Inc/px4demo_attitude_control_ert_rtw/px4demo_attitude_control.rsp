@@ -1,8 +1,0 @@
-SysTickScheduler.o
-ert_main.o
-m3m4m4f_multitasking.o
-px4demo_attitude_control.o
-px4demo_attitude_control_data.o
-startup_gcc.o
-syscalls.o
-system_LM3S.o
