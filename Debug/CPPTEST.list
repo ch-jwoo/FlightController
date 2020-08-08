@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  16 .debug_macro  00031d3e  00000000  00000000  00078040  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   00026f91  00000000  00000000  000a9d7e  2**0
+ 17 .debug_line   00026f90  00000000  00000000  000a9d7e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    000fd19a  00000000  00000000  000d0d0f  2**0
+ 18 .debug_str    000fd19a  00000000  00000000  000d0d0e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  001cdea9  2**0
+ 19 .comment      0000007b  00000000  00000000  001cdea8  2**0
                   CONTENTS, READONLY
  20 .debug_frame  0000c7e0  00000000  00000000  001cdf24  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -11913,7 +11913,7 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
  8006d52:	681b      	ldr	r3, [r3, #0]
  8006d54:	681b      	ldr	r3, [r3, #0]
  8006d56:	429a      	cmp	r2, r3
- 8006d58:	d137      	bne.n	8006dca <HAL_I2C_MemRxCpltCallback+0x86>
+ 8006d58:	d125      	bne.n	8006da6 <HAL_I2C_MemRxCpltCallback+0x62>
 		MPU9250_i2cRxCpltCallback();
  8006d5a:	f7fa fc8b 	bl	8001674 <MPU9250_i2cRxCpltCallback>
 		sensorAccel.setAccel(mpu9250.accel[0], mpu9250.accel[1], mpu9250.accel[2]);
@@ -11940,32 +11940,33 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
  8006d9c:	eeb0 0a67 	vmov.f32	s0, s15
  8006da0:	481d      	ldr	r0, [pc, #116]	; (8006e18 <HAL_I2C_MemRxCpltCallback+0xd4>)
  8006da2:	f7fd feff 	bl	8004ba4 <_ZN2FC10SensorGyro7setGyroEfff>
-		sensorMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
- 8006da6:	4b1a      	ldr	r3, [pc, #104]	; (8006e10 <HAL_I2C_MemRxCpltCallback+0xcc>)
- 8006da8:	edd3 7a16 	vldr	s15, [r3, #88]	; 0x58
- 8006dac:	4b18      	ldr	r3, [pc, #96]	; (8006e10 <HAL_I2C_MemRxCpltCallback+0xcc>)
- 8006dae:	ed93 7a17 	vldr	s14, [r3, #92]	; 0x5c
- 8006db2:	4b17      	ldr	r3, [pc, #92]	; (8006e10 <HAL_I2C_MemRxCpltCallback+0xcc>)
- 8006db4:	edd3 6a18 	vldr	s13, [r3, #96]	; 0x60
- 8006db8:	eeb0 1a66 	vmov.f32	s2, s13
- 8006dbc:	eef0 0a47 	vmov.f32	s1, s14
- 8006dc0:	eeb0 0a67 	vmov.f32	s0, s15
- 8006dc4:	4815      	ldr	r0, [pc, #84]	; (8006e1c <HAL_I2C_MemRxCpltCallback+0xd8>)
- 8006dc6:	f7fd ff29 	bl	8004c1c <_ZN2FC9SensorMag6setMagEfff>
+//		sensorMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
 	}
 //#endif
 
 //#ifdef USE_IST8310
 	if(hi2c->Instance == ist8310.hi2c->Instance){
- 8006dca:	687b      	ldr	r3, [r7, #4]
- 8006dcc:	681a      	ldr	r2, [r3, #0]
- 8006dce:	4b14      	ldr	r3, [pc, #80]	; (8006e20 <HAL_I2C_MemRxCpltCallback+0xdc>)
- 8006dd0:	681b      	ldr	r3, [r3, #0]
- 8006dd2:	681b      	ldr	r3, [r3, #0]
- 8006dd4:	429a      	cmp	r2, r3
- 8006dd6:	d101      	bne.n	8006ddc <HAL_I2C_MemRxCpltCallback+0x98>
+ 8006da6:	687b      	ldr	r3, [r7, #4]
+ 8006da8:	681a      	ldr	r2, [r3, #0]
+ 8006daa:	4b1c      	ldr	r3, [pc, #112]	; (8006e1c <HAL_I2C_MemRxCpltCallback+0xd8>)
+ 8006dac:	681b      	ldr	r3, [r3, #0]
+ 8006dae:	681b      	ldr	r3, [r3, #0]
+ 8006db0:	429a      	cmp	r2, r3
+ 8006db2:	d113      	bne.n	8006ddc <HAL_I2C_MemRxCpltCallback+0x98>
 		IST8310_i2cRxCpltCallback();
- 8006dd8:	f7fa fa7a 	bl	80012d0 <IST8310_i2cRxCpltCallback>
+ 8006db4:	f7fa fa8c 	bl	80012d0 <IST8310_i2cRxCpltCallback>
+		sensorMag.setMag(ist8310.raw[0], ist8310.raw[1], ist8310.raw[2]);
+ 8006db8:	4b18      	ldr	r3, [pc, #96]	; (8006e1c <HAL_I2C_MemRxCpltCallback+0xd8>)
+ 8006dba:	edd3 7a04 	vldr	s15, [r3, #16]
+ 8006dbe:	4b17      	ldr	r3, [pc, #92]	; (8006e1c <HAL_I2C_MemRxCpltCallback+0xd8>)
+ 8006dc0:	ed93 7a05 	vldr	s14, [r3, #20]
+ 8006dc4:	4b15      	ldr	r3, [pc, #84]	; (8006e1c <HAL_I2C_MemRxCpltCallback+0xd8>)
+ 8006dc6:	edd3 6a06 	vldr	s13, [r3, #24]
+ 8006dca:	eeb0 1a66 	vmov.f32	s2, s13
+ 8006dce:	eef0 0a47 	vmov.f32	s1, s14
+ 8006dd2:	eeb0 0a67 	vmov.f32	s0, s15
+ 8006dd6:	4812      	ldr	r0, [pc, #72]	; (8006e20 <HAL_I2C_MemRxCpltCallback+0xdc>)
+ 8006dd8:	f7fd ff20 	bl	8004c1c <_ZN2FC9SensorMag6setMagEfff>
 	}
 //#endif
 
@@ -11999,8 +12000,8 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
  8006e10:	200004c0 	.word	0x200004c0
  8006e14:	200008f0 	.word	0x200008f0
  8006e18:	20000908 	.word	0x20000908
- 8006e1c:	200008c0 	.word	0x200008c0
- 8006e20:	20000838 	.word	0x20000838
+ 8006e1c:	20000838 	.word	0x20000838
+ 8006e20:	200008c0 	.word	0x200008c0
  8006e24:	20000320 	.word	0x20000320
  8006e28:	20000920 	.word	0x20000920
 

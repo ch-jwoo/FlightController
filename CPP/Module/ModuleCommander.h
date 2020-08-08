@@ -31,9 +31,6 @@ public:
 
 	static bool sendCommand(Command cmd);
 private:
-//	static StaticQueue_t xQueueBuffer;
-//	static uint8_t ucQueueStorage[CMD_QUEUE_LENGTH*CMD_QUEUE_ITEM_SIZE];
-//	static QueueHandle_t commandQueue;
 
 	struct ModeFlag modeFlagPub{};
 
@@ -43,13 +40,6 @@ private:
 	CmdResult toArm();
 	CmdResult toDisArm();
 };
-
-//uint8_t ModuleCommander::ucQueueStorage[CMD_QUEUE_LENGTH*CMD_QUEUE_ITEM_SIZE];
-//QueueHandle_t ModuleCommander::commandQueue = xQueueCreateStatic(CMD_QUEUE_LENGTH,
-//																   sizeof(Command),
-//																   ucQueueStorage,
-//																   &xQueueBuffer);
-
 
 StaticQueue_t xQueueBuffer;
 uint8_t ucQueueStorage[CMD_QUEUE_LENGTH*CMD_QUEUE_ITEM_SIZE];

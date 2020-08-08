@@ -213,7 +213,6 @@ void cppMain(){
 
 	IST8310(&hi2c2);
 
-
 #ifdef USE_GPS
 	/*
 	 *  GPS using DMA circular mode
@@ -245,13 +244,14 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 		MPU9250_i2cRxCpltCallback();
 		sensorAccel.setAccel(mpu9250.accel[0], mpu9250.accel[1], mpu9250.accel[2]);
 		sensorGyro.setGyro(mpu9250.gyro[0], mpu9250.gyro[1], mpu9250.gyro[2]);
-		sensorMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
+//		sensorMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
 	}
 //#endif
 
 //#ifdef USE_IST8310
 	if(hi2c->Instance == ist8310.hi2c->Instance){
 		IST8310_i2cRxCpltCallback();
+		sensorMag.setMag(ist8310.raw[0], ist8310.raw[1], ist8310.raw[2]);
 	}
 //#endif
 
