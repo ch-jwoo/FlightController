@@ -43,19 +43,18 @@ ModuleAHRS.hpp:42:6:void FC::ModuleAHRS::main()	144	static
 ModuleAHRS.hpp:103:6:void FC::ModuleAHRS::MadgwickAHRSupdate(float, float, float, float, float, float, float, float, float)	208	static
 ModuleAHRS.hpp:198:6:void FC::ModuleAHRS::MadgwickAHRSupdateIMU(float, float, float, float, float, float)	152	static
 ModuleAHRS.hpp:264:7:float FC::ModuleAHRS::invSqrt(float)	32	static
-main.cpp:60:5:int _write(int, unsigned char*, int)	24	static
-main.cpp:66:6:void MPU9250_StartTask(void*)	16	static
-main.cpp:72:6:void BME280_StartTask(void*)	16	static
-main.cpp:78:6:void IST8310_StartTask(void*)	16	static
-main.cpp:84:6:void SD_StartTask(void*)	496	static
-main.cpp:154:6:void AHRS_StartTask(void*)	184	static
-main.cpp:167:6:void moduleCommanderMain(void*)	16	static
-main.cpp:188:6:void debug_main(void*)	16	static
-main.cpp:193:6:void sd_main(void*)	496	static
-main.cpp:273:6:void cppMain()	24	static
-main.cpp:408:6:void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef*)	16	static
-main.cpp:432:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	80	static
-main.cpp:461:6:void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef*)	16	static
+main.cpp:59:5:int _write(int, unsigned char*, int)	24	static
+main.cpp:65:6:void MPU9250_StartTask(void*)	16	static
+main.cpp:71:6:void BME280_StartTask(void*)	16	static
+main.cpp:77:6:void IST8310_StartTask(void*)	16	static
+main.cpp:83:6:void SD_StartTask(void*)	512	static
+main.cpp:158:6:void AHRS_StartTask(void*)	184	static
+main.cpp:166:6:void moduleCommanderMain(void*)	16	static
+main.cpp:187:6:void debug_main(void*)	16	static
+main.cpp:193:6:void cppMain()	24	static
+main.cpp:242:6:void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef*)	16	static
+main.cpp:266:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	80	static
+main.cpp:295:6:void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef*)	16	static
 Matrix.hpp:63:5:constexpr matrix::Matrix<Type, M, N>::Matrix() [with Type = float; unsigned int M = 4; unsigned int N = 1]	16	static
 Vector.hpp:25:5:constexpr matrix::Vector<Type, M>::Vector() [with Type = float; unsigned int M = 4]	16	static
 Quaternion.hpp:240:5:matrix::Quaternion<Type>::Quaternion(Type, Type, Type, Type) [with Type = float]	40	static
@@ -81,5 +80,5 @@ Matrix.hpp:97:17:Type matrix::Matrix<Type, M, N>::operator()(size_t, size_t) con
 Vector.hpp:27:5:matrix::Vector<Type, M>::Vector(const MatrixM1&) [with Type = float; unsigned int M = 3]	16	static
 Matrix.hpp:107:18:Type& matrix::Matrix<Type, M, N>::operator()(size_t, size_t) [with Type = float; unsigned int M = 4; unsigned int N = 1]	24	static
 Matrix.hpp:97:17:Type matrix::Matrix<Type, M, N>::operator()(size_t, size_t) const [with Type = float; unsigned int M = 4; unsigned int N = 1]	24	static
-main.cpp:463:1:void __static_initialization_and_destruction_0(int, int)	24	static
-main.cpp:463:1:cpp)	8	static
+main.cpp:297:1:void __static_initialization_and_destruction_0(int, int)	24	static
+main.cpp:297:1:cpp)	8	static

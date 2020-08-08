@@ -55,7 +55,6 @@ SensorBaro sensorBaro;
 SensorGPS sensorGPS;
 RC rc;
 
-
 //we can use printf
 int _write(int file, unsigned char* p, int len) // for debug through uart3
 {
@@ -124,12 +123,17 @@ void SD_StartTask(void *argument){
 			f_write(&SDFile, buf, len, (UINT*)&bw);
 		}
 		if(msgBus.getGPS(&gps)){
-			len=sprintf(buf,"GPS %u %d %d %d %d %d %d\n",(uint)gps.timestamp,(int)(gps.lat*100000000),
-																	(int)(gps.lon*100000000),
-																	(int)(gps.alt*100000000),
-																	(int)(gps.velN*100000000),
-																	(int)(gps.velE*100000000),
-																	(int)(gps.velD*100000000));
+			int32_t latDecimal = (int32_t)gps.lat;
+			int32_t latFraction = (int32_t)((gps.lat-latDecimal)*100000000);
+			int32_t lonDecimal = (int32_t)gps.lon;
+			int32_t lonFraction = (int32_t)((gps.lon-lonDecimal)*100000000);
+			len=std::sprintf(buf,"GPS %u %d.%d %d.%d %d %d %d %d\n",(uint)gps.timestamp,
+															  latDecimal, latFraction,
+															  lonDecimal, lonFraction,
+															  (int)(gps.alt*1000000),
+															  (int)(gps.velN*1000000),
+															  (int)(gps.velE*1000000),
+															  (int)(gps.velD*1000000));
 			f_write(&SDFile, buf, len, (UINT*)&bw);
 		}   // Lat Lon Alt velN velE velD
 		if(msgBus.getBarometer(&baro)){
@@ -225,12 +229,6 @@ void cppMain(){
 	//	Lidar1D_run();
 
     std::printf("boot complete\r\n");
-//	xTaskCreate(sd_main,
-//				"sd_main",
-//				2048,
-//				NULL,
-//				4,
-//				NULL);
 
 	xTaskCreate(debug_main,
 				"debug_main",
@@ -238,13 +236,6 @@ void cppMain(){
 				NULL,
 				2,
 				NULL);
-//	xTaskCreate(moduleCommanderMain,
-//				"moduleCommanderMain",
-//				configMINIMAL_STACK_SIZE,
-//				NULL,
-//				5,
-//				NULL);
-
 }
 
 //callback
@@ -288,7 +279,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 #ifdef USE_GPS
 	if(huart->Instance == UART8){
-		if(TM_GPS_Update() == TM_GPS_Result_NewData){
+		if(TM_GPS_Update() == TM_GPS_Result_NewData && gpsUart.gpsData.Fix != 0 /* gps must fixed */){
 			sensorGPS.setGPS(gpsUart.gpsData.Latitude, gpsUart.gpsData.Longitude, gpsUart.gpsData.Altitude,
 							 TM_GPS_ConvertSpeed(gpsUart.gpsData.Speed, TM_GPS_Speed_MeterPerSecond), gpsUart.gpsData.Direction, gpsUart.gpsData.HDOP, gpsUart.gpsData.VDOP,
 							 gpsUart.gpsData.Satellites, gpsUart.gpsData.FixMode, 0/* UTC in microsecond */);

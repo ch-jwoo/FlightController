@@ -214,7 +214,7 @@ TM_GPS_Result_t TM_GPS_Update() {
 	}
 	
 	/* We have old data */
-	TM_GPS_INT_ReturnWithStatus(&gpsUart.gpsData, TM_GPS_Result_OldData);
+//	TM_GPS_INT_ReturnWithStatus(&gpsUart.gpsData, TM_GPS_Result_OldData);
 
 	return result;
 }
