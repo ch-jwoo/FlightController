@@ -1,13 +1,16 @@
 #ifndef __SENSORGYRO__H
 #define __SENSORGYRO__H
 
+#include <MsgBus/MsgBus.h>
+#include <MsgBus/MsgType.h>
 #include "Usec.h"
-#include "MsgBus/MsgType.hpp"
-#include "MsgBus/MsgBus.hpp"
+#include "Module/ModuleAHRS.h"
+#include "Utils/Freq.h"
+
 
 namespace FC{
 
-class SensorGyro{
+class SensorGyro : public Freq<SensorGyro>{
 public:
     void setGyro(float x, float y, float z);
 private:
@@ -21,6 +24,9 @@ void SensorGyro::setGyro(float x, float y, float z){
 	this->bodyAngularVelocity.xyz[1] = y;
 	this->bodyAngularVelocity.xyz[2] = z;
 	msgBus.setBodyAngularVelocity(this->bodyAngularVelocity);
+	ModuleAHRS::setSignal(AhrsGyro);
+
+	freqCnt++;
 }
 
 }

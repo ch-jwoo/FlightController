@@ -19,7 +19,11 @@ RM := rm -rf
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
+-include CPP/MsgBus/subdir.mk
+-include CPP/Module/subdir.mk
+-include CPP/Lib/MatlabAttitudeController/subdir.mk
 -include CPP/Driver/subdir.mk
+-include CPP/Actuator/subdir.mk
 -include CPP/subdir.mk
 -include subdir.mk
 -include objects.mk

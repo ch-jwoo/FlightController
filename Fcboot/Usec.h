@@ -20,6 +20,10 @@ static __inline uint64_t microsecond(){
 	return ((uint64_t)_timerOverflowCnt<<32) | (__HAL_TIM_GetCounter(USEC_TIMER));
 }
 
+static __inline uint32_t millisecond(){
+	return HAL_GetTick();
+}
+
 static __inline void msOverFlow(){
 	_timerOverflowCnt++;
 }

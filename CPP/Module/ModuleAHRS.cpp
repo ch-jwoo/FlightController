@@ -1,54 +1,56 @@
-#ifndef __MODULEAHRS__H
-#define __MODULEAHRS__H
+/*
+ * ModuleAHRS.cpp
+ *
+ *  Created on: Aug 9, 2020
+ *      Author: cjb88
+ */
 
-#include "MsgBus/MsgType.hpp"
-#include "MsgBus/MsgBus.hpp"
+#include <MsgBus/msgBus.h>
+#include "Usec.h"
+#include "Module/ModuleAHRS.h"
 #include "Lib/Matrix/matrix/Dcm.hpp"
 #include "Lib/Matrix/matrix/Quaternion.hpp"
 #include "cmath"
+#include "Module/ModuleAttitudeController.h"
 
 namespace FC{
 
-class ModuleAHRS{
-public:
-    void init();
-    void main();
-private:
-    /* input */
-    struct BodyAccel bodyAccelSub{};
-    struct BodyAngularVelocity bodyAngularVelocitySub{};
-    struct BodyMag bodyMagSub{};
+ModuleAHRS::ModuleAHRS()
+	: bodyAccelSub{}
+	, bodyAngularVelocitySub{}
+	, bodyMagSub{}
+	, attitudePub{}
+	, nedAccelPub{}
+	, lastUpdate{0}
+	, beta{1.0f}
+	, q0{1.0f}
+	, q1{0.0f}
+	, q2{0.0f}
+	, q3{0.0f}
+{
 
-    /* output */
-    struct Attitude attitudePub{};
-    struct NedAccel nedAccelPub{};
-
-    /* used by Madgwick algorithm */
-    uint64_t lastUpdate{};
-    float beta{1.0f};
-    float q0{1.0f};
-    float q1{0.0f};
-    float q2{0.0f};
-    float q3{0.0f};
-    
-    void MadgwickAHRSupdate(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz);
-    void MadgwickAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, float az);
-
-    void calNedAccel();
-
-    float invSqrt(float x);
-};
+}
 
 void ModuleAHRS::main(){
-	/* no update */
-	if(!msgBus.getBodyAccel(&this->bodyAccelSub)) return;
-	if(!msgBus.getBodyAngularVelocity(&this->bodyAngularVelocitySub)) return;
+	ModuleAHRS moduleAHRS;
+	while(1){
+		/* wait accel, gyro value set */
+		osThreadFlagsWait(0x3U, osFlagsWaitAll, osWaitForever);
+		moduleAHRS.oneStep();
+		ModuleAttitudeController::setSignal(AcAHRS);
+	}
+}
+
+void ModuleAHRS::oneStep(){
+	/* receive data */
+	msgBus.getBodyAccel(&this->bodyAccelSub);
+	msgBus.getBodyAngularVelocity(&this->bodyAngularVelocitySub);
 
 	/* mag data not valid */
 	if(!msgBus.getBodyMag(&this->bodyMagSub))
 	{
 		MadgwickAHRSupdateIMU(bodyAngularVelocitySub.xyz[0],
-				              bodyAngularVelocitySub.xyz[1],
+							  bodyAngularVelocitySub.xyz[1],
 							  bodyAngularVelocitySub.xyz[2],
 							  bodyAccelSub.xyz[0],
 							  bodyAccelSub.xyz[1],
@@ -69,35 +71,38 @@ void ModuleAHRS::main(){
 
 	/* calculate roll pitch yaw */
 	float roll, pitch, yaw;
-    roll = atan2(2.0f * (q0 * q1 + q2 * q3), q0 * q0- q1 * q1 - q2 * q2 + q3 * q3);		//roll
-    pitch = -asin(2.0f * (q1 * q3 - q0 * q2));												//pitch
-    yaw = atan2(2.0f * (q1 * q2 + q0 * q3), q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3);		//yaw
+	roll = atan2(2.0f * (q0 * q1 + q2 * q3), q0 * q0- q1 * q1 - q2 * q2 + q3 * q3);		//roll
+	pitch = -asin(2.0f * (q1 * q3 - q0 * q2));												//pitch
+	yaw = atan2(2.0f * (q1 * q2 + q0 * q3), q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3);		//yaw
 
-    matrix::Quatf quat(q0, q1, q2, q3);		/* NED -> body quaternion */
-    matrix::Dcmf dcm(quat.inversed());		/* body -> NED DCM */
-    matrix::Vector3f tempBodyAccel(this->bodyAccelSub.xyz[0],
-    							   this->bodyAccelSub.xyz[1],
+	matrix::Quatf quat(q0, q1, q2, q3);		/* NED -> body quaternion */
+	matrix::Dcmf dcm(quat.inversed());		/* body -> NED DCM */
+	matrix::Vector3f tempBodyAccel(this->bodyAccelSub.xyz[0],
+								   this->bodyAccelSub.xyz[1],
 								   this->bodyAccelSub.xyz[2]);
 
-    matrix::Vector3f tempNedAccel = dcm*tempBodyAccel;
+	matrix::Vector3f tempNedAccel = dcm*tempBodyAccel;
 
-    attitudePub.timestamp = microsecond();
-    attitudePub.q[0] = this->q0;
-    attitudePub.q[1] = this->q1;
-    attitudePub.q[2] = this->q2;
-    attitudePub.q[3] = this->q3;
-    attitudePub.roll = roll;
-    attitudePub.pitch = pitch;
-    attitudePub.yaw = yaw;
+	attitudePub.timestamp = microsecond();
+	attitudePub.q[0] = this->q0;
+	attitudePub.q[1] = this->q1;
+	attitudePub.q[2] = this->q2;
+	attitudePub.q[3] = this->q3;
+	attitudePub.roll = roll;
+	attitudePub.pitch = pitch;
+	attitudePub.yaw = yaw;
 
-    msgBus.setAttitude(attitudePub);
+	msgBus.setAttitude(attitudePub);
 
-    nedAccelPub.timestamp = microsecond();
-    nedAccelPub.xyz[0] = tempNedAccel(0);
-    nedAccelPub.xyz[1] = tempNedAccel(1);
-    nedAccelPub.xyz[2] = tempNedAccel(2);
+	nedAccelPub.timestamp = microsecond();
+	nedAccelPub.xyz[0] = tempNedAccel(0);
+	nedAccelPub.xyz[1] = tempNedAccel(1);
+	nedAccelPub.xyz[2] = tempNedAccel(2);
 
-    msgBus.setNedAccel(nedAccelPub);
+	msgBus.setNedAccel(nedAccelPub);
+
+	/* Freq class variable */
+	freqCnt++;
 }
 
 void ModuleAHRS::MadgwickAHRSupdate(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz){
@@ -108,10 +113,10 @@ void ModuleAHRS::MadgwickAHRSupdate(float gx, float gy, float gz, float ax, floa
 	float _2q0mx, _2q0my, _2q0mz, _2q1mx, _2bx, _2bz, _4bx, _4bz, _2q0, _2q1, _2q2, _2q3, _2q0q2, _2q2q3, q0q0, q0q1, q0q2, q0q3, q1q1, q1q2, q1q3, q2q2, q2q3, q3q3;
 
 	// Use IMU algorithm if magnetometer measurement invalid (avoids NaN in magnetometer normalisation)
-	if((mx == 0.0f) && (my == 0.0f) && (mz == 0.0f)) {
-		MadgwickAHRSupdateIMU(gx, gy, gz, ax, ay, az);
-		return;
-	}
+//	if((mx == 0.0f) && (my == 0.0f) && (mz == 0.0f)) {
+//		MadgwickAHRSupdateIMU(gx, gy, gz, ax, ay, az);
+//		return;
+//	}
 
 	// Rate of change of quaternion from gyroscope
 	qDot1 = 0.5f * (-q1 * gx - q2 * gy - q3 * gz);
@@ -271,5 +276,10 @@ float ModuleAHRS::invSqrt(float x){
 	return y;
 }
 
-}
-#endif
+
+
+
+
+
+} /* namespace FC */
+

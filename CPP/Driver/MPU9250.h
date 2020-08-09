@@ -257,8 +257,9 @@ void MPU9250_updateDMA();
 /*
  *  called by rxCpltCallback
  *  this function check
+ *  \return imu(1), mag(2)
  */
-void MPU9250_i2cRxCpltCallback();
+uint8_t MPU9250_i2cRxCpltCallback();
 
 /*
  *  copy mpu9250 dma buffer to mpu9250 accel, gyro raw buffer

@@ -1,14 +1,16 @@
 #ifndef __SENSORACCEL__H
 #define __SENSORACCEL__H
 
+#include <MsgBus/MsgBus.h>
+#include <MsgBus/MsgType.h>
 #include "main.h"
 #include "Usec.h"
-#include "MsgBus/MsgType.hpp"
-#include "MsgBus/MsgBus.hpp"
+#include "Module/ModuleAHRS.h"
+#include "Utils/Freq.h"
 
 namespace FC{
 
-class SensorAccel{
+class SensorAccel : public Freq<SensorAccel>{
 public:
 	SensorAccel() = default;
     void setAccel(float x, float y, float z);
@@ -24,6 +26,10 @@ void SensorAccel::setAccel(float x, float y, float z){
 	this->bodyAccel.xyz[1] = y;
 	this->bodyAccel.xyz[2] = z;
 	msgBus.setBodyAccel(this->bodyAccel);
+	ModuleAHRS::setSignal(AhrsAccel);
+
+	/* Freq class variable */
+	freqCnt++;
 }
 
 }

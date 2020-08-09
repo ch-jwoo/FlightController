@@ -1,14 +1,16 @@
 #ifndef __RC__H
 #define __RC__H
 
-#include "MsgBus/MsgType.hpp"
+#include <MsgBus/MsgType.h>
 #include "Module/ModuleCommander.h"
 #include "Usec.h"
+#include "Utils/Freq.h"
+
 namespace FC{
 
 #define ARMING_THRESHOLD 1500
 
-class RC{
+class RC : public Freq<RC>{
 public:
 //    void setRC(uint16_t *ch, uint8_t len);
     void setRC(uint16_t roll=0, uint16_t pitch=0, uint16_t yaw=0, uint16_t throttle=0,
@@ -17,6 +19,7 @@ public:
 			   uint16_t calibration=0, uint16_t calibration_sub=0);
 private:
     struct Controller controllerPub;
+    uint32_t lastArmReq;
 };
 
 
@@ -37,9 +40,15 @@ void RC::setRC(uint16_t roll, uint16_t pitch, uint16_t yaw, uint16_t throttle,
 	struct ModeFlag modeFlag;
 	msgBus.getModeFlag(&modeFlag);							/* current arm mode */
 	Command rcvArmFlag = Command::DisArm;						/* request arm mode */
-	if( armming > ARMING_THRESHOLD )	rcvArmFlag = Command::Arm;
-	if(modeFlag.armMode != rcvArmFlag) ModuleCommander::sendCommand(rcvArmFlag); /* send command */
+	if( armming > ARMING_THRESHOLD ) rcvArmFlag = Command::Arm;
+	if(modeFlag.armMode != rcvArmFlag && millisecond()-lastArmReq > 500){
+		ModuleCommander::sendCommand(rcvArmFlag); /* send command */
+		lastArmReq = millisecond();
+	}
 
+
+	/* Freq class variable */
+	freqCnt++;
 }
 
 }

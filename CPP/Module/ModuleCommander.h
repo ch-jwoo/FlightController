@@ -8,108 +8,72 @@
 #ifndef MODULE_MODULECOMMANDER_H_
 #define MODULE_MODULECOMMANDER_H_
 
+#include <Module/ModuleBuzzer.h>
+#include <MsgBus/MsgBus.h>
+#include <MsgBus/MsgType.h>
 #include "main.h"
 #include "Usec.h"
-#include "MsgBus/MsgType.hpp"
-#include "MsgBus/MsgBus.hpp"
-#include "queue.h"
+#include "cmsis_os.h"
+
 
 namespace FC{
 
-#define CMD_QUEUE_LENGTH 3
-#define CMD_QUEUE_ITEM_SIZE sizeof(Command)
-
-enum class CmdResult{
-	Denied,
-	Changed
-};
+extern osMessageQueueId_t Commander_QueueHandle;
 
 class ModuleCommander{
 public:
-	void init();
-	void main();
 
+	/*
+	 *  ModuleCommander initializer
+	 *  Commander_Queue is created
+	 */
+	ModuleCommander();
+
+	/*
+	 *  ModuleCommander main function
+	 *  this function is called by CMSIS task function
+	 */
+	static void main();
+
+	/*
+	 *  Give a order to commander
+	 *  this function is called by the RemoteController			ex)RC
+	 *  this function will fail if the command queue is full
+	 *  \param[in]		cmd		command to buzzer
+	 *  \return	success(1), fail(0)
+	 */
 	static bool sendCommand(Command cmd);
-private:
 
+	~ModuleCommander() = default;
+	ModuleCommander& operator=(ModuleCommander &&other) = delete;
+	ModuleCommander& operator=(const ModuleCommander &other) = delete;
+	ModuleCommander(ModuleCommander &&other) = delete;
+	ModuleCommander(const ModuleCommander &other) = delete;
+private:
 	struct ModeFlag modeFlagPub{};
 
-	CmdResult commandHandler(Command cmd);
-	CmdResult toAttitude();
-	CmdResult toPosition();
-	CmdResult toArm();
-	CmdResult toDisArm();
+	/*
+	 *  handle command using switch
+	 *  \param[in]		command for handling
+	 */
+	bool commandHandler(Command cmd);
+
+	/*
+	 *  function of dealing the command
+	 *  \return Success(1), Denied(0)
+	 */
+	bool toAttitude();
+	bool toPosition();
+	bool toWaypoint();
+	bool toRTL();
+	bool toTakeoff();
+	bool toLand();
+
+
+	bool toArm();
+	bool toDisArm();
 };
 
-StaticQueue_t xQueueBuffer;
-uint8_t ucQueueStorage[CMD_QUEUE_LENGTH*CMD_QUEUE_ITEM_SIZE];
-QueueHandle_t commandQueue = xQueueCreateStatic(CMD_QUEUE_LENGTH,
-							   sizeof(Command),
-							   ucQueueStorage,
-							   &xQueueBuffer);
-
-ModuleCommander moduleCommander;
-
-void ModuleCommander::main(){
-	Command rcvCommand;
-	if(xQueueReceive(commandQueue, &rcvCommand, portMAX_DELAY)){
-		commandHandler(rcvCommand);
-	}
-}
-
-bool ModuleCommander::sendCommand(Command cmd){
-//	if(xQueueSendToBack(commandQueue, &cmd, 0) != pdPASS) return false;
-	xQueueSendToBackFromISR( commandQueue, &cmd, NULL );
-
-	return true;
-}
-
-CmdResult ModuleCommander::commandHandler(Command cmd){
-	switch(cmd){
-	case Command::ControlAttitude:
-		return toAttitude();
-		break;
-	case Command::ControlPosition:
-//		return toPosition();
-		break;
-	case Command::AutoWaypoint:
-		break;
-	case Command::AutoRTL:
-		break;
-	case Command::AutoTakeoff:
-		break;
-	case Command::AutoLand:
-		break;
-
-	case Command::Arm:
-		return toArm();
-		break;
-	case Command::DisArm:
-		return toDisArm();
-		break;
-	}
-	return CmdResult::Denied;
-}
-
-CmdResult ModuleCommander::toAttitude(){
-//	msgBus.setFlightMode(FlightMode::ControlAttitude);
-}
-
-CmdResult ModuleCommander::toArm(){
-	struct ModeFlag modeFlag;
-	msgBus.getModeFlag(&modeFlag);
-	modeFlag.timestamp = microsecond();
-	modeFlag.armMode = Command::Arm;
-	msgBus.setModeFlag(modeFlag);
-}
-
-CmdResult ModuleCommander::toDisArm(){
-	struct ModeFlag modeFlag;
-	msgBus.getModeFlag(&modeFlag);
-	modeFlag.timestamp = microsecond();
-	modeFlag.armMode = Command::DisArm;
-	msgBus.setModeFlag(modeFlag);
-}
 
 }
 

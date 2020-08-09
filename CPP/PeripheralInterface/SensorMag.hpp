@@ -1,16 +1,18 @@
 #ifndef __SENSORMAG__H
 #define __SENSORMAG__H
 
+#include <MsgBus/MsgBus.h>
+#include <MsgBus/MsgType.h>
 #include "Usec.h"
-#include "MsgBus/MsgType.hpp"
-#include "MsgBus/MsgBus.hpp"
+#include "Utils/Freq.h"
 
 namespace FC{
 
-class SensorMag{
+class SensorMag : public Freq<SensorMag>{
 public:
     void setMag(float x, float y, float z);
     void calibration();
+
 private:
     struct BodyMag bodyMag;
     float bias[3];
@@ -25,6 +27,9 @@ void SensorMag::setMag(float x, float y, float z){
 	this->bodyMag.xyz[1] = y;
 	this->bodyMag.xyz[2] = z;
 	msgBus.setBodyMag(this->bodyMag);
+
+	/* Freq class variable */
+	freqCnt++;
 }
 
 }

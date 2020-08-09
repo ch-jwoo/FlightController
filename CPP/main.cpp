@@ -12,7 +12,6 @@
 #include "tim.h"
 #include "FreeRTOS.h"
 #include "cmsis_os.h"
-#include "fatfs.h"
 #include "timers.h"
 
 //additional
@@ -34,8 +33,12 @@
 #include "PeripheralInterface/SensorBaro.hpp"
 #include "PeripheralInterface/RC.hpp"
 
-#include "Module/ModuleAHRS.hpp"
 #include "Module/ModuleCommander.h"
+#include <Module/ModuleAHRS.h>
+#include <Module/ModuleBuzzer.h>
+#include "Module/ModuleHealth.h"
+#include "Module/ModuleSD.h"
+
 
 
 using namespace FC;
@@ -55,6 +58,10 @@ SensorBaro sensorBaro;
 SensorGPS sensorGPS;
 RC rc;
 
+float attitude;
+uint16_t hzAccel, hzBaro, hzGyro, hzGPS, hzMag, hzAHRS, hzRC;
+uint16_t timeCheck;
+
 //we can use printf
 int _write(int file, unsigned char* p, int len) // for debug through uart3
 {
@@ -62,10 +69,33 @@ int _write(int file, unsigned char* p, int len) // for debug through uart3
 	return len;
 }
 
-void MPU9250_StartTask(void *argument){
+
+void Health_StartTask(void *argument){
+	ModuleHealth::main();
+}
+void Debug_StartTask(void *argument){
+	struct Health health;
 	while(1){
+		msgBus.getHealth(&health);
+		hzAccel = health.accel;
+		hzBaro = health.baro;
+		hzGyro = health.gyro;
+		hzGPS = health.gps;
+		hzMag = health.mag;
+		hzAHRS = health.ahrs;
+		hzRC = health.rc;
+		osDelay(100);
+	}
+}
+
+void MPU9250_StartTask(void *argument){
+	uint32_t tick;
+	tick = osKernelGetTickCount();
+	while(1){
+		tick += 5;
+		osDelayUntil(tick);
 		MPU9250_updateDMA();
-		osDelay(5);				/* 200hz */
+//		osDelay(5);				/* 200hz */
 	}
 }
 void BME280_StartTask(void *argument){
@@ -81,93 +111,25 @@ void IST8310_StartTask(void *argument){
 	}
 }
 void SD_StartTask(void *argument){
-	char buf[256];
-	uint32_t bw;
-	int len = 0;
-	retSD=f_mount(&SDFatFS ,&SDPath[0],1);
-	if(retSD==FR_OK){
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
-	}
-	else HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
-
-	while(1){
-		/* open */
-		f_open(&SDFile,"log.txt", FA_OPEN_APPEND | FA_WRITE );
-		if(retSD==FR_OK){
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
-		}
-		else HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
-
-		/* data read */
-		struct Attitude attitude;
-		struct NedAccel nedAccel;
-		struct GPS gps;
-		struct Barometer baro;
-		struct BodyAngularVelocity gyro;
-
-		if(msgBus.getAttitude(&attitude)){
-		msgBus.getAttitude(&attitude);
-			len = sprintf(buf, "att %u %d %d %d\n", (uint)attitude.timestamp, (int)(attitude.roll*1000000),
-													(int)(attitude.pitch*1000000),
-													(int)(attitude.yaw*1000000));
-			f_write(&SDFile, buf, len, (UINT*)&bw);
-		}
-		if(msgBus.getNedAccel(&nedAccel)){
-			len=sprintf(buf,"accNED %u %d %d %d\n",(uint)nedAccel.timestamp,(int)(nedAccel.xyz[0]*1000000),
-																	(int)(nedAccel.xyz[1]*1000000),
-																	(int)(nedAccel.xyz[2]*1000000));
-			f_write(&SDFile, buf, len, (UINT*)&bw);
-		}
-		if(msgBus.getBodyAngularVelocity(&gyro)){
-			len=sprintf(buf,"gyro %u %d\n",(uint)gyro.timestamp,(int)(gyro.xyz[2]*1000000));
-			f_write(&SDFile, buf, len, (UINT*)&bw);
-		}
-		if(msgBus.getGPS(&gps)){
-			int32_t latDecimal = (int32_t)gps.lat;
-			int32_t latFraction = (int32_t)((gps.lat-latDecimal)*100000000);
-			int32_t lonDecimal = (int32_t)gps.lon;
-			int32_t lonFraction = (int32_t)((gps.lon-lonDecimal)*100000000);
-			len=std::sprintf(buf,"GPS %u %d.%d %d.%d %d %d %d %d\n",(uint)gps.timestamp,
-															  latDecimal, latFraction,
-															  lonDecimal, lonFraction,
-															  (int)(gps.alt*1000000),
-															  (int)(gps.velN*1000000),
-															  (int)(gps.velE*1000000),
-															  (int)(gps.velD*1000000));
-			f_write(&SDFile, buf, len, (UINT*)&bw);
-		}   // Lat Lon Alt velN velE velD
-		if(msgBus.getBarometer(&baro)){
-			len=sprintf(buf,"Baro %u %d\n",(uint)baro.timestamp,(int)(baro.pressure*1000000));
-			f_write(&SDFile, buf, len, (UINT*)&bw);
-		}
-
-		if(retSD==FR_OK){
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
-		}
-		else HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
-
-		f_close(&SDFile);
-		if(retSD==FR_OK){
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
-		}
-		else HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
-		osDelay(100);			/* 10hz */
-	}
+	ModuleSD::main();
 }
 
 void AHRS_StartTask(void *argument){
-	ModuleAHRS moduleAHRS;
-	while(1){
-		moduleAHRS.main();
-		osDelay(20);				/* 200hz */
-	}
+	ModuleAHRS::main();
 }
 
-void moduleCommanderMain(void* param){
-	while(1){
-		moduleCommander.main();
-	}
+void Commander_StartTask(void *argument){
+	ModuleCommander::main();
 }
+
+void Buzzer_StartTask(void *argument){
+	ModuleBuzzer::main();
+}
+//void moduleCommanderMain(void* param){
+//	while(1){
+//		moduleCommander.main();
+//	}
+//}
 
 /*
  *  Switch
@@ -175,24 +137,15 @@ void moduleCommanderMain(void* param){
  *  GPIO_PinState result = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_7);
  */
 /*
- * 	buzzer
- *  if(HAL_TIM_PWM_Start(&htim10, TIM_CHANNEL_1) != HAL_OK){
- *		error
- *	}
- */
-/*
  *  LED signal
  *  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_12, GPIO_PIN_RESET);
  */
-void debug_main(void* param){
-	while(1){
-		osDelay(1000);
-	}
-}
 
 void cppMain(){
     setvbuf(stdout, NULL, _IONBF, 0);
     printf("test\r\n");
+
+
 
     /* micro second timer start */
 	HAL_TIM_Base_Start_IT(&htim2);
@@ -228,37 +181,35 @@ void cppMain(){
 	//	Lidar1D_run();
 
     std::printf("boot complete\r\n");
-
-	xTaskCreate(debug_main,
-				"debug_main",
-				configMINIMAL_STACK_SIZE,
-				NULL,
-				2,
-				NULL);
 }
 
 //callback
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 //#ifdef USE_MPU9250
 	if(hi2c->Instance == mpu9250.hi2c->Instance){
-		MPU9250_i2cRxCpltCallback();
-		sensorAccel.setAccel(mpu9250.accel[0], mpu9250.accel[1], mpu9250.accel[2]);
-		sensorGyro.setGyro(mpu9250.gyro[0], mpu9250.gyro[1], mpu9250.gyro[2]);
-//		sensorMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
+		switch(MPU9250_i2cRxCpltCallback()){
+		case 1:
+			sensorAccel.setAccel(mpu9250.accel[0], mpu9250.accel[1], mpu9250.accel[2]);
+			sensorGyro.setGyro(mpu9250.gyro[0], mpu9250.gyro[1], mpu9250.gyro[2]);
+			break;
+		case 2:
+	//		sensorMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
+			break;
+		}
 	}
 //#endif
 
 //#ifdef USE_IST8310
 	if(hi2c->Instance == ist8310.hi2c->Instance){
-		IST8310_i2cRxCpltCallback();
-		sensorMag.setMag(ist8310.raw[0], ist8310.raw[1], ist8310.raw[2]);
+		if(IST8310_i2cRxCpltCallback())
+			sensorMag.setMag(ist8310.raw[0], ist8310.raw[1], ist8310.raw[2]);
 	}
 //#endif
 
 //#ifdef USE_BME280
 	if(hi2c->Instance == bme280.hi2c->Instance){
-		BME280_i2cRxCpltCallback();
-		sensorBaro.setBaro(bme280.P, bme280.T);
+		if(BME280_i2cRxCpltCallback())
+			sensorBaro.setBaro(bme280.P, bme280.T);
 	}
 //#endif
 }

@@ -1,5 +1,6 @@
 #ifndef __MSGTYPE__H
 #define __MSGTYPE__H
+
 #include "main.h"
 
 namespace FC{
@@ -83,28 +84,46 @@ struct NedAccel{
     float xyz[3];
 };
 
-/*
- *  Command State Flag
- */
-enum class FlightModeType{
-	ControlAttitude,
-	ControlPosition,
-	AutoWaypoint,
-	AutoRTL,
-	AutoTakeoff,
-	AutoLand,
-};
 struct ModeFlag{
 	uint64_t timestamp;
 	Command armMode;
 	Command flightMode;
 };
 
-enum class ArmModeType{
-	Arm,
-	DisArm
+
+/*
+ *  health check
+ */
+struct Health{
+	uint64_t timestamp;
+
+	uint16_t accel;
+	uint16_t gyro;
+	uint16_t mag;
+	uint16_t baro;
+	uint16_t gps;
+	uint16_t rc;
+
+	uint16_t ahrs;
+	uint16_t ins;
+
+	uint16_t attitudeController;
+	uint16_t positionController;
+	uint16_t autoController;
 };
 
+/*
+ *  Actuator
+ */
+struct MotorPWM{
+	uint64_t timestamp;
+	uint16_t m1;
+	uint16_t m2;
+	uint16_t m3;
+	uint16_t m4;
+	uint16_t m5;
+	uint16_t m6;
+};
 
 }
 

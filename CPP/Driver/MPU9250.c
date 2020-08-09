@@ -58,24 +58,28 @@ void MPU9250_updateDMA(){
 	HAL_I2C_Mem_Read_DMA(mpu9250.hi2c, MPU9250_ADDRESS, ACCEL_XOUT_H, 1, mpu9250.MPU9250_buffer, 14);
 }
 
-void MPU9250_i2cRxCpltCallback(){
+uint8_t MPU9250_i2cRxCpltCallback(){
+	static uint8_t res = 0;
 	if(mpu9250.dmaFlag == MPU9250_dmaMPU9250){
 		if(MPU9250_calRawData() != MPU9250_Fail){
 			MPU9250_calCalibValue();
+			res = 1;
 		}
 		if(xTaskGetTickCount() - mpu9250.AK8963_lastUpdate > AK8963_UPDATE_TICK){
 			mpu9250.dmaFlag = MPU9250_dmaAK8963;
 			HAL_I2C_Mem_Read_DMA(mpu9250.hi2c, AK8963_ADDRESS, AK8963_XOUT_L, 1, mpu9250.AK8963_buffer, 7);
 			mpu9250.AK8963_lastUpdate = xTaskGetTickCount();
-			return;
+			return res;
 		}
 	}
 	else if(mpu9250.dmaFlag == MPU9250_dmaAK8963){
-			if(AK8963_calRawData() == MPU9250_Success){
-				AK8963_calCalibValue();
-			}
+		if(AK8963_calRawData() == MPU9250_Success){
+			AK8963_calCalibValue();
+			res = 2;
+		}
 	}
 	mpu9250.dmaFlag = MPU9250_dmaIdle;
+	return res;
 }
 
 MPU9250_Result_t MPU9250_calRawData(){

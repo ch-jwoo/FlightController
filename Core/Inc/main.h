@@ -61,6 +61,11 @@ void BME280_StartTask(void *argument);
 void IST8310_StartTask(void *argument);
 void SD_StartTask(void *argument);
 void AHRS_StartTask(void *argument);
+void Commander_StartTask(void *argument);
+void Debug_StartTask(void *argument);
+void Buzzer_StartTask(void *argument);
+void Health_StartTask(void *argument);
+void AC_StartTask(void *argument);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -82,20 +87,12 @@ void AHRS_StartTask(void *argument);
 #define LED2_GPIO_Port GPIOF
 #define LED3_Pin GPIO_PIN_4
 #define LED3_GPIO_Port GPIOF
-#define BUZZER_Pin GPIO_PIN_6
-#define BUZZER_GPIO_Port GPIOF
-#define SERVO5_Pin GPIO_PIN_8
-#define SERVO5_GPIO_Port GPIOF
-#define SERVO6_Pin GPIO_PIN_9
-#define SERVO6_GPIO_Port GPIOF
 #define MCO_Pin GPIO_PIN_0
 #define MCO_GPIO_Port GPIOH
 #define USART2_CTS_Pin GPIO_PIN_0
 #define USART2_CTS_GPIO_Port GPIOA
-#define SERVO1_Pin GPIO_PIN_1
-#define SERVO1_GPIO_Port GPIOA
-#define SERVO2_Pin GPIO_PIN_2
-#define SERVO2_GPIO_Port GPIOA
+#define BUZZER_Pin GPIO_PIN_1
+#define BUZZER_GPIO_Port GPIOA
 #define USART2_RX_Pin GPIO_PIN_3
 #define USART2_RX_GPIO_Port GPIOA
 #define SPI1_SCK_Pin GPIO_PIN_5
@@ -124,10 +121,18 @@ void AHRS_StartTask(void *argument);
 #define UART7_RX_GPIO_Port GPIOE
 #define UART7_TX_Pin GPIO_PIN_8
 #define UART7_TX_GPIO_Port GPIOE
+#define SERVO4_Pin GPIO_PIN_9
+#define SERVO4_GPIO_Port GPIOE
+#define SERVO1_Pin GPIO_PIN_11
+#define SERVO1_GPIO_Port GPIOE
+#define SERVO2_Pin GPIO_PIN_13
+#define SERVO2_GPIO_Port GPIOE
 #define SERVO3_Pin GPIO_PIN_14
-#define SERVO3_GPIO_Port GPIOB
-#define SERVO4_Pin GPIO_PIN_15
-#define SERVO4_GPIO_Port GPIOB
+#define SERVO3_GPIO_Port GPIOE
+#define SERVO5_Pin GPIO_PIN_14
+#define SERVO5_GPIO_Port GPIOB
+#define SERVO6_Pin GPIO_PIN_15
+#define SERVO6_GPIO_Port GPIOB
 #define STLK_RX_Pin GPIO_PIN_8
 #define STLK_RX_GPIO_Port GPIOD
 #define STLK_TX_Pin GPIO_PIN_9

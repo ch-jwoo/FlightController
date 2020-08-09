@@ -106,17 +106,15 @@ int main(void)
   MX_USART2_UART_Init();
   MX_I2C2_Init();
   MX_TIM2_Init();
-  MX_TIM10_Init();
   MX_UART8_Init();
   MX_SDIO_SD_Init();
   MX_FATFS_Init();
   MX_TIM9_Init();
-  MX_TIM13_Init();
-  MX_TIM14_Init();
   MX_TIM5_Init();
   MX_TIM8_Init();
   MX_TIM12_Init();
   MX_SPI1_Init();
+  MX_TIM1_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -192,44 +190,41 @@ void SystemClock_Config(void)
   */
 static void MX_NVIC_Init(void)
 {
-  /* I2C1_ER_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(I2C1_ER_IRQn, 1, 0);
-  HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
   /* UART7_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(UART7_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(UART7_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(UART7_IRQn);
   /* I2C2_EV_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(I2C2_EV_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(I2C2_EV_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(I2C2_EV_IRQn);
   /* I2C2_ER_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(I2C2_ER_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(I2C2_ER_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(I2C2_ER_IRQn);
   /* SDIO_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(SDIO_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(SDIO_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(SDIO_IRQn);
   /* DMA1_Stream3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream3_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(DMA1_Stream3_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);
   /* DMA1_Stream6_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
   /* DMA1_Stream5_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 1, 0);
+  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
   /* DMA2_Stream3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
   /* DMA2_Stream6_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream6_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream6_IRQn);
   /* TIM1_BRK_TIM9_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(TIM1_BRK_TIM9_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(TIM1_BRK_TIM9_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(TIM1_BRK_TIM9_IRQn);
   /* TIM2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(TIM2_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(TIM2_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(TIM2_IRQn);
   /* UART8_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(UART8_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(UART8_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(UART8_IRQn);
 }
 

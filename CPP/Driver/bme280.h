@@ -121,7 +121,7 @@ extern BME280_t bme280;
 
 void BME280_init(I2C_HandleTypeDef *hi2c, uint8_t Posr, uint8_t Hosr, uint8_t Tosr, uint8_t Mode, uint8_t IIRFilter, uint8_t SBy);
 void BME280_readIT();
-void BME280_i2cRxCpltCallback();
+uint8_t BME280_i2cRxCpltCallback();
 
 int32_t BME280_readTemperature();
 int32_t BME280_readPressure();

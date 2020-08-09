@@ -1,13 +1,14 @@
 #ifndef __SENSORBARO__H
 #define __SENSORBARO__H
 
-#include "MsgBus/MsgType.hpp"
-#include "MsgBus/MsgBus.hpp"
+#include <MsgBus/MsgBus.h>
+#include <MsgBus/MsgType.h>
 #include "Usec.h"
+#include "Utils/Freq.h"
 
 namespace FC{
 
-class SensorBaro{
+class SensorBaro : public Freq<SensorBaro>{
 public:
     void setBaro(float pressure/*[hPa]*/, float temperature/*[degC]*/);
 private:
@@ -21,6 +22,9 @@ void SensorBaro::setBaro(float pressure, float temperature){
 	this->barometer.temperature = temperature;
 
 	msgBus.setBarometer(this->barometer);
+
+	/* Freq class variable */
+	freqCnt++;
 }
 
 }

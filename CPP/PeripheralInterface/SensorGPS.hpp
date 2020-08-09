@@ -1,14 +1,15 @@
 #ifndef __SENSORGPS__H
 #define __SENSORGPS__H
 
-#include "MsgBus/MsgType.hpp"
-#include "MsgBus/MsgBus.hpp"
+#include <MsgBus/MsgBus.h>
+#include <MsgBus/MsgType.h>
 #include "Usec.h"
 #include "cmath"
+#include "Utils/Freq.h"
 
 namespace FC{
 
-class SensorGPS{
+class SensorGPS : public Freq<SensorGPS>{
 public:
     void setGPS(double lat, double lon, float alt/*sea level altitude [m]*/,
                 float vel/*[m/s]*/, float direction/*[deg]*/, float hdop, float vdop,
@@ -46,6 +47,10 @@ void SensorGPS::setGPS(double lat, double lon, float alt,
 	this->gps.fixType = fixType;
 
 	msgBus.setGPS(this->gps);
+
+	/* Freq class variable */
+	freqCnt++;
+
 }
 
 

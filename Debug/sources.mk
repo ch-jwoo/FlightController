@@ -29,7 +29,11 @@ CPP_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+CPP/Actuator \
 CPP/Driver \
+CPP/Lib/MatlabAttitudeController \
+CPP/Module \
+CPP/MsgBus \
 CPP \
 Core/Src \
 Core/Startup \

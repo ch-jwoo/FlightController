@@ -56,8 +56,8 @@ void BME280_readIT(){
 
 }
 
-void BME280_i2cRxCpltCallback(){
-	if(bm_i2cFlag != bm_i2cBME280) return;
+uint8_t BME280_i2cRxCpltCallback(){
+	if(bm_i2cFlag != bm_i2cBME280) return 0;
     bme280.countP = (int32_t) (((int32_t) bme280.buf[0] << 24 | (int32_t) bme280.buf[1] << 16 | (int32_t) bme280.buf[2] << 8) >> 12);
     bme280.countT = (int32_t) (((int32_t) bme280.buf[3] << 24 | (int32_t) bme280.buf[4] << 16 | (int32_t) bme280.buf[5] << 8) >> 12);
 
@@ -68,6 +68,7 @@ void BME280_i2cRxCpltCallback(){
 //    bme280.alt = 44330 * (1.0 - pow(bme280.P / bme280.base_P, 0.1903));
 
     bm_i2cFlag = bm_i2cIdle;
+    return 1;
 }
 
 uint8_t BME280_getChipID(){

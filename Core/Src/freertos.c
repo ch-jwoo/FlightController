@@ -27,6 +27,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "timers.h"
+#include "freertos.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -85,7 +86,7 @@ const osThreadAttr_t MPU9250_Task_attributes = {
   .stack_size = sizeof(MPU9250_TaskBuffer),
   .cb_mem = &MPU9250_TaskControlBlock,
   .cb_size = sizeof(MPU9250_TaskControlBlock),
-  .priority = (osPriority_t) osPriorityRealtime3,
+  .priority = (osPriority_t) osPriorityRealtime,
 };
 /* Definitions for BME280_Task */
 osThreadId_t BME280_TaskHandle;
@@ -97,7 +98,7 @@ const osThreadAttr_t BME280_Task_attributes = {
   .stack_size = sizeof(BME280_TaskBuffer),
   .cb_mem = &BME280_TaskControlBlock,
   .cb_size = sizeof(BME280_TaskControlBlock),
-  .priority = (osPriority_t) osPriorityRealtime2,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for IST8310_Task */
 osThreadId_t IST8310_TaskHandle;
@@ -109,7 +110,7 @@ const osThreadAttr_t IST8310_Task_attributes = {
   .stack_size = sizeof(IST8310_TaskBuffer),
   .cb_mem = &IST8310_TaskControlBlock,
   .cb_size = sizeof(IST8310_TaskControlBlock),
-  .priority = (osPriority_t) osPriorityRealtime2,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for SD_Task */
 osThreadId_t SD_TaskHandle;
@@ -121,7 +122,7 @@ const osThreadAttr_t SD_Task_attributes = {
   .stack_size = sizeof(SD_TaskBuffer),
   .cb_mem = &SD_TaskControlBlock,
   .cb_size = sizeof(SD_TaskControlBlock),
-  .priority = (osPriority_t) osPriorityRealtime,
+  .priority = (osPriority_t) osPriorityHigh7,
 };
 /* Definitions for AHRS_Task */
 osThreadId_t AHRS_TaskHandle;
@@ -133,7 +134,67 @@ const osThreadAttr_t AHRS_Task_attributes = {
   .stack_size = sizeof(AHRS_TaskBuffer),
   .cb_mem = &AHRS_TaskControlBlock,
   .cb_size = sizeof(AHRS_TaskControlBlock),
-  .priority = (osPriority_t) osPriorityRealtime1,
+  .priority = (osPriority_t) osPriorityRealtime,
+};
+/* Definitions for Commander_Task */
+osThreadId_t Commander_TaskHandle;
+uint32_t Commander_TaskBuffer[ 512 ];
+osStaticThreadDef_t Commander_TaskControlBlock;
+const osThreadAttr_t Commander_Task_attributes = {
+  .name = "Commander_Task",
+  .stack_mem = &Commander_TaskBuffer[0],
+  .stack_size = sizeof(Commander_TaskBuffer),
+  .cb_mem = &Commander_TaskControlBlock,
+  .cb_size = sizeof(Commander_TaskControlBlock),
+  .priority = (osPriority_t) osPriorityRealtime,
+};
+/* Definitions for Debug_myTask */
+osThreadId_t Debug_myTaskHandle;
+uint32_t Debug_myTaskBuffer[ 128 ];
+osStaticThreadDef_t Debug_myTaskControlBlock;
+const osThreadAttr_t Debug_myTask_attributes = {
+  .name = "Debug_myTask",
+  .stack_mem = &Debug_myTaskBuffer[0],
+  .stack_size = sizeof(Debug_myTaskBuffer),
+  .cb_mem = &Debug_myTaskControlBlock,
+  .cb_size = sizeof(Debug_myTaskControlBlock),
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for Buzzer_Task */
+osThreadId_t Buzzer_TaskHandle;
+uint32_t Buzzer_TaskBuffer[ 512 ];
+osStaticThreadDef_t Buzzer_TaskControlBlock;
+const osThreadAttr_t Buzzer_Task_attributes = {
+  .name = "Buzzer_Task",
+  .stack_mem = &Buzzer_TaskBuffer[0],
+  .stack_size = sizeof(Buzzer_TaskBuffer),
+  .cb_mem = &Buzzer_TaskControlBlock,
+  .cb_size = sizeof(Buzzer_TaskControlBlock),
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for Health_Task */
+osThreadId_t Health_TaskHandle;
+uint32_t Health_TaskBuffer[ 128 ];
+osStaticThreadDef_t Health_TaskControlBlock;
+const osThreadAttr_t Health_Task_attributes = {
+  .name = "Health_Task",
+  .stack_mem = &Health_TaskBuffer[0],
+  .stack_size = sizeof(Health_TaskBuffer),
+  .cb_mem = &Health_TaskControlBlock,
+  .cb_size = sizeof(Health_TaskControlBlock),
+  .priority = (osPriority_t) osPriorityRealtime,
+};
+/* Definitions for AC_Task */
+osThreadId_t AC_TaskHandle;
+uint32_t AC_TaskBuffer[ 128 ];
+osStaticThreadDef_t AC_TaskControlBlock;
+const osThreadAttr_t AC_Task_attributes = {
+  .name = "AC_Task",
+  .stack_mem = &AC_TaskBuffer[0],
+  .stack_size = sizeof(AC_TaskBuffer),
+  .cb_mem = &AC_TaskControlBlock,
+  .cb_size = sizeof(AC_TaskControlBlock),
+  .priority = (osPriority_t) osPriorityLow,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -147,6 +208,11 @@ extern void BME280_StartTask(void *argument);
 extern void IST8310_StartTask(void *argument);
 extern void SD_StartTask(void *argument);
 extern void AHRS_StartTask(void *argument);
+extern void Commander_StartTask(void *argument);
+extern void Debug_StartTask(void *argument);
+extern void Buzzer_StartTask(void *argument);
+extern void Health_StartTask(void *argument);
+extern void AC_StartTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -169,14 +235,6 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
-  const uint8_t MPU9250_UPDATE_HZ = 200;
-  const uint8_t BME280_UPDATE_HZ = 50;
-  const uint8_t IST8310_UPDATE_HZ = 100;
-
-  const uint32_t MPU9250_TICK = 1000/MPU9250_UPDATE_HZ;
-  const uint32_t BME280_TICK = 1000/BME280_UPDATE_HZ;
-  const uint32_t IST8310_TICK = 1000/IST8310_UPDATE_HZ;
 
 //  if( osTimerStart( MPU9250_TimerHandle, MPU9250_TICK ) != osOK )
 //  {
@@ -216,6 +274,21 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of AHRS_Task */
   AHRS_TaskHandle = osThreadNew(AHRS_StartTask, NULL, &AHRS_Task_attributes);
+
+  /* creation of Commander_Task */
+  Commander_TaskHandle = osThreadNew(Commander_StartTask, NULL, &Commander_Task_attributes);
+
+  /* creation of Debug_myTask */
+  Debug_myTaskHandle = osThreadNew(Debug_StartTask, NULL, &Debug_myTask_attributes);
+
+  /* creation of Buzzer_Task */
+  Buzzer_TaskHandle = osThreadNew(Buzzer_StartTask, NULL, &Buzzer_Task_attributes);
+
+  /* creation of Health_Task */
+  Health_TaskHandle = osThreadNew(Health_StartTask, NULL, &Health_Task_attributes);
+
+  /* creation of AC_Task */
+  AC_TaskHandle = osThreadNew(AC_StartTask, NULL, &AC_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

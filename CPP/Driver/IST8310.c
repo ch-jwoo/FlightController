@@ -40,8 +40,8 @@ void IST8310_updataIT(){
 		else osDelay(1);
 	}
 }
-void IST8310_i2cRxCpltCallback(){
-	if(bm_i2cFlag != bm_i2cIST8310) return;
+uint8_t IST8310_i2cRxCpltCallback(){
+	if(bm_i2cFlag != bm_i2cIST8310) return 0;
 
 	bm_i2cFlag = bm_i2cIdle;
 
@@ -54,7 +54,7 @@ void IST8310_i2cRxCpltCallback(){
 		ist8310.count.y > IST8310_MAX_VAL_XY || ist8310.count.y < IST8310_MIN_VAL_XY ||
 		ist8310.count.z > IST8310_MAX_VAL_Z  || ist8310.count.z < IST8310_MIN_VAL_Z)
 	{
-		return;
+		return 0;
 	}
 
 	/*
@@ -66,6 +66,7 @@ void IST8310_i2cRxCpltCallback(){
 	ist8310.raw[0] = (float)(ist8310.count.y);
 	ist8310.raw[1] = (float)(ist8310.count.x);
 	ist8310.raw[2] = (float)(ist8310.count.z);
+	return 1;
 }
 
 void IST8310_write(uint8_t address, uint8_t *data, uint8_t count){
