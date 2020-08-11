@@ -98,7 +98,7 @@ const osThreadAttr_t BME280_Task_attributes = {
   .stack_size = sizeof(BME280_TaskBuffer),
   .cb_mem = &BME280_TaskControlBlock,
   .cb_size = sizeof(BME280_TaskControlBlock),
-  .priority = (osPriority_t) osPriorityHigh,
+  .priority = (osPriority_t) osPriorityRealtime,
 };
 /* Definitions for IST8310_Task */
 osThreadId_t IST8310_TaskHandle;
@@ -110,7 +110,7 @@ const osThreadAttr_t IST8310_Task_attributes = {
   .stack_size = sizeof(IST8310_TaskBuffer),
   .cb_mem = &IST8310_TaskControlBlock,
   .cb_size = sizeof(IST8310_TaskControlBlock),
-  .priority = (osPriority_t) osPriorityHigh,
+  .priority = (osPriority_t) osPriorityRealtime,
 };
 /* Definitions for SD_Task */
 osThreadId_t SD_TaskHandle;
@@ -146,7 +146,7 @@ const osThreadAttr_t Commander_Task_attributes = {
   .stack_size = sizeof(Commander_TaskBuffer),
   .cb_mem = &Commander_TaskControlBlock,
   .cb_size = sizeof(Commander_TaskControlBlock),
-  .priority = (osPriority_t) osPriorityRealtime,
+  .priority = (osPriority_t) osPriorityHigh7,
 };
 /* Definitions for Debug_myTask */
 osThreadId_t Debug_myTaskHandle;
@@ -186,7 +186,7 @@ const osThreadAttr_t Health_Task_attributes = {
 };
 /* Definitions for AC_Task */
 osThreadId_t AC_TaskHandle;
-uint32_t AC_TaskBuffer[ 128 ];
+uint32_t AC_TaskBuffer[ 4096 ];
 osStaticThreadDef_t AC_TaskControlBlock;
 const osThreadAttr_t AC_Task_attributes = {
   .name = "AC_Task",

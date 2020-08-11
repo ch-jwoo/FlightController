@@ -12,33 +12,33 @@
 #include "Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h"
 #include "Actuator/Motor.h"
 #include "freertosVariable.h"
+#include "Utils/Freq.h"
 
 namespace FC {
 
 enum AcSignal{
-	AcAHRS = 0x1
+	AC_fromAHRS = 0x1
 };
 
-extern osThreadId_t AC_TaskHandle;
-
-class ModuleAttitudeController {
+class ModuleAttitudeController : public px4_AlgorithmModelClass, public Freq<ModuleAttitudeController>{
 public:
 	static void main(){
 		ModuleAttitudeController attitudeController;
 		while(1){
 			/* wait AHRS set */
-			osThreadFlagsWait(0x1U, osFlagsWaitAll, osWaitForever);
+			osThreadFlagsWait(AC_fromAHRS, osFlagsWaitAny, osWaitForever);
 			attitudeController.oneStep();
+			freqCnt++;
 		}
 	}
 
 	void oneStep();
 
 	static inline void setSignal(enum AcSignal signal){
-		if(signal == AcAHRS) osThreadFlagsSet(AC_TaskHandle, AcAHRS);
+		if(signal == AC_fromAHRS) osThreadFlagsSet(AC_TaskHandle, AC_fromAHRS);
 	}
 
-	ModuleAttitudeController() = default;
+	ModuleAttitudeController();
 	~ModuleAttitudeController() = default;
 	ModuleAttitudeController(const ModuleAttitudeController &other) = delete;
 	ModuleAttitudeController(ModuleAttitudeController &&other) = delete;
@@ -58,9 +58,22 @@ private:
 	float targetYawRate;
 	uint16_t throttle;
 
+	/*
+	 *  set targetRoll, targetPitch, targetYawRate, throttle from Position Controller
+	 *  this function change private member variable
+	 */
 	void setFromPositionController();
+
+	/*
+	 *  set targetRoll, targetPitch, targetYawRate, throttle from Remote Controller
+	 *  this function change private member variable
+	 */
 	void setFromRC();
 
+	/*
+	 *  set motor pwm
+	 *  \param[in]		pwm1 ~ pwm6		motor pwm
+	 */
 	void setMotor(uint16_t pwm1, uint16_t pwm2, uint16_t pwm3, uint16_t pwm4, uint16_t pwm5, uint16_t pwm6);
 };
 

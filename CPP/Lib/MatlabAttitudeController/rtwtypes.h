@@ -1,26 +1,26 @@
-/*
- * Academic License - for use in teaching, academic research, and meeting
- * course requirements at degree granting institutions only.  Not for
- * government, commercial, or other organizational use.
- *
- * File: rtwtypes.h
- *
- * Code generated for Simulink model 'Second_att_control_codeblock_fly'.
- *
- * Model version                  : 1.29
- * Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
- * C/C++ source code generated on : Sun Aug  9 19:55:33 2020
- *
- * Target selection: ert.tlc
- * Embedded hardware selection: ARM Compatible->ARM Cortex
- * Code generation objectives: Unspecified
- * Validation result: Not run
- */
+//
+// Academic License - for use in teaching, academic research, and meeting
+// course requirements at degree granting institutions only.  Not for
+// government, commercial, or other organizational use.
+//
+// File: rtwtypes.h
+//
+// Code generated for Simulink model 'Second_att_control_codeblock_fly'.
+//
+// Model version                  : 1.29
+// Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
+// C/C++ source code generated on : Mon Aug 10 17:49:21 2020
+//
+// Target selection: ert.tlc
+// Embedded hardware selection: ARM Compatible->ARM Cortex
+// Code generation objectives: Unspecified
+// Validation result: Not run
+//
 
 #ifndef RTWTYPES_H
 #define RTWTYPES_H
 
-/* Logical type definitions */
+// Logical type definitions
 #if (!defined(__cplusplus))
 #  ifndef false
 #   define false                       (0U)
@@ -31,23 +31,23 @@
 #  endif
 #endif
 
-/*=======================================================================*
- * Target hardware information
- *   Device type: ARM Compatible->ARM Cortex
- *   Number of bits:     char:   8    short:   16    int:  32
- *                       long:  32
- *                       native word size:  32
- *   Byte ordering: LittleEndian
- *   Signed integer division rounds to: Zero
- *   Shift right on a signed integer as arithmetic shift: on
- *=======================================================================*/
+//=======================================================================*
+//  Target hardware information
+//    Device type: ARM Compatible->ARM Cortex
+//    Number of bits:     char:   8    short:   16    int:  32
+//                        long:  32
+//                        native word size:  32
+//    Byte ordering: LittleEndian
+//    Signed integer division rounds to: Zero
+//    Shift right on a signed integer as arithmetic shift: on
+// =======================================================================
 
-/*=======================================================================*
- * Fixed width word size data types:                                     *
- *   int8_T, int16_T, int32_T     - signed 8, 16, or 32 bit integers     *
- *   uint8_T, uint16_T, uint32_T  - unsigned 8, 16, or 32 bit integers   *
- *   real32_T, real64_T           - 32 and 64 bit floating point numbers *
- *=======================================================================*/
+//=======================================================================*
+//  Fixed width word size data types:                                     *
+//    int8_T, int16_T, int32_T     - signed 8, 16, or 32 bit integers     *
+//    uint8_T, uint16_T, uint32_T  - unsigned 8, 16, or 32 bit integers   *
+//    real32_T, real64_T           - 32 and 64 bit floating point numbers *
+// =======================================================================
 typedef signed char int8_T;
 typedef unsigned char uint8_T;
 typedef short int16_T;
@@ -57,10 +57,10 @@ typedef unsigned int uint32_T;
 typedef float real32_T;
 typedef double real64_T;
 
-/*===========================================================================*
- * Generic type definitions: boolean_T, char_T, byte_T, int_T, uint_T,       *
- *                           real_T, time_T, ulong_T.                        *
- *===========================================================================*/
+//===========================================================================*
+//  Generic type definitions: boolean_T, char_T, byte_T, int_T, uint_T,       *
+//                            real_T, time_T, ulong_T.                        *
+// ===========================================================================
 typedef double real_T;
 typedef double time_T;
 typedef unsigned char boolean_T;
@@ -71,9 +71,9 @@ typedef char char_T;
 typedef unsigned char uchar_T;
 typedef char_T byte_T;
 
-/*===========================================================================*
- * Complex number type definitions                                           *
- *===========================================================================*/
+//===========================================================================*
+//  Complex number type definitions                                           *
+// ===========================================================================
 #define CREAL_T
 
 typedef struct {
@@ -133,11 +133,11 @@ typedef struct {
   uint32_T im;
 } cuint32_T;
 
-/*=======================================================================*
- * Min and Max:                                                          *
- *   int8_T, int16_T, int32_T     - signed 8, 16, or 32 bit integers     *
- *   uint8_T, uint16_T, uint32_T  - unsigned 8, 16, or 32 bit integers   *
- *=======================================================================*/
+//=======================================================================*
+//  Min and Max:                                                          *
+//    int8_T, int16_T, int32_T     - signed 8, 16, or 32 bit integers     *
+//    uint8_T, uint16_T, uint32_T  - unsigned 8, 16, or 32 bit integers   *
+// =======================================================================
 #define MAX_int8_T                     ((int8_T)(127))
 #define MIN_int8_T                     ((int8_T)(-128))
 #define MAX_uint8_T                    ((uint8_T)(255U))
@@ -148,13 +148,13 @@ typedef struct {
 #define MIN_int32_T                    ((int32_T)(-2147483647-1))
 #define MAX_uint32_T                   ((uint32_T)(0xFFFFFFFFU))
 
-/* Block D-Work pointer type */
+// Block D-Work pointer type
 typedef void * pointer_T;
 
-#endif                                 /* RTWTYPES_H */
+#endif                                 // RTWTYPES_H
 
-/*
- * File trailer for generated code.
- *
- * [EOF]
- */
+//
+// File trailer for generated code.
+//
+// [EOF]
+//

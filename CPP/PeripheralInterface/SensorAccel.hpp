@@ -26,7 +26,7 @@ void SensorAccel::setAccel(float x, float y, float z){
 	this->bodyAccel.xyz[1] = y;
 	this->bodyAccel.xyz[2] = z;
 	msgBus.setBodyAccel(this->bodyAccel);
-	ModuleAHRS::setSignal(AhrsAccel);
+	ModuleAHRS::setSignal(AHRS_fromAccel);
 
 	/* Freq class variable */
 	freqCnt++;

@@ -7,12 +7,13 @@
 
 #include "freertosVariable.h"
 #include "Utils/Freq.h"
+#include "Module/ModuleAttitudeController.h"
 
 namespace FC{
 
 enum AhrsSignal{
-	AhrsAccel = 0x1,
-	AhrsGyro = 0x2
+	AHRS_fromAccel = 0x1,
+	AHRS_fromGyro = 0x2
 };
 
 class ModuleAHRS : public Freq<ModuleAHRS>{
@@ -22,13 +23,6 @@ public:
 	 *  initialize member variable
 	 */
 	ModuleAHRS();
-
-	/*
-	 *  ModuleAHRS main function
-	 *  this function is called by CMSIS task function
-	 *	wait signal from accelerometer and gyrometer
-	 */
-    static void main();
 
     /*
      *  calculate madgwick
@@ -41,11 +35,26 @@ public:
      */
     static inline void setSignal(enum AhrsSignal signal){
     	switch(signal){
-    	case AhrsAccel:
-        	osThreadFlagsSet(AHRS_TaskHandle, AhrsAccel);
+    	case AHRS_fromAccel:
+        	osThreadFlagsSet(AHRS_TaskHandle, AHRS_fromAccel);
         	break;
-    	case AhrsGyro:
-        	osThreadFlagsSet(AHRS_TaskHandle, AhrsGyro);
+    	case AHRS_fromGyro:
+        	osThreadFlagsSet(AHRS_TaskHandle, AHRS_fromGyro);
+    	}
+    }
+
+	/*
+	 *  ModuleAHRS main function
+	 *  this function is called by CMSIS task function
+	 *	wait signal from accelerometer and gyrometer
+	 */
+    static void main(){
+    	ModuleAHRS moduleAHRS;
+    	while(1){
+    		/* wait accel, gyro value set */
+    		osThreadFlagsWait(0x3U, osFlagsWaitAll, osWaitForever);
+    		moduleAHRS.oneStep();
+    		ModuleAttitudeController::setSignal(AC_fromAHRS);
     	}
     }
 

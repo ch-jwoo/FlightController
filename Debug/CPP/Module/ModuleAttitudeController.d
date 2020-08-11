@@ -22,6 +22,8 @@ CPP/Module/ModuleAttitudeController.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
@@ -54,7 +56,7 @@ CPP/Module/ModuleAttitudeController.o: \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- C:/STM/CPPTEST/Fcboot/Usec.h
+ C:/STM/CPPTEST/CPP/Utils/Freq.h C:/STM/CPPTEST/Fcboot/Usec.h
 
 C:/STM/CPPTEST/CPP/Module/ModuleAttitudeController.h:
 
@@ -103,6 +105,10 @@ C:/STM/CPPTEST/CPP/MsgBus/MsgType.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h:
 
@@ -171,5 +177,7 @@ C:/STM/CPPTEST/CPP/Actuator/Motor.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
+
+C:/STM/CPPTEST/CPP/Utils/Freq.h:
 
 C:/STM/CPPTEST/Fcboot/Usec.h:

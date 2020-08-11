@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "adc.h"
 #include "dma.h"
 #include "fatfs.h"
 #include "i2c.h"
@@ -115,6 +116,7 @@ int main(void)
   MX_TIM12_Init();
   MX_SPI1_Init();
   MX_TIM1_Init();
+  MX_ADC1_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -194,10 +196,10 @@ static void MX_NVIC_Init(void)
   HAL_NVIC_SetPriority(UART7_IRQn, 10, 0);
   HAL_NVIC_EnableIRQ(UART7_IRQn);
   /* I2C2_EV_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(I2C2_EV_IRQn, 10, 0);
+  HAL_NVIC_SetPriority(I2C2_EV_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(I2C2_EV_IRQn);
   /* I2C2_ER_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(I2C2_ER_IRQn, 10, 0);
+  HAL_NVIC_SetPriority(I2C2_ER_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(I2C2_ER_IRQn);
   /* SDIO_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(SDIO_IRQn, 10, 0);

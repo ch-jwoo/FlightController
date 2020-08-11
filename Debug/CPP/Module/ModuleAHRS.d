@@ -20,6 +20,8 @@ CPP/Module/ModuleAHRS.o: ../CPP/Module/ModuleAHRS.cpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
@@ -51,6 +53,11 @@ CPP/Module/ModuleAHRS.o: ../CPP/Module/ModuleAHRS.cpp \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  ../Core/Inc/freertosVariable.h C:/STM/CPPTEST/CPP/Utils/Freq.h \
+ C:/STM/CPPTEST/CPP/Module/ModuleAttitudeController.h \
+ C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h \
+ C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/rtwtypes.h \
+ C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h \
+ C:/STM/CPPTEST/CPP/Actuator/Motor.h \
  C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/Dcm.hpp \
  C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/math.hpp \
  C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/stdlib_imports.hpp \
@@ -68,12 +75,7 @@ CPP/Module/ModuleAHRS.o: ../CPP/Module/ModuleAHRS.cpp \
  C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/LeastSquaresSolver.hpp \
  C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/Dual.hpp \
  C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/PseudoInverse.hpp \
- C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/PseudoInverse.hxx \
- C:/STM/CPPTEST/CPP/Module/ModuleAttitudeController.h \
- C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h \
- C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/rtwtypes.h \
- C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h \
- C:/STM/CPPTEST/CPP/Actuator/Motor.h
+ C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/PseudoInverse.hxx
 
 C:/STM/CPPTEST/CPP/MsgBus/msgBus.h:
 
@@ -120,6 +122,10 @@ C:/STM/CPPTEST/CPP/MsgBus/MsgType.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h:
 
@@ -189,6 +195,16 @@ C:/STM/CPPTEST/CPP/MsgBus/MsgBus.h:
 
 C:/STM/CPPTEST/CPP/Utils/Freq.h:
 
+C:/STM/CPPTEST/CPP/Module/ModuleAttitudeController.h:
+
+C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h:
+
+C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/rtwtypes.h:
+
+C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h:
+
+C:/STM/CPPTEST/CPP/Actuator/Motor.h:
+
 C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/Dcm.hpp:
 
 C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/math.hpp:
@@ -224,13 +240,3 @@ C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/Dual.hpp:
 C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/PseudoInverse.hpp:
 
 C:/STM/CPPTEST/CPP/Lib/Matrix/matrix/PseudoInverse.hxx:
-
-C:/STM/CPPTEST/CPP/Module/ModuleAttitudeController.h:
-
-C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h:
-
-C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/rtwtypes.h:
-
-C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h:
-
-C:/STM/CPPTEST/CPP/Actuator/Motor.h:

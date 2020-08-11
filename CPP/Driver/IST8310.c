@@ -31,14 +31,11 @@ void IST8310(I2C_HandleTypeDef *hi2c){
  *  150hz gogo
  */
 void IST8310_updataIT(){
-	while(1){
-		if(bm_i2cFlag == bm_i2cIdle){
-			HAL_I2C_Mem_Read_IT(IST8310_I2C, IST8310_BUS_I2C_ADDR, IST8310_ADDR_DATA_OUT_X_LSB, 1, (uint8_t*)&ist8310.buf, sizeof(ist8310.buf));
-			bm_i2cFlag = bm_i2cIST8310;
-			return;
-		}
-		else osDelay(1);
-	}
+	if(bm_i2cFlag != bm_i2cIdle) return;
+
+	HAL_I2C_Mem_Read_IT(IST8310_I2C, IST8310_BUS_I2C_ADDR, IST8310_ADDR_DATA_OUT_X_LSB, 1, (uint8_t*)&ist8310.buf, sizeof(ist8310.buf));
+	bm_i2cFlag = bm_i2cIST8310;
+
 }
 uint8_t IST8310_i2cRxCpltCallback(){
 	if(bm_i2cFlag != bm_i2cIST8310) return 0;

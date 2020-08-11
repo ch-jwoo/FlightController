@@ -24,7 +24,7 @@ void SensorGyro::setGyro(float x, float y, float z){
 	this->bodyAngularVelocity.xyz[1] = y;
 	this->bodyAngularVelocity.xyz[2] = z;
 	msgBus.setBodyAngularVelocity(this->bodyAngularVelocity);
-	ModuleAHRS::setSignal(AhrsGyro);
+	ModuleAHRS::setSignal(AHRS_fromGyro);
 
 	freqCnt++;
 }

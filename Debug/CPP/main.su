@@ -22,7 +22,10 @@ MsgBus.h:54:5:bool FC::MsgBus::getHealth(FC::Health*)	32	static
 MsgBus.h:54:5:void FC::MsgBus::setHealth(const FC::Health&)	24	static
 Usec.h:19:26:uint64_t microsecond()	12	static
 Usec.h:23:26:uint32_t millisecond()	8	static
-ModuleAHRS.h:42:24:static void FC::ModuleAHRS::setSignal(FC::AhrsSignal)	16	static
+ModuleAttitudeController.h:25:14:static void FC::ModuleAttitudeController::main()	488	static
+ModuleAttitudeController.h:37:21:static void FC::ModuleAttitudeController::setSignal(FC::AcSignal)	16	static
+ModuleAHRS.h:36:24:static void FC::ModuleAHRS::setSignal(FC::AhrsSignal)	16	static
+ModuleAHRS.h:51:17:static void FC::ModuleAHRS::main()	176	static
 SensorAccel.hpp:22:6:void FC::SensorAccel::setAccel(float, float, float)	32	static
 SensorGyro.hpp:20:6:void FC::SensorGyro::setGyro(float, float, float)	32	static
 SensorMag.hpp:23:6:void FC::SensorMag::setMag(float, float, float)	32	static
@@ -31,20 +34,21 @@ SensorBaro.hpp:19:6:void FC::SensorBaro::setBaro(float, float)	32	static
 RC.hpp:26:6:void FC::RC::setRC(uint16_t, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t)	56	static
 ModuleHealth.h:18:14:static void FC::ModuleHealth::main()	48	static
 ModuleSD.h:24:14:static void FC::ModuleSD::main()	504	static
-main.cpp:66:5:int _write(int, unsigned char*, int)	24	static
-main.cpp:73:6:void Health_StartTask(void*)	16	static
-main.cpp:76:6:void Debug_StartTask(void*)	48	static
-main.cpp:91:6:void MPU9250_StartTask(void*)	24	static
-main.cpp:101:6:void BME280_StartTask(void*)	16	static
-main.cpp:107:6:void IST8310_StartTask(void*)	16	static
-main.cpp:113:6:void SD_StartTask(void*)	16	static
-main.cpp:117:6:void AHRS_StartTask(void*)	16	static
-main.cpp:121:6:void Commander_StartTask(void*)	16	static
-main.cpp:125:6:void Buzzer_StartTask(void*)	16	static
-main.cpp:144:6:void cppMain()	24	static
-main.cpp:187:6:void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef*)	16	static
-main.cpp:217:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	80	static
-main.cpp:246:6:void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef*)	16	static
+main.cpp:67:5:int _write(int, unsigned char*, int)	24	static
+main.cpp:74:6:void Health_StartTask(void*)	16	static
+main.cpp:77:6:void Debug_StartTask(void*)	48	static
+main.cpp:93:6:void MPU9250_StartTask(void*)	24	static
+main.cpp:103:6:void BME280_StartTask(void*)	16	static
+main.cpp:109:6:void IST8310_StartTask(void*)	16	static
+main.cpp:115:6:void SD_StartTask(void*)	16	static
+main.cpp:119:6:void AHRS_StartTask(void*)	16	static
+main.cpp:123:6:void Commander_StartTask(void*)	16	static
+main.cpp:127:6:void Buzzer_StartTask(void*)	16	static
+main.cpp:131:6:void AC_StartTask(void*)	16	static
+main.cpp:149:6:void cppMain()	24	static
+main.cpp:192:6:void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef*)	16	static
+main.cpp:222:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	80	static
+main.cpp:251:6:void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef*)	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::SensorAccel]	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::SensorGyro]	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::SensorMag]	16	static
@@ -52,5 +56,6 @@ Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::SensorBaro]	
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::SensorGPS]	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::RC]	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::ModuleAHRS]	16	static
-main.cpp:248:1:void __static_initialization_and_destruction_0(int, int)	16	static
-main.cpp:248:1:cpp)	8	static
+Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::ModuleAttitudeController]	16	static
+main.cpp:253:1:void __static_initialization_and_destruction_0(int, int)	16	static
+main.cpp:253:1:cpp)	8	static

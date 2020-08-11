@@ -53,7 +53,6 @@ void BME280_readIT(){
 		bm_i2cFlag = bm_i2cBME280;
 		return;
 	}
-
 }
 
 uint8_t BME280_i2cRxCpltCallback(){

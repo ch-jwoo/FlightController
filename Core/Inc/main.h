@@ -101,6 +101,8 @@ void AC_StartTask(void *argument);
 #define MOTOR5_GPIO_Port GPIOA
 #define SPI1_MOSI_Pin GPIO_PIN_7
 #define SPI1_MOSI_GPIO_Port GPIOA
+#define PCB_SD_DETECT_Pin GPIO_PIN_5
+#define PCB_SD_DETECT_GPIO_Port GPIOC
 #define LD1_Pin GPIO_PIN_0
 #define LD1_GPIO_Port GPIOB
 #define MOTOR7_Pin GPIO_PIN_1

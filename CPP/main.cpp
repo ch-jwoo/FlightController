@@ -38,6 +38,7 @@
 #include <Module/ModuleBuzzer.h>
 #include "Module/ModuleHealth.h"
 #include "Module/ModuleSD.h"
+#include "Module/ModuleAttitudeController.h"
 
 
 
@@ -59,7 +60,7 @@ SensorGPS sensorGPS;
 RC rc;
 
 float attitude;
-uint16_t hzAccel, hzBaro, hzGyro, hzGPS, hzMag, hzAHRS, hzRC;
+uint16_t hzAccel, hzBaro, hzGyro, hzGPS, hzMag, hzAHRS, hzRC, hzAtti;
 uint16_t timeCheck;
 
 //we can use printf
@@ -84,6 +85,7 @@ void Debug_StartTask(void *argument){
 		hzMag = health.mag;
 		hzAHRS = health.ahrs;
 		hzRC = health.rc;
+		hzAtti = health.attitudeController;
 		osDelay(100);
 	}
 }
@@ -125,11 +127,14 @@ void Commander_StartTask(void *argument){
 void Buzzer_StartTask(void *argument){
 	ModuleBuzzer::main();
 }
-//void moduleCommanderMain(void* param){
+
+void AC_StartTask(void *argument){
+	ModuleAttitudeController::main();
 //	while(1){
-//		moduleCommander.main();
+//		osDelay(100);
 //	}
-//}
+}
+
 
 /*
  *  Switch

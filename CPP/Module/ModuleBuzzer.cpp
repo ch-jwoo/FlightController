@@ -34,6 +34,7 @@ void ModuleBuzzer::main() {
 	while(1){
 		if(osMessageQueueGet(Buzzer_QueueHandle, (void*)&rcvResult, NULL, osWaitForever) == osOK){
 			buzzer.commandHandler(rcvResult);
+//			osDelay(10);
 		}
 		else{
 			osMessageQueueReset(Buzzer_QueueHandle);
@@ -51,6 +52,7 @@ ModuleBuzzer::ModuleBuzzer(TIM_HandleTypeDef *htim, uint32_t Channel, uint32_t C
 	  this->htim = htim;
 	  this->Channel = Channel;
 	  this->CLK = CLK/10;		/* 10 : AutoReload Register+1 */
+	__HAL_TIM_SET_PRESCALER(htim, this->CLK / 4000);
 }
 
 
@@ -92,17 +94,18 @@ void ModuleBuzzer::denied(){
 }
 
 void ModuleBuzzer::success(){
-	for (uint8_t i = 0 ; i < sizeof(A)/sizeof(enum notes) ; i++) {
-		__HAL_TIM_SET_PRESCALER(htim, CLK / A[i] * 100);
-		HAL_TIM_PWM_Start(htim, Channel);
-		osDelay(500);
-
-		/* Make each note sound and cut 1 mileecond */
-		HAL_TIM_PWM_Stop(htim, Channel);
-//		__HAL_TIM_SET_COMPARE(htim, Channel, 0);
-		osDelay(10);
-	}
-//	__HAL_TIM_SET_COMPARE(htim, Channel, 0);
+//	for (uint8_t i = 0 ; i < sizeof(A)/sizeof(enum notes) ; i++) {
+////		__HAL_TIM_SET_PRESCALER(htim, CLK / A[i] * 100);
+//		HAL_TIM_PWM_Start(htim, Channel);
+//		osDelay(500);
+//
+//		/* Make each note sound and cut 1 mileecond */
+//		HAL_TIM_PWM_Stop(htim, Channel);
+//		osDelay(10);
+//	}
+	HAL_TIM_PWM_Start(htim, Channel);
+	osDelay(2000);
+	HAL_TIM_PWM_Stop(htim, Channel);
 }
 
 } /* namespace FC */

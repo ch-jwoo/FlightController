@@ -11,7 +11,6 @@
 #include "Lib/Matrix/matrix/Dcm.hpp"
 #include "Lib/Matrix/matrix/Quaternion.hpp"
 #include "cmath"
-#include "Module/ModuleAttitudeController.h"
 
 namespace FC{
 
@@ -29,16 +28,6 @@ ModuleAHRS::ModuleAHRS()
 	, q3{0.0f}
 {
 
-}
-
-void ModuleAHRS::main(){
-	ModuleAHRS moduleAHRS;
-	while(1){
-		/* wait accel, gyro value set */
-		osThreadFlagsWait(0x3U, osFlagsWaitAll, osWaitForever);
-		moduleAHRS.oneStep();
-		ModuleAttitudeController::setSignal(AcAHRS);
-	}
 }
 
 void ModuleAHRS::oneStep(){

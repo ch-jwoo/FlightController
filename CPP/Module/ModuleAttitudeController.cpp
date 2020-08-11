@@ -10,6 +10,10 @@
 
 namespace FC {
 
+ModuleAttitudeController::ModuleAttitudeController(){
+	/* matlab codegen function */
+	initialize();
+}
 
 void ModuleAttitudeController::oneStep(){
 	msgBus.getModeFlag(&modeFlagSub);
@@ -22,22 +26,34 @@ void ModuleAttitudeController::oneStep(){
 		setFromPositionController();
 	}
 
-	Second_att_control_codeblock__U.set_pitch = targetPitch;
-	Second_att_control_codeblock__U.set_roll = targetRoll;
-	Second_att_control_codeblock__U.set_yaw = targetYawRate;
-	Second_att_control_codeblock__U.set_thrust = throttle;
+	ExtU_Second_att_control_codeb_T input;
+	input.set_pitch = targetPitch;
+	input.set_roll = targetRoll;
+	input.set_yaw = targetYawRate;
+	input.set_thrust = throttle;
 
 	msgBus.getAttitude(&attitudeSub);
 	msgBus.getBodyAngularVelocity(&bodyAngularVelocitySub);
 
-	Second_att_control_codeblock__U.Roll = attitudeSub.roll;
-	Second_att_control_codeblock__U.Pitch = attitudeSub.pitch;
-	Second_att_control_codeblock__U.p = bodyAngularVelocitySub.xyz[0];
-	Second_att_control_codeblock__U.q = bodyAngularVelocitySub.xyz[1];
-	Second_att_control_codeblock__U.r = bodyAngularVelocitySub.xyz[2];
+	input.Roll = attitudeSub.roll;
+	input.Pitch = attitudeSub.pitch;
+	input.p = bodyAngularVelocitySub.xyz[0];
+	input.q = bodyAngularVelocitySub.xyz[1];
+	input.r = bodyAngularVelocitySub.xyz[2];
+	input.Arm_cmd = 2000;
 
-	Second_att_control_codeblock_fly_step();
+	/* matlab codegen function */
+	setExternalInputs(&input);
+	step();
+	ExtY_Second_att_control_codeb_T output = getExternalOutputs();
 
+	/* set motor pwm */
+	setMotor((uint16_t)output.PWM_OUT[0],
+			 (uint16_t)output.PWM_OUT[1],
+			 (uint16_t)output.PWM_OUT[2],
+			 (uint16_t)output.PWM_OUT[3],
+			 (uint16_t)output.PWM_OUT[4],
+			 (uint16_t)output.PWM_OUT[5]);
 }
 
 void ModuleAttitudeController::setFromPositionController(){

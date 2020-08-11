@@ -19,6 +19,8 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
@@ -57,6 +59,11 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
  C:/STM/CPPTEST/CPP/MsgBus/MsgBus.h C:/STM/CPPTEST/CPP/MsgBus/MsgType.h \
  C:/STM/CPPTEST/Fcboot/Usec.h C:/STM/CPPTEST/CPP/Module/ModuleAHRS.h \
  ../Core/Inc/freertosVariable.h C:/STM/CPPTEST/CPP/Utils/Freq.h \
+ C:/STM/CPPTEST/CPP/Module/ModuleAttitudeController.h \
+ C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h \
+ C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/rtwtypes.h \
+ C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h \
+ C:/STM/CPPTEST/CPP/Actuator/Motor.h \
  ../CPP/PeripheralInterface/SensorGyro.hpp \
  ../CPP/PeripheralInterface/SensorMag.hpp \
  ../CPP/PeripheralInterface/SensorGPS.hpp \
@@ -70,7 +77,8 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
  ../FATFS/Target/bsp_driver_sd.h ../FATFS/Target/fatfs_platform.h \
  ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h \
- ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/sd_diskio.h
+ ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/sd_diskio.h \
+ ../CPP/Module/ModuleAttitudeController.h
 
 ../Core/Inc/main.h:
 
@@ -113,6 +121,10 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h:
 
@@ -206,6 +218,16 @@ C:/STM/CPPTEST/CPP/Module/ModuleAHRS.h:
 
 C:/STM/CPPTEST/CPP/Utils/Freq.h:
 
+C:/STM/CPPTEST/CPP/Module/ModuleAttitudeController.h:
+
+C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h:
+
+C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/rtwtypes.h:
+
+C:/STM/CPPTEST/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h:
+
+C:/STM/CPPTEST/CPP/Actuator/Motor.h:
+
 ../CPP/PeripheralInterface/SensorGyro.hpp:
 
 ../CPP/PeripheralInterface/SensorMag.hpp:
@@ -245,3 +267,5 @@ C:/STM/CPPTEST/CPP/Module/ModuleBuzzer.h:
 ../Middlewares/Third_Party/FatFs/src/ff.h:
 
 ../FATFS/Target/sd_diskio.h:
+
+../CPP/Module/ModuleAttitudeController.h:

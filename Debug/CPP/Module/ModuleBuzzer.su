@@ -1,8 +1,8 @@
 ModuleBuzzer.cpp:30:6:static void FC::ModuleBuzzer::main()	64	static
-ModuleBuzzer.cpp:45:1:FC::ModuleBuzzer::ModuleBuzzer(TIM_HandleTypeDef*, uint32_t, uint32_t)	24	static
-ModuleBuzzer.cpp:57:6:static bool FC::ModuleBuzzer::sendCommand(FC::BuzzerCommand)	16	static
-ModuleBuzzer.cpp:65:6:void FC::ModuleBuzzer::commandHandler(FC::BuzzerCommand)	16	static
-ModuleBuzzer.cpp:82:6:void FC::ModuleBuzzer::armed()	16	static
-ModuleBuzzer.cpp:86:6:void FC::ModuleBuzzer::disarmed()	16	static
-ModuleBuzzer.cpp:90:6:void FC::ModuleBuzzer::denied()	16	static
-ModuleBuzzer.cpp:94:6:void FC::ModuleBuzzer::success()	24	static
+ModuleBuzzer.cpp:46:1:FC::ModuleBuzzer::ModuleBuzzer(TIM_HandleTypeDef*, uint32_t, uint32_t)	24	static
+ModuleBuzzer.cpp:59:6:static bool FC::ModuleBuzzer::sendCommand(FC::BuzzerCommand)	16	static
+ModuleBuzzer.cpp:67:6:void FC::ModuleBuzzer::commandHandler(FC::BuzzerCommand)	16	static
+ModuleBuzzer.cpp:84:6:void FC::ModuleBuzzer::armed()	16	static
+ModuleBuzzer.cpp:88:6:void FC::ModuleBuzzer::disarmed()	16	static
+ModuleBuzzer.cpp:92:6:void FC::ModuleBuzzer::denied()	16	static
+ModuleBuzzer.cpp:96:6:void FC::ModuleBuzzer::success()	16	static

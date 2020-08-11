@@ -36,7 +36,7 @@ public:
 			//TODO ins, attitude, position, auto
 			health.ins = 0;
 
-			health.attitudeController = 0;
+			health.attitudeController = ModuleAttitudeController::checkFreq();
 			health.positionController = 0;
 			health.autoController = 0;
 
