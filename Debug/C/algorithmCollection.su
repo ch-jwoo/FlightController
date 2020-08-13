@@ -1,0 +1,4 @@
+algorithmCollection.c:24:7:invSqrt	32	static
+algorithmCollection.c:34:6:quat2eul	32	static
+algorithmCollection.c:40:6:junTimer_tic	16	static
+algorithmCollection.c:45:10:junTimer_toc	16	static
