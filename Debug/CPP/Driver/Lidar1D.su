@@ -1,0 +1,3 @@
+Lidar1D.c:12:6:Lidar1D_init	24	static
+Lidar1D.c:75:19:Lidar1D_run	8	static
+Lidar1D.c:82:6:Lidar1D_CaptureCallback	16	static

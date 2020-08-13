@@ -1,0 +1,8 @@
+ModuleBuzzer.cpp:30:6:static void FC::ModuleBuzzer::main()	64	static
+ModuleBuzzer.cpp:53:1:FC::ModuleBuzzer::ModuleBuzzer(TIM_HandleTypeDef*, uint32_t, uint32_t)	24	static
+ModuleBuzzer.cpp:66:6:static bool FC::ModuleBuzzer::sendCommand(FC::BuzzerCommand)	16	static
+ModuleBuzzer.cpp:74:6:void FC::ModuleBuzzer::commandHandler(FC::BuzzerCommand)	16	static
+ModuleBuzzer.cpp:91:6:void FC::ModuleBuzzer::armed()	16	static
+ModuleBuzzer.cpp:95:6:void FC::ModuleBuzzer::disarmed()	16	static
+ModuleBuzzer.cpp:99:6:void FC::ModuleBuzzer::denied()	16	static
+ModuleBuzzer.cpp:103:6:void FC::ModuleBuzzer::success()	16	static
