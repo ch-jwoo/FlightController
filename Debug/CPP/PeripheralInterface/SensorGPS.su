@@ -1,0 +1,7 @@
+MsgBus.h:45:5:void FC::MsgBus::setGPS(const FC::GPS&)	16	static
+Usec.h:19:26:uint64_t microsecond()	12	static
+cmath:184:3:constexpr float std::cos(float)	16	static
+cmath:425:3:constexpr float std::sin(float)	16	static
+SensorGPS.cpp:13:6:void FC::SensorGPS::setGPS(double, double, float, float, float, float, float, uint8_t, uint8_t, uint64_t)	80	static
+SensorGPS.cpp:47:1:void __static_initialization_and_destruction_0(int, int)	16	static
+SensorGPS.cpp:47:1:cpp)	8	static

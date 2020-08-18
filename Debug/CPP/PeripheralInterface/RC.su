@@ -1,0 +1,8 @@
+MsgBus.h:48:5:void FC::MsgBus::setController(const FC::Controller&)	16	static
+MsgBus.h:57:5:bool FC::MsgBus::getModeFlag(FC::ModeFlag*)	24	static
+Usec.h:19:26:uint64_t microsecond()	12	static
+Usec.h:23:26:uint32_t millisecond()	8	static
+RC.h:15:2:FC::RC::RC()	16	static
+RC.cpp:15:6:void FC::RC::setRC(uint16_t, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t)	56	static
+RC.cpp:66:1:void __static_initialization_and_destruction_0(int, int)	16	static
+RC.cpp:66:1:cpp)	8	static

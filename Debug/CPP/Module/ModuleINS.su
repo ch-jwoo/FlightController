@@ -1,0 +1,10 @@
+positionEstimator.h:462:8:void positionEstimatorModelClass::setExternalInputs(const positionEstimatorModelClass::ExtU*)	16	static
+positionEstimator.h:470:45:const positionEstimatorModelClass::ExtY& positionEstimatorModelClass::getExternalOutputs() const	16	static
+MsgBus.h:45:5:bool FC::MsgBus::getGPS(FC::GPS*)	32	static
+MsgBus.h:46:5:bool FC::MsgBus::getBarometer(FC::Barometer*)	32	static
+MsgBus.h:52:5:bool FC::MsgBus::getAttitude(FC::Attitude*)	32	static
+MsgBus.h:53:5:bool FC::MsgBus::getNedAccel(FC::NedAccel*)	32	static
+MsgBus.h:55:5:void FC::MsgBus::setLocalPosition(const FC::LocalPosition&)	16	static
+Usec.h:19:26:uint64_t microsecond()	12	static
+ModuleINS.cpp:16:1:FC::ModuleINS::ModuleINS()	24	static
+ModuleINS.cpp:22:6:void FC::ModuleINS::onestep()	224	static

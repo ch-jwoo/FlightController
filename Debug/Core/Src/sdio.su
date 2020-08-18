@@ -1,0 +1,3 @@
+sdio.c:33:6:MX_SDIO_SD_Init	4	static
+sdio.c:46:6:HAL_SD_MspInit	56	static
+sdio.c:139:6:HAL_SD_MspDeInit	16	static

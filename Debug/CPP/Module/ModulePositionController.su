@@ -1,0 +1,12 @@
+positionControl.h:407:8:void positionControlModelClass::setExternalInputs(const positionControlModelClass::ExtU_positionControl_T*)	16	static
+positionControl.h:415:61:const positionControlModelClass::ExtY_positionControl_T& positionControlModelClass::getExternalOutputs() const	16	static
+MsgBus.h:48:5:bool FC::MsgBus::getController(FC::Controller*)	24	static
+MsgBus.h:49:5:void FC::MsgBus::setVehicleAttitueSP(const FC::VehicleAttitueSP&)	24	static
+MsgBus.h:55:5:bool FC::MsgBus::getLocalPosition(FC::LocalPosition*)	32	static
+MsgBus.h:57:5:bool FC::MsgBus::getModeFlag(FC::ModeFlag*)	24	static
+Usec.h:19:26:uint64_t microsecond()	12	static
+function.h:13:14:float FC::map(uint16_t, uint16_t, uint16_t, float, float)	24	static
+ModulePositionController.cpp:16:1:FC::ModulePositionController::ModulePositionController()	16	static
+ModulePositionController.cpp:21:6:void FC::ModulePositionController::oneStep()	128	static
+ModulePositionController.cpp:66:6:void FC::ModulePositionController::setFromRC()	40	static
+ModulePositionController.cpp:84:6:void FC::ModulePositionController::setFromAutoController()	16	static
