@@ -95,7 +95,7 @@ private:
 	 */
 	void resetController();
 
-	static const uint16_t DISARM_PWM = 1100;
+//	static const uint16_t DISARM_PWM = 1100;
 };
 
 

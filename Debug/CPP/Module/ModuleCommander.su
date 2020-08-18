@@ -9,13 +9,13 @@ ModuleCommander.cpp:54:6:static bool FC::ModuleCommander::sendCommand(FC::Comman
 ModuleCommander.cpp:62:6:static void FC::ModuleCommander::sendSignal(FC::CmdSignal)	16	static
 ModuleCommander.cpp:66:6:bool FC::ModuleCommander::commandHandler(FC::Command)	16	static
 ModuleCommander.cpp:101:6:bool FC::ModuleCommander::toAttitude()	24	static
-ModuleCommander.cpp:118:6:bool FC::ModuleCommander::toPosition()	24	static
-ModuleCommander.cpp:137:6:bool FC::ModuleCommander::toWaypoint()	16	static
-ModuleCommander.cpp:141:6:bool FC::ModuleCommander::toRTL()	16	static
-ModuleCommander.cpp:144:6:bool FC::ModuleCommander::toTakeoff()	16	static
-ModuleCommander.cpp:148:6:bool FC::ModuleCommander::toLand()	16	static
-ModuleCommander.cpp:152:6:bool FC::ModuleCommander::toArm()	24	static
-ModuleCommander.cpp:177:6:bool FC::ModuleCommander::toDisArm()	24	static
-ModuleCommander.cpp:198:6:bool FC::ModuleCommander::toMotorCalibration()	32	static
-ModuleCommander.cpp:216:6:bool FC::ModuleCommander::stopTheOtherTask()	16	static
-ModuleCommander.cpp:230:6:void FC::ModuleCommander::resetController()	16	static
+ModuleCommander.cpp:119:6:bool FC::ModuleCommander::toPosition()	24	static
+ModuleCommander.cpp:138:6:bool FC::ModuleCommander::toWaypoint()	16	static
+ModuleCommander.cpp:142:6:bool FC::ModuleCommander::toRTL()	16	static
+ModuleCommander.cpp:145:6:bool FC::ModuleCommander::toTakeoff()	16	static
+ModuleCommander.cpp:149:6:bool FC::ModuleCommander::toLand()	16	static
+ModuleCommander.cpp:153:6:bool FC::ModuleCommander::toArm()	24	static
+ModuleCommander.cpp:178:6:bool FC::ModuleCommander::toDisArm()	24	static
+ModuleCommander.cpp:199:6:bool FC::ModuleCommander::toMotorCalibration()	32	static
+ModuleCommander.cpp:217:6:bool FC::ModuleCommander::stopTheOtherTask()	16	static
+ModuleCommander.cpp:229:6:void FC::ModuleCommander::resetController()	16	static

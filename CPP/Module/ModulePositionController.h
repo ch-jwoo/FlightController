@@ -95,6 +95,7 @@ private:
 	static constexpr float MAX_VELTICAL = 1.0;
 	static constexpr float MAX_YAW = 1.570796f;			/* pi/2 */
 
+	static const uint16_t STICK_THRESHOLD = 100;
 };
 
 } /* namespace FC */

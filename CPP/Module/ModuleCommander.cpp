@@ -113,6 +113,7 @@ bool ModuleCommander::toAttitude(){
 	stopTheOtherTask();
 
 	ModuleBuzzer::sendCommand(BuzzerCommand::Success);
+	return true;
 }
 
 bool ModuleCommander::toPosition(){
@@ -217,12 +218,10 @@ bool ModuleCommander::stopTheOtherTask(){
 	switch(modeFlagPub.flightMode){
 	case Command::ControlAttitude:
 		ModulePositionController::setSignal(PC_stop);
-		//TODO stop attitude(?)
 	case Command::ControlPosition:
-		/* not break */
-	case Command::AutoWaypoint:
 		//TODO stop auto controller
-		/* not break */
+	case Command::AutoWaypoint:
+		//??
 		break;
 	}
 }

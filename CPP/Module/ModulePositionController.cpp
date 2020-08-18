@@ -10,6 +10,7 @@
 #include "Usec.h"
 #include "cmath"
 #include "Utils/function.h"
+#include "Utils/Constant.h"
 #include "printf.h"
 namespace FC {
 
@@ -20,12 +21,6 @@ ModulePositionController::ModulePositionController() {
 
 void ModulePositionController::oneStep(){
 	msgBus.getModeFlag(&modeFlagSub);
-//	if((modeFlagSub.armMode != Command::Arm)
-//	 || modeFlagSub.flightMode == Command::ControlAttitude){
-//		startFlag = false;
-//		return;
-//	}
-
 	msgBus.getLocalPosition(&localPositionSub);
 
 	if(modeFlagSub.flightMode == Command::ControlPosition){
@@ -64,27 +59,76 @@ void ModulePositionController::oneStep(){
 }
 
 void ModulePositionController::setFromRC(){
+	static bool throtleStickSet = false;
+	static bool yawStickSet = false;
+	static bool rollStickSet = false;
+	static bool pitchStickSet = false;
+	float roll;
+	float pitch;
+
 	msgBus.getController(&controllerSub);
 
-	float roll = map(controllerSub.roll, 1000, 2000, -MAX_HORISION, MAX_HORISION);		/* roll */
-	float pitch = map(controllerSub.pitch, 1000, 2000, -MAX_HORISION, MAX_HORISION);	/* pitch */
-	targetYaw = map(controllerSub.yaw, 1000, 2000, -MAX_YAW, MAX_YAW);
-	targetZ = map(controllerSub.throttle, 1000, 2000, -MAX_VELTICAL, MAX_VELTICAL);
+	if( 1500 - STICK_THRESHOLD < controllerSub.throttle && controllerSub.throttle < 1500 + STICK_THRESHOLD){
+		// set altitude
+		if(!throtleStickSet){
+			targetZ = localPositionSub.z;
+			throtleStickSet = true;
+		}
+	}
+	else{
+		targetZ = localPositionSub.z - map(controllerSub.throttle, 1000, 2000, -MAX_VELTICAL, MAX_VELTICAL);
+		throtleStickSet = false;
+	}
 
-	float cosYaw = cos(localPositionSub.yaw);
-	float sinYaw = sin(localPositionSub.yaw);
-	targetX = localPositionSub.x + pitch*cosYaw + -roll*sinYaw;
-	targetY = localPositionSub.x + pitch*sinYaw + roll*cosYaw;
-	targetZ += localPositionSub.z;
-	targetYaw += localPositionSub.yaw;
+	if( 1500 - STICK_THRESHOLD < controllerSub.yaw && controllerSub.yaw < 1500 + STICK_THRESHOLD){
+		// set altitude
+		if(!yawStickSet){
+			targetYaw = localPositionSub.yaw;
+			yawStickSet = true;
+		}
+	}
+	else{
+		targetYaw = localPositionSub.yaw + map(controllerSub.yaw, 1000, 2000, -MAX_YAW, MAX_YAW);
+		targetYaw = radianThreshold(targetYaw);
+		yawStickSet = false;
+	}
 
-//	printf("%f %f %f %f\r\n", targetX, targetY, targetZ, targetYaw);
+	if(1500 - STICK_THRESHOLD < controllerSub.roll && controllerSub.roll < 1500 + STICK_THRESHOLD){
+		if(!rollStickSet){
+			roll = 0;
+			rollStickSet = true;
+		}
+	}
+	else{
+		roll = map(controllerSub.roll, 1000, 2000, -MAX_HORISION, MAX_HORISION);		/* roll */
+		rollStickSet = false;
+	}
+	if(1500 - STICK_THRESHOLD < controllerSub.pitch && controllerSub.pitch < 1500 + STICK_THRESHOLD){
+		if(!pitchStickSet){
+			pitch = 0;
+			pitchStickSet = true;
+		}
+	}
+	else{
+		pitch = map(controllerSub.pitch, 1000, 2000, -MAX_HORISION, MAX_HORISION);		/* pitch */
+		pitchStickSet = false;
+	}
+//	float roll = map(controllerSub.roll, 1000, 2000, -MAX_HORISION, MAX_HORISION);		/* roll */
+//	float pitch = map(controllerSub.pitch, 1000, 2000, -MAX_HORISION, MAX_HORISION);	/* pitch */
+//	targetYaw = map(controllerSub.yaw, 1000, 2000, -MAX_YAW, MAX_YAW);
+
+	if( !rollStickSet || !pitchStickSet){
+		float cosYaw = cos(localPositionSub.yaw);
+		float sinYaw = sin(localPositionSub.yaw);
+		targetX = localPositionSub.x + pitch*cosYaw + -roll*sinYaw;
+		targetY = localPositionSub.y + pitch*sinYaw + roll*cosYaw;
+	}
+//	targetZ += localPositionSub.z;
+//	targetYaw += localPositionSub.yaw;
 }
 
 void ModulePositionController::setFromAutoController(){
 	//TODO add struct VehiclePositionSP, convert to target
 }
-
-
 
 } /* namespace FC */
