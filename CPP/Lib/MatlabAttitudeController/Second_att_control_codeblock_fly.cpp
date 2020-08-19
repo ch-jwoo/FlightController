@@ -9,16 +9,62 @@
 //
 // Model version                  : 1.31
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Aug 17 09:54:55 2020
+// C/C++ source code generated on : Mon Aug 17 10:05:41 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
-#include <MatlabAttitudeController/Second_att_control_codeblock_fly.h>
-#include <MatlabAttitudeController/Second_att_control_codeblock_fly_private.h>
+#include "Second_att_control_codeblock_fly.h"
+#include "Second_att_control_codeblock_fly_private.h"
 
+// Exported block parameters
+real32_T Angle_rate_pitch_kI = 1.0F;   // Variable: Angle_rate_pitch_kI
+                                          //  Referenced by: '<S4>/I_pr1'
+
+real32_T Angle_rate_pitch_kP = 4.0F;   // Variable: Angle_rate_pitch_kP
+                                          //  Referenced by: '<S4>/P_pr1'
+
+real32_T Angle_rate_roll_PI_kI = 1.0F; // Variable: Angle_rate_roll_PI_kI
+                                          //  Referenced by: '<S4>/I_pr'
+
+real32_T Angle_rate_roll_PI_kP = 4.0F; // Variable: Angle_rate_roll_PI_kP
+                                          //  Referenced by: '<S4>/P_pr'
+
+real32_T Yaw_angel_rate_P = 2.0F;      // Variable: Yaw_angel_rate_P
+                                          //  Referenced by: '<S6>/Gain'
+
+real32_T kD_Pitch_rate_PID = 0.03F;    // Variable: kD_Pitch_rate_PID
+                                          //  Referenced by: '<S5>/D_pr1'
+
+real32_T kD_Roll_rate_PID = 0.03F;     // Variable: kD_Roll_rate_PID
+                                          //  Referenced by: '<S5>/D_pr'
+
+real32_T kI_Pitch_rate_PID = 0.3F;     // Variable: kI_Pitch_rate_PID
+                                          //  Referenced by: '<S5>/I_pr1'
+
+real32_T kI_Roll_rate_PID = 0.3F;      // Variable: kI_Roll_rate_PID
+                                          //  Referenced by: '<S5>/I_pr'
+
+real32_T kI_Yaw_rate_PID = 0.2F;       // Variable: kI_Yaw_rate_PID
+                                          //  Referenced by: '<S38>/Integral Gain'
+
+real32_T kP_Pitch_rate_PID = 3.0F;     // Variable: kP_Pitch_rate_PID
+                                          //  Referenced by: '<S5>/P_pr1'
+
+real32_T kP_Roll_rate_PID = 3.0F;      // Variable: kP_Roll_rate_PID
+                                          //  Referenced by: '<S5>/P_pr'
+
+real32_T kP_Yaw_rate_PID = 0.3F;       // Variable: kP_Yaw_rate_PID
+                                          //  Referenced by: '<S46>/Proportional Gain'
+
+
+// Exported data definition
+
+// Const memory section
+// Definition for custom storage class: Const
+const real32_T Max_angle_coef = 0.5F;  // Referenced by: '<S1>/Max_angle_coef'
 real32_T rt_roundf_snf(real32_T u)
 {
   real32_T y;
@@ -50,23 +96,20 @@ void px4_AlgorithmModelClass::step()
   //   Inport: '<Root>/set_pitch'
   //   Inport: '<Root>/set_roll'
 
-  Second_att_control_codeblock__B.Max_angle_coef[0] =
-    Second_att_control_codeblock__P.Max_angle_coef_Gain *
+  Second_att_control_codeblock__B.Max_angle_coef_m[0] = Max_angle_coef *
     Second_att_control_codeblock__U.set_roll;
-  Second_att_control_codeblock__B.Max_angle_coef[1] =
-    Second_att_control_codeblock__P.Max_angle_coef_Gain *
+  Second_att_control_codeblock__B.Max_angle_coef_m[1] = Max_angle_coef *
     Second_att_control_codeblock__U.set_pitch;
 
   // Sum: '<S4>/Sum' incorporates:
   //   Inport: '<Root>/Roll'
 
   Second_att_control_codeblock__B.pitchrollerror =
-    Second_att_control_codeblock__B.Max_angle_coef[0] -
+    Second_att_control_codeblock__B.Max_angle_coef_m[0] -
     Second_att_control_codeblock__U.Roll;
 
   // Gain: '<S4>/P_pr'
-  Second_att_control_codeblock__B.P_pr =
-    Second_att_control_codeblock__P.P_pr_Gain *
+  Second_att_control_codeblock__B.P_pr = Angle_rate_roll_PI_kP *
     Second_att_control_codeblock__B.pitchrollerror;
 
   // DiscreteIntegrator: '<S4>/Discrete-Time Integrator'
@@ -74,8 +117,7 @@ void px4_AlgorithmModelClass::step()
     Second_att_control_codeblock_DW.DiscreteTimeIntegrator_DSTATE;
 
   // Gain: '<S4>/I_pr'
-  Second_att_control_codeblock__B.I_pr =
-    Second_att_control_codeblock__P.I_pr_Gain *
+  Second_att_control_codeblock__B.I_pr = Angle_rate_roll_PI_kI *
     Second_att_control_codeblock__B.DiscreteTimeIntegrator;
 
   // Sum: '<S4>/Sum16'
@@ -89,8 +131,7 @@ void px4_AlgorithmModelClass::step()
     Second_att_control_codeblock__B.P_pr_m - Second_att_control_codeblock__U.p;
 
   // Gain: '<S5>/P_pr'
-  Second_att_control_codeblock__B.P_pr_b =
-    Second_att_control_codeblock__P.P_pr_Gain_a *
+  Second_att_control_codeblock__B.P_pr_b = kP_Roll_rate_PID *
     Second_att_control_codeblock__B.pitchrollerror_b;
 
   // DiscreteIntegrator: '<S5>/Discrete-Time Integrator'
@@ -98,8 +139,7 @@ void px4_AlgorithmModelClass::step()
     Second_att_control_codeblock_DW.DiscreteTimeIntegrator_DSTATE_k;
 
   // Gain: '<S5>/I_pr'
-  Second_att_control_codeblock__B.I_pr_d =
-    Second_att_control_codeblock__P.I_pr_Gain_d *
+  Second_att_control_codeblock__B.I_pr_d = kI_Roll_rate_PID *
     Second_att_control_codeblock__B.DiscreteTimeIntegrator_h;
 
   // SampleTimeMath: '<S7>/TSamp'
@@ -130,8 +170,7 @@ void px4_AlgorithmModelClass::step()
     Second_att_control_codeblock__B.Uk1;
 
   // Gain: '<S5>/D_pr'
-  Second_att_control_codeblock__B.D_pr =
-    Second_att_control_codeblock__P.D_pr_Gain *
+  Second_att_control_codeblock__B.D_pr = kD_Roll_rate_PID *
     Second_att_control_codeblock__B.Diff;
 
   // Sum: '<S5>/Sum16'
@@ -163,12 +202,11 @@ void px4_AlgorithmModelClass::step()
   //   Inport: '<Root>/Pitch'
 
   Second_att_control_codeblock__B.pitchrollerror_m =
-    Second_att_control_codeblock__B.Max_angle_coef[1] -
+    Second_att_control_codeblock__B.Max_angle_coef_m[1] -
     Second_att_control_codeblock__U.Pitch;
 
   // Gain: '<S4>/P_pr1'
-  Second_att_control_codeblock__B.P_pr1 =
-    Second_att_control_codeblock__P.P_pr1_Gain *
+  Second_att_control_codeblock__B.P_pr1 = Angle_rate_pitch_kP *
     Second_att_control_codeblock__B.pitchrollerror_m;
 
   // DiscreteIntegrator: '<S4>/Discrete-Time Integrator1'
@@ -176,8 +214,7 @@ void px4_AlgorithmModelClass::step()
     Second_att_control_codeblock_DW.DiscreteTimeIntegrator1_DSTATE;
 
   // Gain: '<S4>/I_pr1'
-  Second_att_control_codeblock__B.I_pr1 =
-    Second_att_control_codeblock__P.I_pr1_Gain *
+  Second_att_control_codeblock__B.I_pr1 = Angle_rate_pitch_kI *
     Second_att_control_codeblock__B.DiscreteTimeIntegrator1;
 
   // Sum: '<S4>/Sum1'
@@ -191,8 +228,7 @@ void px4_AlgorithmModelClass::step()
     Second_att_control_codeblock__B.P_pr_o - Second_att_control_codeblock__U.q;
 
   // Gain: '<S5>/P_pr1'
-  Second_att_control_codeblock__B.P_pr1_p =
-    Second_att_control_codeblock__P.P_pr1_Gain_n *
+  Second_att_control_codeblock__B.P_pr1_p = kP_Pitch_rate_PID *
     Second_att_control_codeblock__B.pitchrollerror_i;
 
   // DiscreteIntegrator: '<S5>/Discrete-Time Integrator1'
@@ -200,8 +236,7 @@ void px4_AlgorithmModelClass::step()
     Second_att_control_codeblock_DW.DiscreteTimeIntegrator1_DSTAT_d;
 
   // Gain: '<S5>/I_pr1'
-  Second_att_control_codeblock__B.I_pr1_j =
-    Second_att_control_codeblock__P.I_pr1_Gain_g *
+  Second_att_control_codeblock__B.I_pr1_j = kI_Pitch_rate_PID *
     Second_att_control_codeblock__B.DiscreteTimeIntegrator1_p;
 
   // SampleTimeMath: '<S8>/TSamp'
@@ -233,8 +268,7 @@ void px4_AlgorithmModelClass::step()
     Second_att_control_codeblock__B.Uk1_i;
 
   // Gain: '<S5>/D_pr1'
-  Second_att_control_codeblock__B.D_pr1 =
-    Second_att_control_codeblock__P.D_pr1_Gain *
+  Second_att_control_codeblock__B.D_pr1 = kD_Pitch_rate_PID *
     Second_att_control_codeblock__B.Diff_l;
 
   // Sum: '<S5>/Sum2'
@@ -270,13 +304,11 @@ void px4_AlgorithmModelClass::step()
     - Second_att_control_codeblock__U.r;
 
   // Gain: '<S6>/Gain'
-  Second_att_control_codeblock__B.Gain_f =
-    Second_att_control_codeblock__P.Gain_Gain_j *
+  Second_att_control_codeblock__B.Gain_f = Yaw_angel_rate_P *
     Second_att_control_codeblock__B.Sum;
 
   // Gain: '<S46>/Proportional Gain'
-  Second_att_control_codeblock__B.ProportionalGain =
-    Second_att_control_codeblock__P.DiscretePIDController_P *
+  Second_att_control_codeblock__B.ProportionalGain = kP_Yaw_rate_PID *
     Second_att_control_codeblock__B.Gain_f;
 
   // DiscreteIntegrator: '<S41>/Integrator'
@@ -543,8 +575,7 @@ void px4_AlgorithmModelClass::step()
     Second_att_control_codeblock__B.antiWU_Gain1;
 
   // Gain: '<S38>/Integral Gain'
-  Second_att_control_codeblock__B.IntegralGain =
-    Second_att_control_codeblock__P.DiscretePIDController_I *
+  Second_att_control_codeblock__B.IntegralGain = kI_Yaw_rate_PID *
     Second_att_control_codeblock__B.Gain_f;
 
   // Update for DiscreteIntegrator: '<S4>/Discrete-Time Integrator'

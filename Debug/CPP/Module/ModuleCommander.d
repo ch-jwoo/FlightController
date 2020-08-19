@@ -47,9 +47,9 @@ CPP/Module/ModuleCommander.o: ../CPP/Module/ModuleCommander.cpp \
  ../Core/Inc/tim.h ../Core/Inc/main.h C:/STM/411RE/CPP/MsgBus/MsgBus.h \
  ../Core/Inc/Usec.h ../Core/Inc/tim.h \
  C:/STM/411RE/CPP/Module/ModulePositionController.h \
- C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl.h \
- C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_types.h \
- C:/STM/411RE/CPP/Lib/MatlabPositionControl/rtwtypes.h \
+ C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h \
+ C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h \
+ C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h \
  C:/STM/411RE/CPP/Utils/Freq.h ../Core/Inc/freertosVariable.h \
  C:/STM/411RE/CPP/Utils/Constant.h \
  C:/STM/411RE/CPP/Module/ModuleCommander.h \
@@ -174,11 +174,11 @@ C:/STM/411RE/CPP/MsgBus/MsgBus.h:
 
 C:/STM/411RE/CPP/Module/ModulePositionController.h:
 
-C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl.h:
+C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h:
 
-C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_types.h:
+C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h:
 
-C:/STM/411RE/CPP/Lib/MatlabPositionControl/rtwtypes.h:
+C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h:
 
 C:/STM/411RE/CPP/Utils/Freq.h:
 

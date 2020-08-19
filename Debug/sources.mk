@@ -32,7 +32,7 @@ SUBDIRS := \
 CPP/Actuator \
 CPP/Driver \
 CPP/Lib/MatlabAttitudeController \
-CPP/Lib/MatlabPositionControl \
+CPP/Lib/MatlabPositionControl/positionControl_ert_rtw \
 CPP/Lib/MatlabPositionEstimator \
 CPP/Lib \
 CPP/Module \

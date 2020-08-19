@@ -23,7 +23,7 @@ RM := rm -rf
 -include CPP/MsgBus/subdir.mk
 -include CPP/Module/subdir.mk
 -include CPP/Lib/MatlabPositionEstimator/subdir.mk
--include CPP/Lib/MatlabPositionControl/subdir.mk
+-include CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/subdir.mk
 -include CPP/Lib/MatlabAttitudeController/subdir.mk
 -include CPP/Lib/subdir.mk
 -include CPP/Driver/subdir.mk

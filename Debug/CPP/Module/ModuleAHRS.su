@@ -6,9 +6,9 @@ msgBus.h:53:5:void FC::MsgBus::setNedAccel(const FC::NedAccel&)	24	static
 Usec.h:19:26:uint64_t microsecond()	12	static
 ModuleAHRS.cpp:17:1:FC::ModuleAHRS::ModuleAHRS()	24	static
 ModuleAHRS.cpp:33:6:void FC::ModuleAHRS::oneStep()	128	static
-ModuleAHRS.cpp:97:6:void FC::ModuleAHRS::MadgwickAHRSupdate(float, float, float, float, float, float, float, float, float)	208	static
-ModuleAHRS.cpp:194:6:void FC::ModuleAHRS::MadgwickAHRSupdateIMU(float, float, float, float, float, float)	152	static
-ModuleAHRS.cpp:262:7:float FC::ModuleAHRS::invSqrt(float)	32	static
+ModuleAHRS.cpp:107:6:void FC::ModuleAHRS::MadgwickAHRSupdate(float, float, float, float, float, float, float, float, float)	200	static
+ModuleAHRS.cpp:204:6:void FC::ModuleAHRS::MadgwickAHRSupdateIMU(float, float, float, float, float, float)	144	static
+ModuleAHRS.cpp:272:7:float FC::ModuleAHRS::invSqrt(float)	32	static
 Matrix.hpp:63:5:constexpr matrix::Matrix<Type, M, N>::Matrix() [with Type = float; unsigned int M = 4; unsigned int N = 1]	16	static
 Vector.hpp:25:5:constexpr matrix::Vector<Type, M>::Vector() [with Type = float; unsigned int M = 4]	16	static
 Quaternion.hpp:240:5:matrix::Quaternion<Type>::Quaternion(Type, Type, Type, Type) [with Type = float]	40	static

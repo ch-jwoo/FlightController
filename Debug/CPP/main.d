@@ -68,9 +68,9 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
  ../CPP/PeripheralInterface/SensorBaro.h C:/STM/411RE/CPP/Lib/printf.h \
  ../CPP/Module/ModuleCommander.h ../CPP/Module/ModuleHealth.h \
  ../CPP/Module/ModulePositionController.h \
- C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl.h \
- C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_types.h \
- C:/STM/411RE/CPP/Lib/MatlabPositionControl/rtwtypes.h \
+ C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h \
+ C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h \
+ C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h \
  ../CPP/Module/ModuleCommander.h ../CPP/Module/ModuleINS.h \
  C:/STM/411RE/CPP/Lib/MatlabPositionEstimator/positionEstimator.h \
  C:/STM/411RE/CPP/Lib/MatlabPositionEstimator/rtwtypes.h \
@@ -250,11 +250,11 @@ C:/STM/411RE/CPP/Lib/printf.h:
 
 ../CPP/Module/ModulePositionController.h:
 
-C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl.h:
+C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h:
 
-C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_types.h:
+C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h:
 
-C:/STM/411RE/CPP/Lib/MatlabPositionControl/rtwtypes.h:
+C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h:
 
 ../CPP/Module/ModuleCommander.h:
 

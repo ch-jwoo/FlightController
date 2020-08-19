@@ -9,7 +9,7 @@
 //
 // Model version                  : 1.31
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Aug 17 09:54:55 2020
+// C/C++ source code generated on : Mon Aug 17 10:05:41 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -18,11 +18,65 @@
 //
 #ifndef RTW_HEADER_Second_att_control_codeblock_fly_h_
 #define RTW_HEADER_Second_att_control_codeblock_fly_h_
-#include <MatlabAttitudeController/rtwtypes.h>
-#include <MatlabAttitudeController/Second_att_control_codeblock_fly_types.h>
 #include <cmath>
+#include "rtwtypes.h"
+#include "Second_att_control_codeblock_fly_types.h"
 
 // Macros for accessing real-time model data structure
+
+//
+//  Exported Global Parameters
+//
+//  Note: Exported global parameters are tunable parameters with an exported
+//  global storage class designation.  Code generation will declare the memory for
+//  these parameters and exports their symbols.
+//
+
+extern real32_T Angle_rate_pitch_kI;   // Variable: Angle_rate_pitch_kI
+                                          //  Referenced by: '<S4>/I_pr1'
+
+extern real32_T Angle_rate_pitch_kP;   // Variable: Angle_rate_pitch_kP
+                                          //  Referenced by: '<S4>/P_pr1'
+
+extern real32_T Angle_rate_roll_PI_kI; // Variable: Angle_rate_roll_PI_kI
+                                          //  Referenced by: '<S4>/I_pr'
+
+extern real32_T Angle_rate_roll_PI_kP; // Variable: Angle_rate_roll_PI_kP
+                                          //  Referenced by: '<S4>/P_pr'
+
+extern real32_T Yaw_angel_rate_P;      // Variable: Yaw_angel_rate_P
+                                          //  Referenced by: '<S6>/Gain'
+
+extern real32_T kD_Pitch_rate_PID;     // Variable: kD_Pitch_rate_PID
+                                          //  Referenced by: '<S5>/D_pr1'
+
+extern real32_T kD_Roll_rate_PID;      // Variable: kD_Roll_rate_PID
+                                          //  Referenced by: '<S5>/D_pr'
+
+extern real32_T kI_Pitch_rate_PID;     // Variable: kI_Pitch_rate_PID
+                                          //  Referenced by: '<S5>/I_pr1'
+
+extern real32_T kI_Roll_rate_PID;      // Variable: kI_Roll_rate_PID
+                                          //  Referenced by: '<S5>/I_pr'
+
+extern real32_T kI_Yaw_rate_PID;       // Variable: kI_Yaw_rate_PID
+                                          //  Referenced by: '<S38>/Integral Gain'
+
+extern real32_T kP_Pitch_rate_PID;     // Variable: kP_Pitch_rate_PID
+                                          //  Referenced by: '<S5>/P_pr1'
+
+extern real32_T kP_Roll_rate_PID;      // Variable: kP_Roll_rate_PID
+                                          //  Referenced by: '<S5>/P_pr'
+
+extern real32_T kP_Yaw_rate_PID;       // Variable: kP_Yaw_rate_PID
+                                          //  Referenced by: '<S46>/Proportional Gain'
+
+
+// Exported data declaration
+
+// Const memory section
+// Declaration for custom storage class: Const
+extern const real32_T Max_angle_coef;  // Referenced by: '<S1>/Max_angle_coef'
 
 // Class declaration for model Second_att_control_codeblock_fly
 class px4_AlgorithmModelClass {
@@ -30,7 +84,7 @@ class px4_AlgorithmModelClass {
  public:
   // Block signals (default storage)
   typedef struct {
-    real32_T Max_angle_coef[2];        // '<S1>/Max_angle_coef'
+    real32_T Max_angle_coef_m[2];      // '<S1>/Max_angle_coef'
     real32_T pitchrollerror;           // '<S4>/Sum'
     real32_T P_pr;                     // '<S4>/P_pr'
     real32_T DiscreteTimeIntegrator;   // '<S4>/Discrete-Time Integrator'
@@ -116,9 +170,6 @@ class px4_AlgorithmModelClass {
 
   // Parameters (default storage)
   struct P_Second_att_control_codebloc_T {
-    real32_T DiscretePIDController_I; // Mask Parameter: DiscretePIDController_I
-                                         //  Referenced by: '<S38>/Integral Gain'
-
     real32_T DiscreteDerivative_ICPrevScaled;
                               // Mask Parameter: DiscreteDerivative_ICPrevScaled
                                  //  Referenced by: '<S7>/UD'
@@ -131,15 +182,6 @@ class px4_AlgorithmModelClass {
                               // Mask Parameter: DiscretePIDController_InitialCo
                                  //  Referenced by: '<S41>/Integrator'
 
-    real32_T DiscretePIDController_P; // Mask Parameter: DiscretePIDController_P
-                                         //  Referenced by: '<S46>/Proportional Gain'
-
-    real32_T Max_angle_coef_Gain;      // Expression: Max_angle_coef
-                                          //  Referenced by: '<S1>/Max_angle_coef'
-
-    real32_T P_pr_Gain;                // Expression: Angle_rate_roll_PI_kP
-                                          //  Referenced by: '<S4>/P_pr'
-
     real32_T DiscreteTimeIntegrator_gainval;
                            // Computed Parameter: DiscreteTimeIntegrator_gainval
                               //  Referenced by: '<S4>/Discrete-Time Integrator'
@@ -147,12 +189,6 @@ class px4_AlgorithmModelClass {
     real32_T DiscreteTimeIntegrator_IC;
                                 // Computed Parameter: DiscreteTimeIntegrator_IC
                                    //  Referenced by: '<S4>/Discrete-Time Integrator'
-
-    real32_T I_pr_Gain;                // Expression: Angle_rate_roll_PI_kI
-                                          //  Referenced by: '<S4>/I_pr'
-
-    real32_T P_pr_Gain_a;              // Expression: kP_Roll_rate_PID
-                                          //  Referenced by: '<S5>/P_pr'
 
     real32_T DiscreteTimeIntegrator_gainva_l;
                           // Computed Parameter: DiscreteTimeIntegrator_gainva_l
@@ -162,14 +198,8 @@ class px4_AlgorithmModelClass {
                               // Computed Parameter: DiscreteTimeIntegrator_IC_k
                                  //  Referenced by: '<S5>/Discrete-Time Integrator'
 
-    real32_T I_pr_Gain_d;              // Expression: kI_Roll_rate_PID
-                                          //  Referenced by: '<S5>/I_pr'
-
     real32_T TSamp_WtEt;               // Computed Parameter: TSamp_WtEt
                                           //  Referenced by: '<S7>/TSamp'
-
-    real32_T D_pr_Gain;                // Expression: kD_Roll_rate_PID
-                                          //  Referenced by: '<S5>/D_pr'
 
     real32_T Saturation_UpperSat;     // Computed Parameter: Saturation_UpperSat
                                          //  Referenced by: '<S5>/Saturation'
@@ -180,9 +210,6 @@ class px4_AlgorithmModelClass {
     real32_T Gain_Gain;                // Computed Parameter: Gain_Gain
                                           //  Referenced by: '<S5>/Gain'
 
-    real32_T P_pr1_Gain;               // Expression: Angle_rate_pitch_kP
-                                          //  Referenced by: '<S4>/P_pr1'
-
     real32_T DiscreteTimeIntegrator1_gainval;
                           // Computed Parameter: DiscreteTimeIntegrator1_gainval
                              //  Referenced by: '<S4>/Discrete-Time Integrator1'
@@ -190,12 +217,6 @@ class px4_AlgorithmModelClass {
     real32_T DiscreteTimeIntegrator1_IC;
                                // Computed Parameter: DiscreteTimeIntegrator1_IC
                                   //  Referenced by: '<S4>/Discrete-Time Integrator1'
-
-    real32_T I_pr1_Gain;               // Expression: Angle_rate_pitch_kI
-                                          //  Referenced by: '<S4>/I_pr1'
-
-    real32_T P_pr1_Gain_n;             // Expression: kP_Pitch_rate_PID
-                                          //  Referenced by: '<S5>/P_pr1'
 
     real32_T DiscreteTimeIntegrator1_gainv_k;
                           // Computed Parameter: DiscreteTimeIntegrator1_gainv_k
@@ -205,14 +226,8 @@ class px4_AlgorithmModelClass {
                              // Computed Parameter: DiscreteTimeIntegrator1_IC_j
                                 //  Referenced by: '<S5>/Discrete-Time Integrator1'
 
-    real32_T I_pr1_Gain_g;             // Expression: kI_Pitch_rate_PID
-                                          //  Referenced by: '<S5>/I_pr1'
-
     real32_T TSamp_WtEt_l;             // Computed Parameter: TSamp_WtEt_l
                                           //  Referenced by: '<S8>/TSamp'
-
-    real32_T D_pr1_Gain;               // Expression: kD_Pitch_rate_PID
-                                          //  Referenced by: '<S5>/D_pr1'
 
     real32_T Saturation1_UpperSat;   // Computed Parameter: Saturation1_UpperSat
                                         //  Referenced by: '<S5>/Saturation1'
@@ -222,9 +237,6 @@ class px4_AlgorithmModelClass {
 
     real32_T Gain1_Gain;               // Computed Parameter: Gain1_Gain
                                           //  Referenced by: '<S5>/Gain1'
-
-    real32_T Gain_Gain_j;              // Computed Parameter: Gain_Gain_j
-                                          //  Referenced by: '<S6>/Gain'
 
     real32_T Integrator_gainval;       // Computed Parameter: Integrator_gainval
                                           //  Referenced by: '<S41>/Integrator'

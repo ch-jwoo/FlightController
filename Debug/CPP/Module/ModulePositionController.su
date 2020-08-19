@@ -1,5 +1,5 @@
-positionControl.h:407:8:void positionControlModelClass::setExternalInputs(const positionControlModelClass::ExtU_positionControl_T*)	16	static
-positionControl.h:415:61:const positionControlModelClass::ExtY_positionControl_T& positionControlModelClass::getExternalOutputs() const	16	static
+positionControl.h:454:8:void positionControlModelClass::setExternalInputs(const ExtU_positionControl_T*)	16	static
+positionControl.h:462:34:const ExtY_positionControl_T& positionControlModelClass::getExternalOutputs() const	16	static
 MsgBus.h:48:5:bool FC::MsgBus::getController(FC::Controller*)	24	static
 MsgBus.h:49:5:void FC::MsgBus::setVehicleAttitueSP(const FC::VehicleAttitueSP&)	24	static
 MsgBus.h:55:5:bool FC::MsgBus::getLocalPosition(FC::LocalPosition*)	32	static

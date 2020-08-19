@@ -1,0 +1,10 @@
+Yaw_angleToRate_P = 0.04;
+
+pos_x_P = 0.7; pos_x_I = 0; pos_x_D = 0.1;
+pos_x_vel_P = 0.17; pos_x_vel_I = 0; pos_x_vel_D = 0.11;
+
+pos_y_P = 0.88; pos_y_I = 0; pos_y_D = 0.252;
+pos_y_vel_P = 0.17; pos_y_vel_I = 0.3; pos_y_vel_D = 0.11;
+
+pos_z_P = 2.7; pos_z_I = 0.2; pos_z_D = 0.01;
+pos_z_vel_P = 3; pos_z_vel_I = 0.3; pos_z_vel_D = 0.01;

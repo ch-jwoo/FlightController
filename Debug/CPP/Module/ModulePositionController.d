@@ -1,9 +1,9 @@
 CPP/Module/ModulePositionController.o: \
  ../CPP/Module/ModulePositionController.cpp \
  C:/STM/411RE/CPP/Module/ModulePositionController.h \
- C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl.h \
- C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_types.h \
- C:/STM/411RE/CPP/Lib/MatlabPositionControl/rtwtypes.h \
+ C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h \
+ C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h \
+ C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h \
  C:/STM/411RE/CPP/Utils/Freq.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
@@ -59,11 +59,11 @@ CPP/Module/ModulePositionController.o: \
 
 C:/STM/411RE/CPP/Module/ModulePositionController.h:
 
-C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl.h:
+C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h:
 
-C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_types.h:
+C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h:
 
-C:/STM/411RE/CPP/Lib/MatlabPositionControl/rtwtypes.h:
+C:/STM/411RE/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h:
 
 C:/STM/411RE/CPP/Utils/Freq.h:
 

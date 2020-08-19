@@ -9,7 +9,7 @@
 //
 // Model version                  : 1.31
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Aug 17 09:54:55 2020
+// C/C++ source code generated on : Mon Aug 17 10:05:41 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -18,7 +18,7 @@
 //
 #ifndef RTW_HEADER_Second_att_control_codeblock_fly_private_h_
 #define RTW_HEADER_Second_att_control_codeblock_fly_private_h_
-#include <MatlabAttitudeController/rtwtypes.h>
+#include "rtwtypes.h"
 
 extern real32_T rt_roundf_snf(real32_T u);
 

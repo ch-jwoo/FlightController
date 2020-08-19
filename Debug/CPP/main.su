@@ -19,8 +19,8 @@ MsgBus.h:59:5:void FC::MsgBus::setHealth(const FC::Health&)	24	static
 MsgBus.h:61:5:bool FC::MsgBus::getMotorPWM(FC::MotorPWM*)	32	static
 ModuleAttitudeController.h:28:14:static void FC::ModuleAttitudeController::main()	448	static
 ModuleAttitudeController.h:45:21:static void FC::ModuleAttitudeController::setSignal(FC::AcSignal)	16	static
-ModuleAHRS.h:51:17:static void FC::ModuleAHRS::main()	176	static
-ModulePositionController.h:30:14:static void FC::ModulePositionController::main()	1016	static
+ModuleAHRS.h:51:17:static void FC::ModuleAHRS::main()	184	static
+ModulePositionController.h:30:14:static void FC::ModulePositionController::main()	1104	static
 ModulePositionController.h:66:21:static void FC::ModulePositionController::setSignal(FC::PcSignal)	16	static
 ModuleINS.h:25:14:static void FC::ModuleINS::main()	3624	static
 ModuleHealth.h:20:14:static void FC::ModuleHealth::main()	48	static

@@ -4,8 +4,8 @@ MsgBus.h:49:5:bool FC::MsgBus::getVehicleAttitueSP(FC::VehicleAttitueSP*)	32	sta
 MsgBus.h:52:5:bool FC::MsgBus::getAttitude(FC::Attitude*)	32	static
 MsgBus.h:57:5:bool FC::MsgBus::getModeFlag(FC::ModeFlag*)	24	static
 MsgBus.h:61:5:void FC::MsgBus::setMotorPWM(const FC::MotorPWM&)	24	static
-Second_att_control_codeblock_fly.h:272:8:void px4_AlgorithmModelClass::setExternalInputs(const px4_AlgorithmModelClass::ExtU_Second_att_control_codeb_T*)	24	static
-Second_att_control_codeblock_fly.h:282:7:const px4_AlgorithmModelClass::ExtY_Second_att_control_codeb_T& px4_AlgorithmModelClass::getExternalOutputs() const	16	static
+Second_att_control_codeblock_fly.h:284:8:void px4_AlgorithmModelClass::setExternalInputs(const px4_AlgorithmModelClass::ExtU_Second_att_control_codeb_T*)	24	static
+Second_att_control_codeblock_fly.h:294:7:const px4_AlgorithmModelClass::ExtY_Second_att_control_codeb_T& px4_AlgorithmModelClass::getExternalOutputs() const	16	static
 Usec.h:19:26:uint64_t microsecond()	12	static
 ModuleAttitudeController.cpp:14:1:FC::ModuleAttitudeController::ModuleAttitudeController()	16	static
 ModuleAttitudeController.cpp:16:6:void FC::ModuleAttitudeController::oneStep()	88	static
