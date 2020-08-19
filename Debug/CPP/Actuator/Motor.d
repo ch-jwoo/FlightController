@@ -1,6 +1,6 @@
 CPP/Actuator/Motor.o: ../CPP/Actuator/Motor.cpp \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Actuator/Motor.h \
- ../Core/Inc/main.h ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
+ C:/git/FlightController/CPP/Actuator/Motor.h ../Core/Inc/main.h \
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
@@ -44,7 +44,7 @@ CPP/Actuator/Motor.o: ../CPP/Actuator/Motor.cpp \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
  ../Core/Inc/tim.h ../Core/Inc/main.h
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Actuator/Motor.h:
+C:/git/FlightController/CPP/Actuator/Motor.h:
 
 ../Core/Inc/main.h:
 

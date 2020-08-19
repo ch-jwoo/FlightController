@@ -22,6 +22,7 @@ extern osThreadId_t Debug_myTaskHandle;
 extern osThreadId_t Buzzer_TaskHandle;
 extern osThreadId_t Health_TaskHandle;
 extern osThreadId_t AC_TaskHandle;
-
+extern osThreadId_t INS_TaskHandle;
+extern osThreadId_t PC_TaskHandle;
 
 #endif /* INC_FREERTOSVARIABLE_H_ */

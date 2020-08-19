@@ -21,7 +21,7 @@ ModuleAHRS::ModuleAHRS()
 	, attitudePub{}
 	, nedAccelPub{}
 	, lastUpdate{0}
-	, beta{1.0f}
+	, beta{0.6f}
 	, q0{1.0f}
 	, q1{0.0f}
 	, q2{0.0f}
@@ -35,28 +35,38 @@ void ModuleAHRS::oneStep(){
 	msgBus.getBodyAccel(&this->bodyAccelSub);
 	msgBus.getBodyAngularVelocity(&this->bodyAngularVelocitySub);
 
-	/* mag data not valid */
-	if(!msgBus.getBodyMag(&this->bodyMagSub))
-	{
-		MadgwickAHRSupdateIMU(bodyAngularVelocitySub.xyz[0],
-							  bodyAngularVelocitySub.xyz[1],
-							  bodyAngularVelocitySub.xyz[2],
-							  bodyAccelSub.xyz[0],
-							  bodyAccelSub.xyz[1],
-							  bodyAccelSub.xyz[2]);
-	}
-	/* mag data valid */
-	else{
-		MadgwickAHRSupdate(bodyAngularVelocitySub.xyz[0],
-						   bodyAngularVelocitySub.xyz[1],
-						   bodyAngularVelocitySub.xyz[2],
-						   bodyAccelSub.xyz[0],
-						   bodyAccelSub.xyz[1],
-						   bodyAccelSub.xyz[2],
-						   bodyMagSub.xyz[0],
-						   bodyMagSub.xyz[1],
-						   bodyMagSub.xyz[2]);
-	}
+//	/* mag data not valid */
+//	if(!msgBus.getBodyMag(&this->bodyMagSub))
+//	{
+//		MadgwickAHRSupdateIMU(bodyAngularVelocitySub.xyz[0],
+//							  bodyAngularVelocitySub.xyz[1],
+//							  bodyAngularVelocitySub.xyz[2],
+//							  bodyAccelSub.xyz[0],
+//							  bodyAccelSub.xyz[1],
+//							  bodyAccelSub.xyz[2]);
+//	}
+//	/* mag data valid */
+//	else{
+//		MadgwickAHRSupdate(bodyAngularVelocitySub.xyz[0],
+//						   bodyAngularVelocitySub.xyz[1],
+//						   bodyAngularVelocitySub.xyz[2],
+//						   bodyAccelSub.xyz[0],
+//						   bodyAccelSub.xyz[1],
+//						   bodyAccelSub.xyz[2],
+//						   bodyMagSub.xyz[0],
+//						   bodyMagSub.xyz[1],
+//						   bodyMagSub.xyz[2]);
+//	}
+	msgBus.getBodyMag(&this->bodyMagSub);
+	MadgwickAHRSupdate(bodyAngularVelocitySub.xyz[0],
+					   bodyAngularVelocitySub.xyz[1],
+					   bodyAngularVelocitySub.xyz[2],
+					   bodyAccelSub.xyz[0],
+					   bodyAccelSub.xyz[1],
+					   bodyAccelSub.xyz[2],
+					   bodyMagSub.xyz[0],
+					   bodyMagSub.xyz[1],
+					   bodyMagSub.xyz[2]);
 
 	/* calculate roll pitch yaw */
 	float roll, pitch, yaw;
@@ -65,7 +75,7 @@ void ModuleAHRS::oneStep(){
 	yaw = atan2(2.0f * (q1 * q2 + q0 * q3), q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3);		//yaw
 
 	matrix::Quatf quat(q0, q1, q2, q3);		/* NED -> body quaternion */
-	matrix::Dcmf dcm(quat.inversed());		/* body -> NED DCM */
+	matrix::Dcmf dcm(quat/*.inversed()*/);		/* body -> NED DCM */
 	matrix::Vector3f tempBodyAccel(this->bodyAccelSub.xyz[0],
 								   this->bodyAccelSub.xyz[1],
 								   this->bodyAccelSub.xyz[2]);
@@ -102,10 +112,10 @@ void ModuleAHRS::MadgwickAHRSupdate(float gx, float gy, float gz, float ax, floa
 	float _2q0mx, _2q0my, _2q0mz, _2q1mx, _2bx, _2bz, _4bx, _4bz, _2q0, _2q1, _2q2, _2q3, _2q0q2, _2q2q3, q0q0, q0q1, q0q2, q0q3, q1q1, q1q2, q1q3, q2q2, q2q3, q3q3;
 
 	// Use IMU algorithm if magnetometer measurement invalid (avoids NaN in magnetometer normalisation)
-//	if((mx == 0.0f) && (my == 0.0f) && (mz == 0.0f)) {
-//		MadgwickAHRSupdateIMU(gx, gy, gz, ax, ay, az);
-//		return;
-//	}
+	if((mx == 0.0f) && (my == 0.0f) && (mz == 0.0f)) {
+		MadgwickAHRSupdateIMU(gx, gy, gz, ax, ay, az);
+		return;
+	}
 
 	// Rate of change of quaternion from gyroscope
 	qDot1 = 0.5f * (-q1 * gx - q2 * gy - q3 * gz);
@@ -173,7 +183,7 @@ void ModuleAHRS::MadgwickAHRSupdate(float gx, float gy, float gz, float ax, floa
 	qDot4 -= beta * s3;
 
 
-	float dt = (microsecond() - this->lastUpdate)*1000000;	/*[second]*/
+	float dt = (microsecond() - this->lastUpdate)/1000000.0;	/*[second]*/
 	if(dt > 0.01) dt = 0.01;								/* saturation */
 	// Integrate rate of change of quaternion to yield quaternion
 	q0 += qDot1 * (dt);
@@ -187,6 +197,8 @@ void ModuleAHRS::MadgwickAHRSupdate(float gx, float gy, float gz, float ax, floa
 	q1 *= recipNorm;
 	q2 *= recipNorm;
 	q3 *= recipNorm;
+
+	lastUpdate = microsecond();
 }
 
 void ModuleAHRS::MadgwickAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, float az) {
@@ -239,7 +251,7 @@ void ModuleAHRS::MadgwickAHRSupdateIMU(float gx, float gy, float gz, float ax, f
 	qDot3 -= beta * s2;
 	qDot4 -= beta * s3;
 
-	float dt = (microsecond() - this->lastUpdate)*1000000;			/*[second]*/
+	float dt = (microsecond() - this->lastUpdate)/1000000.0;			/*[second]*/
 	if(dt > 0.01) dt = 0.01;
 	// Integrate rate of change of quaternion to yield quaternion
 	q0 += qDot1 * (dt);
@@ -253,6 +265,8 @@ void ModuleAHRS::MadgwickAHRSupdateIMU(float gx, float gy, float gz, float ax, f
 	q1 *= recipNorm;
 	q2 *= recipNorm;
 	q3 *= recipNorm;
+
+	lastUpdate = microsecond();
 }
 
 float ModuleAHRS::invSqrt(float x){

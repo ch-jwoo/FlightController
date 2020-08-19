@@ -44,16 +44,24 @@ public:
     SIMPLE_FUNC_IMPL(BodyMag, BodyMag, bodyMag)
     SIMPLE_FUNC_IMPL(GPS, GPS, gps)
     SIMPLE_FUNC_IMPL(Barometer, Barometer, barometer)
+
     SIMPLE_FUNC_IMPL(Controller, Controller, controller)
+    SIMPLE_FUNC_IMPL(VehicleAttitueSP, VehicleAttitueSP, vehicleAttitudeSP)
+    SIMPLE_FUNC_IMPL(VehiclePositionSP, VehiclePositionSP, vehiclePositionSP)
     
     SIMPLE_FUNC_IMPL(Attitude, Attitude, attitude)
     SIMPLE_FUNC_IMPL(NedAccel, NedAccel, nedAccel)
+
+    SIMPLE_FUNC_IMPL(LocalPosition, LocalPosition, localPosition)
 
     SIMPLE_FUNC_IMPL(ModeFlag, ModeFlag, modeFlag)
 
     SIMPLE_FUNC_IMPL(Health, Health, health)
 
     SIMPLE_FUNC_IMPL(MotorPWM, MotorPWM, motorPWM)
+
+    SIMPLE_FUNC_IMPL(VehicleWP, VehicleWP, vehicleWP)
+
 private:
     /* Peripheral Interface */
     struct BodyAccel bodyAccel;
@@ -61,11 +69,18 @@ private:
     struct BodyMag bodyMag;
     struct GPS gps;
     struct Barometer barometer;
-    struct Controller controller;
 
-    /* estimate */
+    /* control */
+    struct Controller controller;
+    struct VehicleAttitueSP vehicleAttitudeSP;
+    struct VehiclePositionSP vehiclePositionSP;
+
+    /* AHRS */
     struct Attitude attitude;
     struct NedAccel nedAccel;
+
+    /* INS */
+    struct LocalPosition localPosition;
 
     /* flight state */
     struct ModeFlag modeFlag;
@@ -75,6 +90,9 @@ private:
 
     /* actuator */
     struct MotorPWM motorPWM;
+
+    /* waypoints */
+    struct VehicleWP vehicleWP;
 };
 
 extern MsgBus msgBus;

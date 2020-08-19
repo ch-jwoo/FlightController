@@ -1,13 +1,16 @@
 MsgBus.h:43:5:bool FC::MsgBus::getBodyAngularVelocity(FC::BodyAngularVelocity*)	32	static
-MsgBus.h:47:5:bool FC::MsgBus::getController(FC::Controller*)	24	static
-MsgBus.h:49:5:bool FC::MsgBus::getAttitude(FC::Attitude*)	32	static
-MsgBus.h:52:5:bool FC::MsgBus::getModeFlag(FC::ModeFlag*)	24	static
-MsgBus.h:56:5:void FC::MsgBus::setMotorPWM(const FC::MotorPWM&)	24	static
-Second_att_control_codeblock_fly.h:320:8:void px4_AlgorithmModelClass::setExternalInputs(const px4_AlgorithmModelClass::ExtU_Second_att_control_codeb_T*)	24	static
-Second_att_control_codeblock_fly.h:330:7:const px4_AlgorithmModelClass::ExtY_Second_att_control_codeb_T& px4_AlgorithmModelClass::getExternalOutputs() const	16	static
+MsgBus.h:48:5:bool FC::MsgBus::getController(FC::Controller*)	24	static
+MsgBus.h:49:5:bool FC::MsgBus::getVehicleAttitueSP(FC::VehicleAttitueSP*)	32	static
+MsgBus.h:52:5:bool FC::MsgBus::getAttitude(FC::Attitude*)	32	static
+MsgBus.h:57:5:bool FC::MsgBus::getModeFlag(FC::ModeFlag*)	24	static
+MsgBus.h:61:5:void FC::MsgBus::setMotorPWM(const FC::MotorPWM&)	24	static
+Second_att_control_codeblock_fly.h:284:8:void px4_AlgorithmModelClass::setExternalInputs(const px4_AlgorithmModelClass::ExtU_Second_att_control_codeb_T*)	24	static
+Second_att_control_codeblock_fly.h:294:7:const px4_AlgorithmModelClass::ExtY_Second_att_control_codeb_T& px4_AlgorithmModelClass::getExternalOutputs() const	16	static
 Usec.h:18:26:uint64_t microsecond()	12	static
-ModuleAttitudeController.cpp:13:1:FC::ModuleAttitudeController::ModuleAttitudeController()	16	static
-ModuleAttitudeController.cpp:18:6:void FC::ModuleAttitudeController::oneStep()	88	static
-ModuleAttitudeController.cpp:76:6:void FC::ModuleAttitudeController::setFromPositionController()	16	static
-ModuleAttitudeController.cpp:80:6:void FC::ModuleAttitudeController::setFromRC()	16	static
-ModuleAttitudeController.cpp:88:6:void FC::ModuleAttitudeController::setMotor(uint16_t, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t)	32	static
+function.h:15:14:float FC::map(uint16_t, uint16_t, uint16_t, float, float)	24	static
+function.h:19:14:float FC::radianThreshold(float)	16	static
+ModuleAttitudeController.cpp:15:1:FC::ModuleAttitudeController::ModuleAttitudeController()	16	static
+ModuleAttitudeController.cpp:17:6:void FC::ModuleAttitudeController::oneStep()	88	static
+ModuleAttitudeController.cpp:71:6:void FC::ModuleAttitudeController::setFromPositionController()	16	static
+ModuleAttitudeController.cpp:79:6:void FC::ModuleAttitudeController::setFromRC()	16	static
+ModuleAttitudeController.cpp:91:6:void FC::ModuleAttitudeController::setMotor(uint16_t, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t)	32	static

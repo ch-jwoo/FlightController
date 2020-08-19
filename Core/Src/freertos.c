@@ -94,7 +94,7 @@ const osThreadAttr_t IST8310_Task_attributes = {
 };
 /* Definitions for SD_Task */
 osThreadId_t SD_TaskHandle;
-uint32_t SD_TaskBuffer[ 1024 ];
+uint32_t SD_TaskBuffer[ 2048 ];
 osStaticThreadDef_t SD_TaskControlBlock;
 const osThreadAttr_t SD_Task_attributes = {
   .name = "SD_Task",
@@ -106,7 +106,7 @@ const osThreadAttr_t SD_Task_attributes = {
 };
 /* Definitions for AHRS_Task */
 osThreadId_t AHRS_TaskHandle;
-uint32_t AHRS_TaskBuffer[ 512 ];
+uint32_t AHRS_TaskBuffer[ 256 ];
 osStaticThreadDef_t AHRS_TaskControlBlock;
 const osThreadAttr_t AHRS_Task_attributes = {
   .name = "AHRS_Task",
@@ -118,7 +118,7 @@ const osThreadAttr_t AHRS_Task_attributes = {
 };
 /* Definitions for Commander_Task */
 osThreadId_t Commander_TaskHandle;
-uint32_t Commander_TaskBuffer[ 256 ];
+uint32_t Commander_TaskBuffer[ 512 ];
 osStaticThreadDef_t Commander_TaskControlBlock;
 const osThreadAttr_t Commander_Task_attributes = {
   .name = "Commander_Task",
@@ -126,14 +126,14 @@ const osThreadAttr_t Commander_Task_attributes = {
   .stack_size = sizeof(Commander_TaskBuffer),
   .cb_mem = &Commander_TaskControlBlock,
   .cb_size = sizeof(Commander_TaskControlBlock),
-  .priority = (osPriority_t) osPriorityHigh7,
+  .priority = (osPriority_t) osPriorityRealtime,
 };
 /* Definitions for Debug_Task */
 osThreadId_t Debug_TaskHandle;
 const osThreadAttr_t Debug_Task_attributes = {
   .name = "Debug_Task",
   .priority = (osPriority_t) osPriorityAboveNormal,
-  .stack_size = 128 * 4
+  .stack_size = 1024 * 4
 };
 /* Definitions for Buzzer_Task */
 osThreadId_t Buzzer_TaskHandle;
@@ -161,7 +161,7 @@ const osThreadAttr_t Health_Task_attributes = {
 };
 /* Definitions for AC_Task */
 osThreadId_t AC_TaskHandle;
-uint32_t AC_TaskBuffer[ 1024 ];
+uint32_t AC_TaskBuffer[ 512 ];
 osStaticThreadDef_t AC_TaskControlBlock;
 const osThreadAttr_t AC_Task_attributes = {
   .name = "AC_Task",
@@ -169,6 +169,25 @@ const osThreadAttr_t AC_Task_attributes = {
   .stack_size = sizeof(AC_TaskBuffer),
   .cb_mem = &AC_TaskControlBlock,
   .cb_size = sizeof(AC_TaskControlBlock),
+  .priority = (osPriority_t) osPriorityRealtime,
+};
+/* Definitions for INS_Task */
+osThreadId_t INS_TaskHandle;
+const osThreadAttr_t INS_Task_attributes = {
+  .name = "INS_Task",
+  .priority = (osPriority_t) osPriorityHigh7,
+  .stack_size = 2048 * 4
+};
+/* Definitions for PC_Task */
+osThreadId_t PC_TaskHandle;
+uint32_t PC_TaskBuffer[ 2048 ];
+osStaticThreadDef_t PC_TaskControlBlock;
+const osThreadAttr_t PC_Task_attributes = {
+  .name = "PC_Task",
+  .stack_mem = &PC_TaskBuffer[0],
+  .stack_size = sizeof(PC_TaskBuffer),
+  .cb_mem = &PC_TaskControlBlock,
+  .cb_size = sizeof(PC_TaskControlBlock),
   .priority = (osPriority_t) osPriorityRealtime,
 };
 
@@ -188,6 +207,8 @@ extern void Debug_StartTask(void *argument);
 extern void Buzzer_StartTask(void *argument);
 extern void Health_StartTask(void *argument);
 extern void AC_StartTask(void *argument);
+extern void INS_StartTask(void *argument);
+extern void PC_StartTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -250,6 +271,12 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of AC_Task */
   AC_TaskHandle = osThreadNew(AC_StartTask, NULL, &AC_Task_attributes);
+
+  /* creation of INS_Task */
+  INS_TaskHandle = osThreadNew(INS_StartTask, NULL, &INS_Task_attributes);
+
+  /* creation of PC_Task */
+  PC_TaskHandle = osThreadNew(PC_StartTask, NULL, &PC_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

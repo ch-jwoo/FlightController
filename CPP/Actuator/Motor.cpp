@@ -17,13 +17,20 @@ namespace FC {
  *  M4 PD13 TIM4 CHANNEL2
  *  M5 PB1 TIM3 CHANNEL4
  *  M6 PC7 TIM3 CHANNEL2
+ *
+ *  M1 PE13 TIM1 CHANNEL3
+ *  M2 PE14	TIM1 CHANNEL4
+ *  M3 PE9 TIM1 CHANNEL1
+ *  M4 PB1 TIM3 CHANNEL4
+ *  M5 PC7 TIM3 CHANNEL2
+ *  M6 PA6 TIM3 CHANNEL1
  */
-Motor m1(&htim4, TIM_CHANNEL_4);
-Motor m2(&htim4, TIM_CHANNEL_3);
-Motor m3(&htim4, TIM_CHANNEL_1);
-Motor m4(&htim4, TIM_CHANNEL_2);
-Motor m5(&htim3, TIM_CHANNEL_4);
-Motor m6(&htim3, TIM_CHANNEL_2);
+Motor m1(&htim1, TIM_CHANNEL_3);
+Motor m2(&htim1, TIM_CHANNEL_4);
+Motor m3(&htim1, TIM_CHANNEL_1);
+Motor m4(&htim3, TIM_CHANNEL_4);
+Motor m5(&htim3, TIM_CHANNEL_2);
+Motor m6(&htim3, TIM_CHANNEL_1);
 
 Motor::Motor(TIM_HandleTypeDef *htim, uint32_t Channel)
 	: htim(htim)

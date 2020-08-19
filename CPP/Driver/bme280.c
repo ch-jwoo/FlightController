@@ -45,6 +45,13 @@ void BME280_init(I2C_HandleTypeDef *hi2c, uint8_t Posr, uint8_t Hosr, uint8_t To
 	bme280._dig_H4 = ( int16_t)(((( int16_t) calib[3] << 8) | (0x0F & calib[4]) << 4) >> 4);
 	bme280._dig_H5 = ( int16_t)(((( int16_t) calib[5] << 8) | (0xF0 & calib[4]) ) >> 4 );
 	bme280._dig_H6 = calib[6];
+
+	/* dump trash value */
+	for(int i=0; i<10; i++){
+		BME280_readTemperature();
+		BME280_readPressure();
+		BME280_readHumidity();
+	}
 }
 
 void BME280_readIT(){
@@ -63,8 +70,6 @@ uint8_t BME280_i2cRxCpltCallback(){
     // change to hPa
     bme280.P = BME280_compensate_P(bme280.countP)/25600.0;	/*[hPa]*/
     bme280.T = BME280_compensate_T(bme280.countT)/100.0;	/*[degC]*/
-
-//    bme280.alt = 44330 * (1.0 - pow(bme280.P / bme280.base_P, 0.1903));
 
     bm_i2cFlag = bm_i2cIdle;
     return 1;

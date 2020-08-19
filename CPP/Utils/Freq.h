@@ -7,7 +7,7 @@
 
 #ifndef MODULE_FREQ_H_
 #define MODULE_FREQ_H_
-
+#include "main.h"
 namespace FC{
 
 template<typename T>

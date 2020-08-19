@@ -66,6 +66,8 @@ void Debug_StartTask(void *argument);
 void Buzzer_StartTask(void *argument);
 void Health_StartTask(void *argument);
 void AC_StartTask(void *argument);
+void INS_StartTask(void *argument);
+void PC_StartTask(void *argument);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -73,8 +75,6 @@ void AC_StartTask(void *argument);
 #define WINCH_CONTROL1_GPIO_Port GPIOE
 #define WINCH_CONTROL2_Pin GPIO_PIN_3
 #define WINCH_CONTROL2_GPIO_Port GPIOE
-#define LIDAR_Pin GPIO_PIN_5
-#define LIDAR_GPIO_Port GPIOE
 #define B1_Pin GPIO_PIN_13
 #define B1_GPIO_Port GPIOC
 #define LED1_Pin GPIO_PIN_2
@@ -107,18 +107,6 @@ void AC_StartTask(void *argument);
 #define SBUS_RX_GPIO_Port GPIOE
 #define SBUS_TX_Pin GPIO_PIN_8
 #define SBUS_TX_GPIO_Port GPIOE
-#define S4_Pin GPIO_PIN_9
-#define S4_GPIO_Port GPIOE
-#define S1_Pin GPIO_PIN_11
-#define S1_GPIO_Port GPIOE
-#define S2_Pin GPIO_PIN_13
-#define S2_GPIO_Port GPIOE
-#define S3_Pin GPIO_PIN_14
-#define S3_GPIO_Port GPIOE
-#define S5_Pin GPIO_PIN_14
-#define S5_GPIO_Port GPIOB
-#define S6_Pin GPIO_PIN_15
-#define S6_GPIO_Port GPIOB
 #define STLINK_RX_Pin GPIO_PIN_8
 #define STLINK_RX_GPIO_Port GPIOD
 #define STLINK_TX_Pin GPIO_PIN_9
@@ -137,8 +125,6 @@ void AC_StartTask(void *argument);
 #define SD_DETECTIONG3_GPIO_Port GPIOG
 #define USB_OTG_FS_OVCR_Pin GPIO_PIN_7
 #define USB_OTG_FS_OVCR_GPIO_Port GPIOG
-#define M8_Pin GPIO_PIN_6
-#define M8_GPIO_Port GPIOC
 #define M6_Pin GPIO_PIN_7
 #define M6_GPIO_Port GPIOC
 #define TELEM_RTS_Pin GPIO_PIN_4

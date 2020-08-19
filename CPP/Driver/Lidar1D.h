@@ -33,9 +33,6 @@ extern Lidar1D_t lidar1D;
  *  ex) system clock 168Mhz
  *  	Prescaler : 168-1
  *  	Period : max
- *
- *  capture channel1		rising edge detection
- *  capture channel2		falling edge detection
  */
 void Lidar1D_init(TIM_HandleTypeDef *htim, uint32_t directChannel, uint32_t indirectChannel);
 

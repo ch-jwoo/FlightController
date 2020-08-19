@@ -59,26 +59,35 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
  ../CPP/Driver/MPU9250.h ../CPP/Driver/sbus.h \
  ../CPP/Driver/tm_stm32_gps.h ../CPP/Driver/IST8310.h \
  ../CPP/Driver/bme280.h ../CPP/Driver/Lidar1D.h \
- ../CPP/PeripheralInterface/SensorAccel.hpp \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/MsgBus/MsgBus.h \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/MsgBus/MsgType.h \
- ../Core/Inc/Usec.h ../Core/Inc/tim.h \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Module/ModuleAHRS.h \
+ ../CPP/PeripheralInterface/Interface.h \
+ C:/git/FlightController/CPP/PeripheralInterface/RC.h \
+ C:/git/FlightController/CPP/MsgBus/MsgType.h \
+ C:/git/FlightController/CPP/Module/ModuleCommander.h \
+ C:/git/FlightController/CPP/Module/ModuleBuzzer.h \
+ C:/git/FlightController/CPP/MsgBus/MsgBus.h ../Core/Inc/Usec.h \
+ ../Core/Inc/tim.h C:/git/FlightController/CPP/Utils/Freq.h \
+ C:/git/FlightController/CPP/PeripheralInterface/SensorAccel.h \
+ C:/git/FlightController/CPP/Module/ModuleAHRS.h \
  ../Core/Inc/freertosVariable.h \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Utils/Freq.h \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Module/ModuleAttitudeController.h \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Lib/MatlabAttitudeController/rtwtypes.h \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Actuator/Motor.h \
- ../CPP/PeripheralInterface/SensorGyro.hpp \
- ../CPP/PeripheralInterface/SensorMag.hpp \
- ../CPP/PeripheralInterface/SensorGPS.hpp \
- ../CPP/PeripheralInterface/SensorBaro.hpp \
- ../CPP/PeripheralInterface/RC.hpp \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Module/ModuleCommander.h \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Module/ModuleBuzzer.h \
- ../CPP/Module/ModuleCommander.h ../CPP/Module/ModuleHealth.h \
+ C:/git/FlightController/CPP/Module/ModuleAttitudeController.h \
+ C:/git/FlightController/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h \
+ C:/git/FlightController/CPP/Lib/MatlabAttitudeController/rtwtypes.h \
+ C:/git/FlightController/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h \
+ C:/git/FlightController/CPP/Actuator/Motor.h \
+ C:/git/FlightController/CPP/Utils/Constant.h \
+ C:/git/FlightController/CPP/PeripheralInterface/SensorGPS.h \
+ C:/git/FlightController/CPP/PeripheralInterface/SensorGyro.h \
+ C:/git/FlightController/CPP/PeripheralInterface/SensorMag.h \
+ ../CPP/PeripheralInterface/SensorBaro.h \
+ C:/git/FlightController/CPP/Lib/printf.h ../CPP/Module/ModuleCommander.h \
+ ../CPP/Module/ModuleHealth.h ../CPP/Module/ModulePositionController.h \
+ C:/git/FlightController/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h \
+ C:/git/FlightController/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h \
+ C:/git/FlightController/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h \
+ ../CPP/Module/ModuleCommander.h ../CPP/Module/ModuleINS.h \
+ C:/git/FlightController/CPP/Lib/MatlabPositionEstimator/positionEstimator.h \
+ C:/git/FlightController/CPP/Lib/MatlabPositionEstimator/rtwtypes.h \
+ C:/git/FlightController/CPP/Module/ModulePositionController.h \
  ../CPP/Module/ModuleSD.h ../FATFS/App/fatfs.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h \
  ../Middlewares/Third_Party/FatFs/src/integer.h ../FATFS/Target/ffconf.h \
@@ -86,7 +95,9 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/sd_diskio.h \
- ../CPP/Module/ModuleAttitudeController.h ../CPP/Actuator/Motor.h
+ ../CPP/Module/ModuleAttitudeController.h ../CPP/Module/ModuleINS.h \
+ ../CPP/Module/ModulePositionController.h ../CPP/Actuator/Motor.h \
+ ../CPP/Utils/Constant.h
 
 ../Core/Inc/main.h:
 
@@ -220,49 +231,73 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
 
 ../CPP/Driver/Lidar1D.h:
 
-../CPP/PeripheralInterface/SensorAccel.hpp:
+../CPP/PeripheralInterface/Interface.h:
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/MsgBus/MsgBus.h:
+C:/git/FlightController/CPP/PeripheralInterface/RC.h:
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/MsgBus/MsgType.h:
+C:/git/FlightController/CPP/MsgBus/MsgType.h:
+
+C:/git/FlightController/CPP/Module/ModuleCommander.h:
+
+C:/git/FlightController/CPP/Module/ModuleBuzzer.h:
+
+C:/git/FlightController/CPP/MsgBus/MsgBus.h:
 
 ../Core/Inc/Usec.h:
 
 ../Core/Inc/tim.h:
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Module/ModuleAHRS.h:
+C:/git/FlightController/CPP/Utils/Freq.h:
+
+C:/git/FlightController/CPP/PeripheralInterface/SensorAccel.h:
+
+C:/git/FlightController/CPP/Module/ModuleAHRS.h:
 
 ../Core/Inc/freertosVariable.h:
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Utils/Freq.h:
+C:/git/FlightController/CPP/Module/ModuleAttitudeController.h:
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Module/ModuleAttitudeController.h:
+C:/git/FlightController/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h:
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h:
+C:/git/FlightController/CPP/Lib/MatlabAttitudeController/rtwtypes.h:
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Lib/MatlabAttitudeController/rtwtypes.h:
+C:/git/FlightController/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h:
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h:
+C:/git/FlightController/CPP/Actuator/Motor.h:
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Actuator/Motor.h:
+C:/git/FlightController/CPP/Utils/Constant.h:
 
-../CPP/PeripheralInterface/SensorGyro.hpp:
+C:/git/FlightController/CPP/PeripheralInterface/SensorGPS.h:
 
-../CPP/PeripheralInterface/SensorMag.hpp:
+C:/git/FlightController/CPP/PeripheralInterface/SensorGyro.h:
 
-../CPP/PeripheralInterface/SensorGPS.hpp:
+C:/git/FlightController/CPP/PeripheralInterface/SensorMag.h:
 
-../CPP/PeripheralInterface/SensorBaro.hpp:
+../CPP/PeripheralInterface/SensorBaro.h:
 
-../CPP/PeripheralInterface/RC.hpp:
-
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Module/ModuleCommander.h:
-
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Module/ModuleBuzzer.h:
+C:/git/FlightController/CPP/Lib/printf.h:
 
 ../CPP/Module/ModuleCommander.h:
 
 ../CPP/Module/ModuleHealth.h:
+
+../CPP/Module/ModulePositionController.h:
+
+C:/git/FlightController/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h:
+
+C:/git/FlightController/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h:
+
+C:/git/FlightController/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h:
+
+../CPP/Module/ModuleCommander.h:
+
+../CPP/Module/ModuleINS.h:
+
+C:/git/FlightController/CPP/Lib/MatlabPositionEstimator/positionEstimator.h:
+
+C:/git/FlightController/CPP/Lib/MatlabPositionEstimator/rtwtypes.h:
+
+C:/git/FlightController/CPP/Module/ModulePositionController.h:
 
 ../CPP/Module/ModuleSD.h:
 
@@ -288,4 +323,10 @@ C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Module/ModuleBuzzer.
 
 ../CPP/Module/ModuleAttitudeController.h:
 
+../CPP/Module/ModuleINS.h:
+
+../CPP/Module/ModulePositionController.h:
+
 ../CPP/Actuator/Motor.h:
+
+../CPP/Utils/Constant.h:

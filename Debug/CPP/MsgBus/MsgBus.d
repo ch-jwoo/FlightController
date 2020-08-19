@@ -1,7 +1,7 @@
 CPP/MsgBus/MsgBus.o: ../CPP/MsgBus/MsgBus.cpp \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/MsgBus/MsgBus.h \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/MsgBus/MsgType.h \
- ../Core/Inc/main.h ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
+ C:/git/FlightController/CPP/MsgBus/MsgBus.h \
+ C:/git/FlightController/CPP/MsgBus/MsgType.h ../Core/Inc/main.h \
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
@@ -44,9 +44,9 @@ CPP/MsgBus/MsgBus.o: ../CPP/MsgBus/MsgBus.cpp \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/MsgBus/MsgBus.h:
+C:/git/FlightController/CPP/MsgBus/MsgBus.h:
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/MsgBus/MsgType.h:
+C:/git/FlightController/CPP/MsgBus/MsgType.h:
 
 ../Core/Inc/main.h:
 

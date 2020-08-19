@@ -17,7 +17,10 @@
 namespace FC {
 
 enum AcSignal{
-	AC_fromAHRS = 0x1
+	AC_fromAHRS = 0x01,
+	AC_reset = 0x02,			/* asynchronized command */
+//	AC_start = 0x04,
+//	AC_stop = 0x08
 };
 
 class ModuleAttitudeController : public px4_AlgorithmModelClass, public Freq<ModuleAttitudeController>{
@@ -25,6 +28,12 @@ public:
 	static void main(){
 		ModuleAttitudeController attitudeController;
 		while(1){
+			/* check reset command */
+			if(osThreadFlagsGet() & AC_reset){
+				osThreadFlagsClear(AC_reset);
+				attitudeController.initialize();
+			}
+
 			/* wait AHRS set */
 			osThreadFlagsWait(AC_fromAHRS, osFlagsWaitAny, osWaitForever);
 			attitudeController.oneStep();
@@ -35,7 +44,7 @@ public:
 	void oneStep();
 
 	static inline void setSignal(enum AcSignal signal){
-		if(signal == AC_fromAHRS) osThreadFlagsSet(AC_TaskHandle, AC_fromAHRS);
+		osThreadFlagsSet(AC_TaskHandle, signal);
 	}
 
 	ModuleAttitudeController();
@@ -48,18 +57,19 @@ public:
 private:
 	struct Attitude attitudeSub;
 	struct BodyAngularVelocity bodyAngularVelocitySub;
-	struct Controller controllerSub;
 	struct ModeFlag modeFlagSub;
+	struct Controller controllerSub;
+	struct VehicleAttitueSP vehicleAttitudeSpSub;
 
 	struct MotorPWM motorPwmSub;
 
 	float targetRoll;
 	float targetPitch;
 	float targetYawRate;
-	uint16_t throttle;
+	float targetThrottle;
 
 	/* previous arm flag */
-	bool armFlag;
+//	bool armFlag;
 
 	/*
 	 *  set targetRoll, targetPitch, targetYawRate, throttle from Position Controller

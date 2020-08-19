@@ -1,6 +1,6 @@
-Motor.cpp:28:1:FC::Motor::Motor(TIM_HandleTypeDef*, uint32_t)	24	static
-Motor.cpp:34:6:void FC::Motor::start()	16	static
-Motor.cpp:39:6:void FC::Motor::stop()	16	static
-Motor.cpp:43:6:void FC::Motor::setPWM(uint16_t)	24	static
-Motor.cpp:56:1:void __static_initialization_and_destruction_0(int, int)	16	static
-Motor.cpp:56:1:cpp)	8	static
+Motor.cpp:35:1:FC::Motor::Motor(TIM_HandleTypeDef*, uint32_t)	24	static
+Motor.cpp:41:6:void FC::Motor::start()	16	static
+Motor.cpp:46:6:void FC::Motor::stop()	16	static
+Motor.cpp:50:6:void FC::Motor::setPWM(uint16_t)	24	static
+Motor.cpp:63:1:void __static_initialization_and_destruction_0(int, int)	16	static
+Motor.cpp:63:1:cpp)	8	static

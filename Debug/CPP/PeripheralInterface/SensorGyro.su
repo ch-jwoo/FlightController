@@ -1,0 +1,9 @@
+MsgBus.h:43:5:void FC::MsgBus::setBodyAngularVelocity(const FC::BodyAngularVelocity&)	24	static
+Usec.h:18:26:uint64_t microsecond()	12	static
+ModuleAHRS.h:36:24:static void FC::ModuleAHRS::setSignal(FC::AhrsSignal)	16	static
+SensorGyro.cpp:14:1:FC::SensorGyro::SensorGyro()	16	static
+SensorGyro.cpp:21:6:void FC::SensorGyro::setBias()	16	static
+SensorGyro.cpp:29:6:void FC::SensorGyro::setGyro(float, float, float)	32	static
+SensorGyro.cpp:44:6:void FC::SensorGyro::calAverage(float, float, float)	32	static
+SensorGyro.cpp:59:1:void __static_initialization_and_destruction_0(int, int)	16	static
+SensorGyro.cpp:59:1:cpp)	8	static

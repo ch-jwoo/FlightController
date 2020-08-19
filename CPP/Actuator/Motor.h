@@ -30,11 +30,6 @@ public:
 	 *  				Prescaler : 5-1
 	 *  				Counter Period : 40000-1
 	 *  				-> 500hz
-	 *
-	 *  				PCLK : 240Mhz
-	 *  				Prescaler : 12-1
-	 *  				Counter Period : 40000-1
-	 *  				-> 500hz
 	 */
 	Motor(TIM_HandleTypeDef *htim, uint32_t Channel);
 

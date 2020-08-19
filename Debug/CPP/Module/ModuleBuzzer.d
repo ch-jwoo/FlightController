@@ -1,7 +1,7 @@
 CPP/Module/ModuleBuzzer.o: ../CPP/Module/ModuleBuzzer.cpp \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Module/ModuleBuzzer.h \
- C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/MsgBus/MsgType.h \
- ../Core/Inc/main.h ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
+ C:/git/FlightController/CPP/Module/ModuleBuzzer.h \
+ C:/git/FlightController/CPP/MsgBus/MsgType.h ../Core/Inc/main.h \
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
@@ -56,9 +56,9 @@ CPP/Module/ModuleBuzzer.o: ../CPP/Module/ModuleBuzzer.cpp \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  ../Core/Inc/tim.h ../Core/Inc/main.h
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/Module/ModuleBuzzer.h:
+C:/git/FlightController/CPP/Module/ModuleBuzzer.h:
 
-C:/Users/cjb88/Desktop/STM32/FlightController_STM32H743/CPP/MsgBus/MsgType.h:
+C:/git/FlightController/CPP/MsgBus/MsgType.h:
 
 ../Core/Inc/main.h:
 

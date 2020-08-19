@@ -50,11 +50,17 @@ public:
 	 */
     static void main(){
     	ModuleAHRS moduleAHRS;
+    	uint8_t cnt = 0;
     	while(1){
     		/* wait accel, gyro value set */
-    		osThreadFlagsWait(0x3U, osFlagsWaitAll, osWaitForever);
+//    		osThreadFlagsWait(0x3U, osFlagsWaitAll, osWaitForever);
     		moduleAHRS.oneStep();
-    		ModuleAttitudeController::setSignal(AC_fromAHRS);
+    		if(cnt>4){
+        		ModuleAttitudeController::setSignal(AC_fromAHRS);		/* 200hz */
+    		}
+
+    		cnt++;
+    		osDelay(1);			/* 1000hz */
     	}
     }
 

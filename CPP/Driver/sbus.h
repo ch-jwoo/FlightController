@@ -169,12 +169,12 @@ SBUS_Result_t SBUS_uartRxCpltCallback(){// must call this function on HAL_UART_R
 	return result;
 }
 
-void SBUS_print() {
-	for (int i = 0; i < SBUS_CHANNEL_NUMBER; i++) {
-		printf("%d \t", sbus.compRcValue[i]);
-	}
-	printf("\r\n");
-}
+//void SBUS_print() {
+//	for (int i = 0; i < SBUS_CHANNEL_NUMBER; i++) {
+//		printf("%d \t", sbus.compRcValue[i]);
+//	}
+//	printf("\r\n");
+//}
 
 uint16_t SBUS_getChannel(uint8_t chan) { // start from 1
 	return sbus.compRcValue[chan - 1];

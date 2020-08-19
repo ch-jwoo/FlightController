@@ -20,6 +20,11 @@ namespace FC{
 
 extern osMessageQueueId_t Commander_QueueHandle;
 
+enum CmdSignal {
+	CMD_ACK = 0x01,
+	CMD_NACK = 0x02
+};
+
 class ModuleCommander{
 public:
 
@@ -44,16 +49,22 @@ public:
 	 */
 	static bool sendCommand(Command cmd);
 
+	static void sendSignal(enum CmdSignal signal);
+
 	~ModuleCommander() = default;
 	ModuleCommander& operator=(ModuleCommander &&other) = delete;
 	ModuleCommander& operator=(const ModuleCommander &other) = delete;
 	ModuleCommander(ModuleCommander &&other) = delete;
 	ModuleCommander(const ModuleCommander &other) = delete;
 private:
+	struct Controller controllerSub{};
+	struct Health health{};
+
 	struct ModeFlag modeFlagPub{};
 
 	/*
-	 *  handle command using switch
+	 *  handle command
+	 *  this function call toAttitude(), toPosition() etc...
 	 *  \param[in]		command for handling
 	 */
 	bool commandHandler(Command cmd);
@@ -63,19 +74,28 @@ private:
 	 *  \return Success(1), Denied(0)
 	 */
 	bool toAttitude();
-	bool toPosition();
+	bool toPosition(Command cmd);		/* cmd = controlAttitude or controlALT */
 	bool toWaypoint();
 	bool toRTL();
 	bool toTakeoff();
 	bool toLand();
-
 
 	bool toArm();
 	bool toDisArm();
 
 	bool toMotorCalibration();
 
-	static const uint16_t DISARM_PWM = 1100;
+	/*
+	 *  When change mode, stop not using task
+	 */
+	bool stopTheOtherTask();
+
+	/*
+	 *  reset controller
+	 */
+	void resetController();
+
+//	static const uint16_t DISARM_PWM = 1100;
 };
 
 

@@ -7,47 +7,43 @@
 
 #include <Module/ModuleAttitudeController.h>
 #include "Usec.h"
+#include "Utils/function.h"
+#include "printf.h"
 
 namespace FC {
 
-ModuleAttitudeController::ModuleAttitudeController(){
-	/* matlab codegen function */
-	initialize();
-}
+ModuleAttitudeController::ModuleAttitudeController(){}
 
 void ModuleAttitudeController::oneStep(){
 	msgBus.getModeFlag(&modeFlagSub);
+
+	/* not armed */
 	if(modeFlagSub.armMode != Command::Arm){
 		setMotor(1000, 1000, 1000, 1000, 1000, 1000);
-		armFlag = false;
+//		armFlag = false;
 		return;
 	}
 
 	/* change disarm to arm -> initialize */
-	if(armFlag == false){
-		armFlag = true;
-		initialize();
-	}
+//	if(armFlag == false){
+//		armFlag = true;
+//		initialize();
+//	}
 
 	/* manual control */
 	if(modeFlagSub.flightMode == Command::ControlAttitude){
-//		setFromRC();
+		setFromRC();
 	}
+	/* position control */
 	else{
 		setFromPositionController();
 	}
 
-	msgBus.getController(&controllerSub);
-
 	ExtU_Second_att_control_codeb_T input;
-	input.set_pitch = controllerSub.pitch;
-	input.set_roll = controllerSub.roll;
-	input.set_yaw = controllerSub.yaw;
-	input.set_thrust = controllerSub.throttle;
-	//	input.set_pitch = targetPitch;
-//	input.set_roll = targetRoll;
-//	input.set_yaw = targetYawRate;
-//	input.set_thrust = throttle;
+	input.set_pitch = targetPitch;
+	input.set_roll = targetRoll;
+	input.set_yaw = targetYawRate;
+	input.set_thrust = targetThrottle;
 
 	msgBus.getAttitude(&attitudeSub);
 	msgBus.getBodyAngularVelocity(&bodyAngularVelocitySub);
@@ -57,7 +53,6 @@ void ModuleAttitudeController::oneStep(){
 	input.p = bodyAngularVelocitySub.xyz[0];
 	input.q = bodyAngularVelocitySub.xyz[1];
 	input.r = bodyAngularVelocitySub.xyz[2];
-	input.Arm_cmd = 2000;
 
 	/* matlab codegen function */
 	setExternalInputs(&input);
@@ -74,15 +69,23 @@ void ModuleAttitudeController::oneStep(){
 }
 
 void ModuleAttitudeController::setFromPositionController(){
-	//TODO make position control struct, and this function
+	msgBus.getVehicleAttitueSP(&vehicleAttitudeSpSub);
+	targetRoll = vehicleAttitudeSpSub.roll;
+	targetPitch = vehicleAttitudeSpSub.pitch;
+	targetYawRate = vehicleAttitudeSpSub.yawRate;
+	targetThrottle = vehicleAttitudeSpSub.throttle;
 }
 
 void ModuleAttitudeController::setFromRC(){
 	msgBus.getController(&controllerSub);
-	targetRoll = (controllerSub.roll - 1500)/500;
-	targetPitch = -(controllerSub.pitch - 1500)/500;
-	targetYawRate = (controllerSub.yaw - 1500)/500;
-	throttle = controllerSub.throttle;
+//	targetRoll = (float)(controllerSub.roll - 1500)/500.0;				/* map 1000~2000 to -1 ~ 1 */
+//	targetPitch = -(float)(controllerSub.pitch - 1500)/500.0;			/* map 1000~2000 to -1 ~ 1 */
+//	targetYawRate = (float)(controllerSub.yaw - 1500)/500.0;			/* map 1000~2000 to -1 ~ 1 */
+//	targetThrottle = (float)(controllerSub.throttle - 1000)/1000.0;		/* map 1000~2000 to 0 ~ 1 */
+	targetRoll = map(controllerSub.roll, 1000, 2000, -1.0, 1.0);
+	targetPitch = map(controllerSub.pitch, 1000, 2000, -1.0, 1.0);
+	targetYawRate = map(controllerSub.yaw, 1000, 2000, -1.0, 1.0);
+	targetThrottle = map(controllerSub.throttle, 1000, 2000, 0.0, 1.0);
 }
 
 void ModuleAttitudeController::setMotor(uint16_t pwm1, uint16_t pwm2, uint16_t pwm3, uint16_t pwm4, uint16_t pwm5, uint16_t pwm6){
