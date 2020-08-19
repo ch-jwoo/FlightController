@@ -139,10 +139,6 @@ void PC_StartTask(void *argument);
 #define MPU9250_SCL_GPIO_Port GPIOB
 #define MPU9250_SDA_Pin GPIO_PIN_9
 #define MPU9250_SDA_GPIO_Port GPIOB
-#define GPS_RX_Pin GPIO_PIN_0
-#define GPS_RX_GPIO_Port GPIOE
-#define GPS_TX_Pin GPIO_PIN_1
-#define GPS_TX_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

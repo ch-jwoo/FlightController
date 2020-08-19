@@ -85,7 +85,7 @@ uint16_t timeCheck;
 int test = 0;
 
 void _putchar(char character){
-	HAL_UART_Transmit(&huart2, (uint8_t*)&character, 1, 10);
+	HAL_UART_Transmit(&huart3, (uint8_t*)&character, 1, 10);
 }
 
 void Health_StartTask(void *argument){
