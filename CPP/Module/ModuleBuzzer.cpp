@@ -28,26 +28,28 @@ static const osMessageQueueAttr_t Buzzer_Queue_attributes = {
 
 
 void ModuleBuzzer::main() {
-	/*
-	 *  \timer setting
-	 *  TIM4, TIM_CHANNEL_1
-	 *  PCLK 100Mhz
-	 *  Prescaler 0
-	 *  Counter Period 10-1
-	 */
-	ModuleBuzzer buzzer(&htim4, TIM_CHANNEL_1, 100000000);
-
-	BuzzerCommand rcvResult;
-	while(1){
-		if(osMessageQueueGet(Buzzer_QueueHandle, (void*)&rcvResult, NULL, osWaitForever) == osOK){
-			buzzer.commandHandler(rcvResult);
-//			osDelay(10);
-		}
-		else{
-			osMessageQueueReset(Buzzer_QueueHandle);
-		}
-		osDelay(10);
-	}
+//	/*
+//	 *  \timer setting
+//	 *  TIM4, TIM_CHANNEL_1
+//	 *  PCLK 100Mhz
+//	 *  Prescaler 0
+//	 *  Counter Period 10-1
+//	 */
+//
+//	/* edit timer. */
+//	ModuleBuzzer buzzer(&htim4, TIM_CHANNEL_1, 100000000);
+//
+//	BuzzerCommand rcvResult;
+//	while(1){
+//		if(osMessageQueueGet(Buzzer_QueueHandle, (void*)&rcvResult, NULL, osWaitForever) == osOK){
+//			buzzer.commandHandler(rcvResult);
+////			osDelay(10);
+//		}
+//		else{
+//			osMessageQueueReset(Buzzer_QueueHandle);
+//		}
+//		osDelay(10);
+//	}
 }
 
 ModuleBuzzer::ModuleBuzzer(TIM_HandleTypeDef *htim, uint32_t Channel, uint32_t CLK)

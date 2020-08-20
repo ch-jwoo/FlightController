@@ -79,8 +79,8 @@ FlightController_STM32H743.bin \
 all: FlightController_STM32H743.elf secondary-outputs
 
 # Tool invocations
-FlightController_STM32H743.elf: $(OBJS) $(USER_OBJS) C:\git\FlightController\STM32H743ZITX_FLASH.ld
-	arm-none-eabi-g++ -o "FlightController_STM32H743.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\git\FlightController\STM32H743ZITX_FLASH.ld" -Wl,-Map="FlightController_STM32H743.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+FlightController_STM32H743.elf: $(OBJS) $(USER_OBJS) C:\git\pwmTest\STM32H743ZITX_FLASH.ld
+	arm-none-eabi-g++ -o "FlightController_STM32H743.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\git\pwmTest\STM32H743ZITX_FLASH.ld" -Wl,-Map="FlightController_STM32H743.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

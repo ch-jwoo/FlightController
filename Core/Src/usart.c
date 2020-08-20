@@ -256,7 +256,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     __HAL_LINKDMA(uartHandle,hdmarx,hdma_uart8_rx);
 
     /* UART8 interrupt Init */
-    HAL_NVIC_SetPriority(UART8_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(UART8_IRQn, 10, 0);
     HAL_NVIC_EnableIRQ(UART8_IRQn);
   /* USER CODE BEGIN UART8_MspInit 1 */
 
@@ -270,22 +270,14 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     /* USART2 clock enable */
     __HAL_RCC_USART2_CLK_ENABLE();
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOD_CLK_ENABLE();
     /**USART2 GPIO Configuration
-    PA0     ------> USART2_CTS
-    PA3     ------> USART2_RX
+    PD3     ------> USART2_CTS
     PD4     ------> USART2_RTS
     PD5     ------> USART2_TX
+    PD6     ------> USART2_RX
     */
-    GPIO_InitStruct.Pin = TELEM_CTS_Pin|TELEM_RX_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = TELEM_RTS_Pin|TELEM_TX_Pin;
+    GPIO_InitStruct.Pin = TELEM_CTS_Pin|TELEM_RTS_Pin|TELEM_TX_Pin|TELEM_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -380,14 +372,12 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     __HAL_RCC_USART2_CLK_DISABLE();
 
     /**USART2 GPIO Configuration
-    PA0     ------> USART2_CTS
-    PA3     ------> USART2_RX
+    PD3     ------> USART2_CTS
     PD4     ------> USART2_RTS
     PD5     ------> USART2_TX
+    PD6     ------> USART2_RX
     */
-    HAL_GPIO_DeInit(GPIOA, TELEM_CTS_Pin|TELEM_RX_Pin);
-
-    HAL_GPIO_DeInit(GPIOD, TELEM_RTS_Pin|TELEM_TX_Pin);
+    HAL_GPIO_DeInit(GPIOD, TELEM_CTS_Pin|TELEM_RTS_Pin|TELEM_TX_Pin|TELEM_RX_Pin);
 
   /* USER CODE BEGIN USART2_MspDeInit 1 */
 

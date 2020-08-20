@@ -110,6 +110,14 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM1_Init();
   MX_UART8_Init();
+  MX_TIM5_Init();
+  MX_TIM8_Init();
+  MX_TIM12_Init();
+  MX_TIM13_Init();
+  MX_TIM14_Init();
+  MX_TIM15_Init();
+  MX_TIM16_Init();
+  MX_TIM17_Init();
   /* USER CODE BEGIN 2 */
 
   cppMain();

@@ -418,7 +418,7 @@ void TM_GPS_Init(UART_HandleTypeDef* huart);
  * @param  *GPS_Data: Pointer to working @ref TM_GPS_t structure
  * @retval Returns value of @ref TM_GPS_Result_t structure
  */
-TM_GPS_Result_t TM_GPS_Update(UART_HandleTypeDef* huart);
+TM_GPS_Result_t TM_GPS_Update();
 
 /**
  * @brief  Converts speed in knots (from GPS) to user selectable speed

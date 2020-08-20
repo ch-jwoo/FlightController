@@ -206,7 +206,6 @@ void Debug_StartTask(void *argument){
 			sp_yaw = attitudeSP.yawRate;
 		}
 //		osKernelUnlock();
-		channel = m1.Channel;
 
 		/* mag calibration */
 //		mag_minX = sensorMag.min[0];
@@ -264,7 +263,10 @@ void Commander_StartTask(void *argument){
 }
 
 void Buzzer_StartTask(void *argument){
-	ModuleBuzzer::main();
+//	ModuleBuzzer::main();
+	while(1){
+		osDelay(100);
+	}
 }
 
 void AC_StartTask(void *argument){
@@ -291,8 +293,7 @@ void PC_StartTask(void *argument){
 
 void cppMain(){
     setvbuf(stdout, NULL, _IONBF, 0);
-    printf("test\r\n");
-
+    printf_("test\r\n");
 
     /* micro second timer start */
 	HAL_TIM_Base_Start_IT(&htim2);
@@ -327,7 +328,7 @@ void cppMain(){
 	 * 				using global interrupt
 	 * 	magnetometer in gps module
 	 */
-	IST8310(&hi2c2);
+//	IST8310(&hi2c2);
 
 	/*
 	 *  \setting		uart8
@@ -356,7 +357,7 @@ void cppMain(){
 	m5.start();
 	m6.start();
 
-    std::printf("boot complete\r\n");
+    printf_("boot complete\r\n");
 }
 
 //callback
@@ -409,10 +410,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 //		}
 //	}
 
-	if(TM_GPS_Update(huart) == TM_GPS_Result_NewData && gpsUart.gpsData.Fix != 0 /* gps must fixed */){
-		sensorGPS.setGPS(gpsUart.gpsData.Latitude, gpsUart.gpsData.Longitude, gpsUart.gpsData.Altitude,
-						 TM_GPS_ConvertSpeed(gpsUart.gpsData.Speed, TM_GPS_Speed_MeterPerSecond), gpsUart.gpsData.Direction, gpsUart.gpsData.HDOP, gpsUart.gpsData.VDOP,
-						 gpsUart.gpsData.Satellites, gpsUart.gpsData.FixMode, 0/* UTC in microsecond */);
+//	if(TM_GPS_Update(huart) == TM_GPS_Result_NewData){
+//		sensorGPS.setGPS(gpsUart.gpsData.Latitude, gpsUart.gpsData.Longitude, gpsUart.gpsData.Altitude,
+//						 TM_GPS_ConvertSpeed(gpsUart.gpsData.Speed, TM_GPS_Speed_MeterPerSecond), gpsUart.gpsData.Direction, gpsUart.gpsData.HDOP, gpsUart.gpsData.VDOP,
+//						 gpsUart.gpsData.Satellites, gpsUart.gpsData.FixMode, 0/* UTC in microsecond */);
+//	}
+	if(huart->Instance == UART8){
+		if(TM_GPS_Update() == TM_GPS_Result_NewData && gpsUart.gpsData.Fix != 0 /* gps must fixed */){
+			sensorGPS.setGPS(gpsUart.gpsData.Latitude, gpsUart.gpsData.Longitude, gpsUart.gpsData.Altitude,
+							 TM_GPS_ConvertSpeed(gpsUart.gpsData.Speed, TM_GPS_Speed_MeterPerSecond), gpsUart.gpsData.Direction, gpsUart.gpsData.HDOP, gpsUart.gpsData.VDOP,
+							 gpsUart.gpsData.Satellites, gpsUart.gpsData.FixMode, 0/* UTC in microsecond */);
+		}
 	}
 }
 

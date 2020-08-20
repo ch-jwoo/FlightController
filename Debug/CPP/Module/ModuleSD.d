@@ -1,5 +1,5 @@
 CPP/Module/ModuleSD.o: ../CPP/Module/ModuleSD.cpp \
- C:/git/FlightController/CPP/Module/ModuleSD.h ../Core/Inc/main.h \
+ C:/git/pwmTest/CPP/Module/ModuleSD.h ../Core/Inc/main.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -59,11 +59,10 @@ CPP/Module/ModuleSD.o: ../CPP/Module/ModuleSD.cpp \
  ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/sd_diskio.h \
- C:/git/FlightController/CPP/Lib/printf.h \
- C:/git/FlightController/CPP/MsgBus/MsgBus.h \
- C:/git/FlightController/CPP/MsgBus/MsgType.h
+ C:/git/pwmTest/CPP/Lib/printf.h C:/git/pwmTest/CPP/MsgBus/MsgBus.h \
+ C:/git/pwmTest/CPP/MsgBus/MsgType.h
 
-C:/git/FlightController/CPP/Module/ModuleSD.h:
+C:/git/pwmTest/CPP/Module/ModuleSD.h:
 
 ../Core/Inc/main.h:
 
@@ -193,8 +192,8 @@ C:/git/FlightController/CPP/Module/ModuleSD.h:
 
 ../FATFS/Target/sd_diskio.h:
 
-C:/git/FlightController/CPP/Lib/printf.h:
+C:/git/pwmTest/CPP/Lib/printf.h:
 
-C:/git/FlightController/CPP/MsgBus/MsgBus.h:
+C:/git/pwmTest/CPP/MsgBus/MsgBus.h:
 
-C:/git/FlightController/CPP/MsgBus/MsgType.h:
+C:/git/pwmTest/CPP/MsgBus/MsgType.h:

@@ -1,5 +1,5 @@
 CPP/Actuator/Motor.o: ../CPP/Actuator/Motor.cpp \
- C:/git/FlightController/CPP/Actuator/Motor.h ../Core/Inc/main.h \
+ C:/git/pwmTest/CPP/Actuator/Motor.h ../Core/Inc/main.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -42,9 +42,9 @@ CPP/Actuator/Motor.o: ../CPP/Actuator/Motor.cpp \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
- ../Core/Inc/tim.h ../Core/Inc/main.h
+ ../Core/Inc/tim.h ../Core/Inc/main.h C:/git/pwmTest/CPP/Lib/printf.h
 
-C:/git/FlightController/CPP/Actuator/Motor.h:
+C:/git/pwmTest/CPP/Actuator/Motor.h:
 
 ../Core/Inc/main.h:
 
@@ -135,3 +135,5 @@ C:/git/FlightController/CPP/Actuator/Motor.h:
 ../Core/Inc/tim.h:
 
 ../Core/Inc/main.h:
+
+C:/git/pwmTest/CPP/Lib/printf.h:

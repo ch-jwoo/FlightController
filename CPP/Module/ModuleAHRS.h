@@ -57,6 +57,7 @@ public:
     		moduleAHRS.oneStep();
     		if(cnt>4){
         		ModuleAttitudeController::setSignal(AC_fromAHRS);		/* 200hz */
+        		cnt = 0;
     		}
 
     		cnt++;

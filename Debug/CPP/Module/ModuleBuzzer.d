@@ -1,6 +1,6 @@
 CPP/Module/ModuleBuzzer.o: ../CPP/Module/ModuleBuzzer.cpp \
- C:/git/FlightController/CPP/Module/ModuleBuzzer.h \
- C:/git/FlightController/CPP/MsgBus/MsgType.h ../Core/Inc/main.h \
+ C:/git/pwmTest/CPP/Module/ModuleBuzzer.h \
+ C:/git/pwmTest/CPP/MsgBus/MsgType.h ../Core/Inc/main.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -56,9 +56,9 @@ CPP/Module/ModuleBuzzer.o: ../CPP/Module/ModuleBuzzer.cpp \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  ../Core/Inc/tim.h ../Core/Inc/main.h
 
-C:/git/FlightController/CPP/Module/ModuleBuzzer.h:
+C:/git/pwmTest/CPP/Module/ModuleBuzzer.h:
 
-C:/git/FlightController/CPP/MsgBus/MsgType.h:
+C:/git/pwmTest/CPP/MsgBus/MsgType.h:
 
 ../Core/Inc/main.h:
 

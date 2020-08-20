@@ -1,9 +1,8 @@
 CPP/PeripheralInterface/SensorGPS.o: \
  ../CPP/PeripheralInterface/SensorGPS.cpp \
  ../CPP/PeripheralInterface/SensorGPS.h \
- C:/git/FlightController/CPP/MsgBus/MsgBus.h \
- C:/git/FlightController/CPP/MsgBus/MsgType.h ../Core/Inc/main.h \
- ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
+ C:/git/pwmTest/CPP/MsgBus/MsgBus.h C:/git/pwmTest/CPP/MsgBus/MsgType.h \
+ ../Core/Inc/main.h ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
@@ -46,13 +45,13 @@ CPP/PeripheralInterface/SensorGPS.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
  ../Core/Inc/Usec.h ../Core/Inc/main.h ../Core/Inc/tim.h \
- C:/git/FlightController/CPP/Utils/Freq.h
+ C:/git/pwmTest/CPP/Utils/Freq.h
 
 ../CPP/PeripheralInterface/SensorGPS.h:
 
-C:/git/FlightController/CPP/MsgBus/MsgBus.h:
+C:/git/pwmTest/CPP/MsgBus/MsgBus.h:
 
-C:/git/FlightController/CPP/MsgBus/MsgType.h:
+C:/git/pwmTest/CPP/MsgBus/MsgType.h:
 
 ../Core/Inc/main.h:
 
@@ -146,4 +145,4 @@ C:/git/FlightController/CPP/MsgBus/MsgType.h:
 
 ../Core/Inc/tim.h:
 
-C:/git/FlightController/CPP/Utils/Freq.h:
+C:/git/pwmTest/CPP/Utils/Freq.h:

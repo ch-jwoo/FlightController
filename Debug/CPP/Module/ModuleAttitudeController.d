@@ -1,9 +1,8 @@
 CPP/Module/ModuleAttitudeController.o: \
  ../CPP/Module/ModuleAttitudeController.cpp \
- C:/git/FlightController/CPP/Module/ModuleAttitudeController.h \
- C:/git/FlightController/CPP/MsgBus/MsgBus.h \
- C:/git/FlightController/CPP/MsgBus/MsgType.h ../Core/Inc/main.h \
- ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
+ C:/git/pwmTest/CPP/Module/ModuleAttitudeController.h \
+ C:/git/pwmTest/CPP/MsgBus/MsgBus.h C:/git/pwmTest/CPP/MsgBus/MsgType.h \
+ ../Core/Inc/main.h ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
@@ -45,11 +44,11 @@ CPP/Module/ModuleAttitudeController.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
- C:/git/FlightController/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h \
- C:/git/FlightController/CPP/Lib/MatlabAttitudeController/rtwtypes.h \
- C:/git/FlightController/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h \
- C:/git/FlightController/CPP/Actuator/Motor.h ../Core/Inc/tim.h \
- ../Core/Inc/main.h ../Core/Inc/freertosVariable.h \
+ C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h \
+ C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/rtwtypes.h \
+ C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h \
+ C:/git/pwmTest/CPP/Actuator/Motor.h ../Core/Inc/tim.h ../Core/Inc/main.h \
+ ../Core/Inc/freertosVariable.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  ../Core/Inc/FreeRTOSConfig.h \
@@ -61,16 +60,15 @@ CPP/Module/ModuleAttitudeController.o: \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- C:/git/FlightController/CPP/Utils/Freq.h ../Core/Inc/Usec.h \
- ../Core/Inc/tim.h C:/git/FlightController/CPP/Utils/function.h \
- C:/git/FlightController/CPP/Utils/Constant.h \
- C:/git/FlightController/CPP/Lib/printf.h
+ C:/git/pwmTest/CPP/Utils/Freq.h ../Core/Inc/Usec.h ../Core/Inc/tim.h \
+ C:/git/pwmTest/CPP/Utils/function.h C:/git/pwmTest/CPP/Utils/Constant.h \
+ C:/git/pwmTest/CPP/Lib/printf.h
 
-C:/git/FlightController/CPP/Module/ModuleAttitudeController.h:
+C:/git/pwmTest/CPP/Module/ModuleAttitudeController.h:
 
-C:/git/FlightController/CPP/MsgBus/MsgBus.h:
+C:/git/pwmTest/CPP/MsgBus/MsgBus.h:
 
-C:/git/FlightController/CPP/MsgBus/MsgType.h:
+C:/git/pwmTest/CPP/MsgBus/MsgType.h:
 
 ../Core/Inc/main.h:
 
@@ -158,13 +156,13 @@ C:/git/FlightController/CPP/MsgBus/MsgType.h:
 
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
 
-C:/git/FlightController/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h:
+C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h:
 
-C:/git/FlightController/CPP/Lib/MatlabAttitudeController/rtwtypes.h:
+C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/rtwtypes.h:
 
-C:/git/FlightController/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h:
+C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h:
 
-C:/git/FlightController/CPP/Actuator/Motor.h:
+C:/git/pwmTest/CPP/Actuator/Motor.h:
 
 ../Core/Inc/tim.h:
 
@@ -194,14 +192,14 @@ C:/git/FlightController/CPP/Actuator/Motor.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 
-C:/git/FlightController/CPP/Utils/Freq.h:
+C:/git/pwmTest/CPP/Utils/Freq.h:
 
 ../Core/Inc/Usec.h:
 
 ../Core/Inc/tim.h:
 
-C:/git/FlightController/CPP/Utils/function.h:
+C:/git/pwmTest/CPP/Utils/function.h:
 
-C:/git/FlightController/CPP/Utils/Constant.h:
+C:/git/pwmTest/CPP/Utils/Constant.h:
 
-C:/git/FlightController/CPP/Lib/printf.h:
+C:/git/pwmTest/CPP/Lib/printf.h:

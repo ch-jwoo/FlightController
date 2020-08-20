@@ -1,7 +1,6 @@
 CPP/PeripheralInterface/RC.o: ../CPP/PeripheralInterface/RC.cpp \
- ../CPP/PeripheralInterface/RC.h \
- C:/git/FlightController/CPP/MsgBus/MsgType.h ../Core/Inc/main.h \
- ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
+ ../CPP/PeripheralInterface/RC.h C:/git/pwmTest/CPP/MsgBus/MsgType.h \
+ ../Core/Inc/main.h ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
@@ -43,8 +42,8 @@ CPP/PeripheralInterface/RC.o: ../CPP/PeripheralInterface/RC.cpp \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
- C:/git/FlightController/CPP/Module/ModuleCommander.h \
- C:/git/FlightController/CPP/Module/ModuleBuzzer.h \
+ C:/git/pwmTest/CPP/Module/ModuleCommander.h \
+ C:/git/pwmTest/CPP/Module/ModuleBuzzer.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  ../Core/Inc/FreeRTOSConfig.h \
@@ -56,13 +55,12 @@ CPP/PeripheralInterface/RC.o: ../CPP/PeripheralInterface/RC.cpp \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- ../Core/Inc/tim.h ../Core/Inc/main.h \
- C:/git/FlightController/CPP/MsgBus/MsgBus.h ../Core/Inc/Usec.h \
- ../Core/Inc/tim.h C:/git/FlightController/CPP/Utils/Freq.h
+ ../Core/Inc/tim.h ../Core/Inc/main.h C:/git/pwmTest/CPP/MsgBus/MsgBus.h \
+ ../Core/Inc/Usec.h ../Core/Inc/tim.h C:/git/pwmTest/CPP/Utils/Freq.h
 
 ../CPP/PeripheralInterface/RC.h:
 
-C:/git/FlightController/CPP/MsgBus/MsgType.h:
+C:/git/pwmTest/CPP/MsgBus/MsgType.h:
 
 ../Core/Inc/main.h:
 
@@ -150,9 +148,9 @@ C:/git/FlightController/CPP/MsgBus/MsgType.h:
 
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
 
-C:/git/FlightController/CPP/Module/ModuleCommander.h:
+C:/git/pwmTest/CPP/Module/ModuleCommander.h:
 
-C:/git/FlightController/CPP/Module/ModuleBuzzer.h:
+C:/git/pwmTest/CPP/Module/ModuleBuzzer.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 
@@ -180,10 +178,10 @@ C:/git/FlightController/CPP/Module/ModuleBuzzer.h:
 
 ../Core/Inc/main.h:
 
-C:/git/FlightController/CPP/MsgBus/MsgBus.h:
+C:/git/pwmTest/CPP/MsgBus/MsgBus.h:
 
 ../Core/Inc/Usec.h:
 
 ../Core/Inc/tim.h:
 
-C:/git/FlightController/CPP/Utils/Freq.h:
+C:/git/pwmTest/CPP/Utils/Freq.h:

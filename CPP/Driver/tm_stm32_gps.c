@@ -193,8 +193,7 @@ void TM_GPS_Init(UART_HandleTypeDef* huart) {
 	HAL_UART_Receive_DMA(gpsUart.huart, gpsUart.GPS_DmaBuf, GPS_DMA_BUF_SIZE);
 }
 
-TM_GPS_Result_t TM_GPS_Update(UART_HandleTypeDef* huart) {
-	if(huart->Instance != gpsUart.huart->Instance) return TM_GPS_Result_None;
+TM_GPS_Result_t TM_GPS_Update() {
 
 	TM_GPS_Result_t result = TM_GPS_Result_OldData;
 //	HAL_UART_Transmit(&huart3, GPS_DmaBuf, GPS_DMA_BUF_SIZE, 100);

@@ -55,9 +55,9 @@ public:
 	Motor& operator=(const Motor &other) = delete;
 	Motor& operator=(Motor &&other) = delete;
 
-	uint32_t Channel;
 private:
 	TIM_HandleTypeDef* htim;
+	uint32_t Channel;
 	uint16_t pwm;
 
 	static const uint16_t MIN_PWM = 1000;
