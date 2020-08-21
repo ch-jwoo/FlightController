@@ -22,6 +22,17 @@ enum class Command{
 	MotorCalibration
 };
 
+enum class AutoCommand {
+	Guidance,      /* waypoint flight */
+	RTL,            /* return to launch */
+
+	Land,         /* auto land */
+	Takeoff,         /* auto takeoff */
+	Hovering,      /* hovering in place */
+	Transition      /* tilting */
+};
+
+
 /*
  *  Peripheral data
  */
@@ -181,7 +192,7 @@ struct Waypoint{
 	double lat;
 	double lon;
 	float alt;
-	uint16_t command;
+	AutoCommand command;
 	uint16_t param;
 };
 
