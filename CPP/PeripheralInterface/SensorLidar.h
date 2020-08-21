@@ -50,9 +50,14 @@ private:
 	float avgDistance;
 	uint8_t avgIndex;
 
+	uint32_t lastUpdatedMillisec;
+
 	void calAverage(float distance);
 
 	const static uint8_t AVERAGE_SIZE = 20;
+
+	constexpr static float MAX_RADIAN = 0.1745329;		/* 10.0 degree */
+	const static uint32_t MINIMUM_TIME_INTERVAL_MILLISEC = 20;		/* max 50hz */
 };
 
 extern SensorLidar sensorLidar;

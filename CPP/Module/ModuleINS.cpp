@@ -6,9 +6,9 @@
  */
 
 #include <Module/ModuleINS.h>
+#include <Utils/Constants.h>
 #include "Usec.h"
 #include "printf.h"
-#include "Utils/Constant.h"
 
 namespace FC {
 
@@ -21,7 +21,6 @@ ModuleINS::ModuleINS()
 
 void ModuleINS::onestep(){
 	ExtU input;
-
 	if(msgBus.getNedAccel(&nedAccelSub)){
 		input.AhrsFlag = true;
 		input.ax = nedAccelSub.xyz[0];
@@ -40,6 +39,12 @@ void ModuleINS::onestep(){
 		input.baroZ = baroSub.altitude;
 	}
 	else input.BaroFlag = false;
+
+	if(msgBus.getLidar(&lidar) && lidar.valid){
+		input.LidarFlag = true;
+		input.Lidar_height = lidar.altitude;
+	}
+	else input.LidarFlag = false;
 
 	setExternalInputs(&input);
 	step();

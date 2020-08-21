@@ -236,7 +236,7 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
   // Expression: p.R{4}
   //  Referenced by: '<S1>/R4'
 
-  0.01,
+  0.001,
 
   // Expression: 1
   //  Referenced by: '<S1>/MeasurementFcn4Inputs'

@@ -67,12 +67,13 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
  C:/git/pwmTest/CPP/MsgBus/MsgBus.h ../Core/Inc/Usec.h ../Core/Inc/tim.h \
  C:/git/pwmTest/CPP/Utils/Freq.h \
  C:/git/pwmTest/CPP/PeripheralInterface/SensorAccel.h \
+ C:/git/pwmTest/CPP/Utils/Constants.h \
  C:/git/pwmTest/CPP/Module/ModuleAHRS.h ../Core/Inc/freertosVariable.h \
  C:/git/pwmTest/CPP/Module/ModuleAttitudeController.h \
  C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h \
  C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/rtwtypes.h \
  C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h \
- C:/git/pwmTest/CPP/Actuator/Motor.h C:/git/pwmTest/CPP/Utils/Constant.h \
+ C:/git/pwmTest/CPP/Actuator/Motor.h \
  C:/git/pwmTest/CPP/PeripheralInterface/SensorGPS.h \
  C:/git/pwmTest/CPP/PeripheralInterface/SensorGyro.h \
  C:/git/pwmTest/CPP/PeripheralInterface/SensorMag.h \
@@ -94,8 +95,7 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/sd_diskio.h \
  ../CPP/Module/ModuleAttitudeController.h ../CPP/Module/ModuleINS.h \
- ../CPP/Module/ModulePositionController.h ../CPP/Actuator/Motor.h \
- ../CPP/Utils/Constant.h
+ ../CPP/Module/ModulePositionController.h ../CPP/Actuator/Motor.h
 
 ../Core/Inc/main.h:
 
@@ -249,6 +249,8 @@ C:/git/pwmTest/CPP/Utils/Freq.h:
 
 C:/git/pwmTest/CPP/PeripheralInterface/SensorAccel.h:
 
+C:/git/pwmTest/CPP/Utils/Constants.h:
+
 C:/git/pwmTest/CPP/Module/ModuleAHRS.h:
 
 ../Core/Inc/freertosVariable.h:
@@ -262,8 +264,6 @@ C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/rtwtypes.h:
 C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h:
 
 C:/git/pwmTest/CPP/Actuator/Motor.h:
-
-C:/git/pwmTest/CPP/Utils/Constant.h:
 
 C:/git/pwmTest/CPP/PeripheralInterface/SensorGPS.h:
 
@@ -328,5 +328,3 @@ C:/git/pwmTest/CPP/Module/ModulePositionController.h:
 ../CPP/Module/ModulePositionController.h:
 
 ../CPP/Actuator/Motor.h:
-
-../CPP/Utils/Constant.h:

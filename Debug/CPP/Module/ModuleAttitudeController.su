@@ -7,8 +7,6 @@ MsgBus.h:62:5:void FC::MsgBus::setMotorPWM(const FC::MotorPWM&)	24	static
 Second_att_control_codeblock_fly.h:288:8:void px4_AlgorithmModelClass::setExternalInputs(const px4_AlgorithmModelClass::ExtU_Second_att_control_codeb_T*)	24	static
 Second_att_control_codeblock_fly.h:298:7:const px4_AlgorithmModelClass::ExtY_Second_att_control_codeb_T& px4_AlgorithmModelClass::getExternalOutputs() const	16	static
 Usec.h:18:26:uint64_t microsecond()	12	static
-function.h:15:14:float FC::map(uint16_t, uint16_t, uint16_t, float, float)	24	static
-function.h:19:14:float FC::radianThreshold(float)	16	static
 ModuleAttitudeController.cpp:15:1:FC::ModuleAttitudeController::ModuleAttitudeController()	16	static
 ModuleAttitudeController.cpp:17:6:void FC::ModuleAttitudeController::oneStep()	88	static
 ModuleAttitudeController.cpp:71:6:void FC::ModuleAttitudeController::setFromPositionController()	16	static

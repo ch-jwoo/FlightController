@@ -6,11 +6,11 @@
  */
 
 #include <Module/ModulePositionController.h>
+#include <Utils/Constants.h>
+#include <Utils/Functions.h>
 #include "Module/ModuleCommander.h"
 #include "Usec.h"
 #include "cmath"
-#include "Utils/function.h"
-#include "Utils/Constant.h"
 #include "printf.h"
 namespace FC {
 

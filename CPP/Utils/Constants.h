@@ -5,8 +5,8 @@
  *      Author: cjb88
  */
 
-#ifndef UTILS_CONSTANT_H_
-#define UTILS_CONSTANT_H_
+#ifndef UTILS_CONSTANTS_H_
+#define UTILS_CONSTANTS_H_
 
 
 #define FC_GRAVITY_ACCEERATION 9.80665
@@ -15,4 +15,4 @@
 #define FC_2PI 6.283185307179586
 
 
-#endif /* UTILS_CONSTANT_H_ */
+#endif /* UTILS_CONSTANTS_H_ */

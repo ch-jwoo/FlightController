@@ -44,7 +44,8 @@ CPP/PeripheralInterface/SensorAccel.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
- ../Core/Inc/Usec.h ../Core/Inc/main.h ../Core/Inc/tim.h \
+ C:/git/pwmTest/CPP/Utils/Constants.h ../Core/Inc/Usec.h \
+ ../Core/Inc/main.h ../Core/Inc/tim.h \
  C:/git/pwmTest/CPP/Module/ModuleAHRS.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
@@ -62,8 +63,7 @@ CPP/PeripheralInterface/SensorAccel.o: \
  C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h \
  C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/rtwtypes.h \
  C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h \
- C:/git/pwmTest/CPP/Actuator/Motor.h ../Core/Inc/tim.h \
- C:/git/pwmTest/CPP/Utils/Constant.h
+ C:/git/pwmTest/CPP/Actuator/Motor.h ../Core/Inc/tim.h
 
 ../CPP/PeripheralInterface/SensorAccel.h:
 
@@ -157,6 +157,8 @@ C:/git/pwmTest/CPP/MsgBus/MsgType.h:
 
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
 
+C:/git/pwmTest/CPP/Utils/Constants.h:
+
 ../Core/Inc/Usec.h:
 
 ../Core/Inc/main.h:
@@ -202,5 +204,3 @@ C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly
 C:/git/pwmTest/CPP/Actuator/Motor.h:
 
 ../Core/Inc/tim.h:
-
-C:/git/pwmTest/CPP/Utils/Constant.h:

@@ -7,8 +7,6 @@ MsgBus.h:50:5:void FC::MsgBus::setVehicleAttitueSP(const FC::VehicleAttitueSP&)	
 MsgBus.h:56:5:bool FC::MsgBus::getLocalPosition(FC::LocalPosition*)	32	static
 MsgBus.h:58:5:bool FC::MsgBus::getModeFlag(FC::ModeFlag*)	24	static
 Usec.h:18:26:uint64_t microsecond()	12	static
-function.h:15:14:float FC::map(uint16_t, uint16_t, uint16_t, float, float)	24	static
-function.h:19:14:float FC::radianThreshold(float)	16	static
 ModulePositionController.cpp:17:1:FC::ModulePositionController::ModulePositionController()	16	static
 ModulePositionController.cpp:21:6:void FC::ModulePositionController::oneStep()	128	static
 ModulePositionController.cpp:70:6:void FC::ModulePositionController::setFromRC()	40	static

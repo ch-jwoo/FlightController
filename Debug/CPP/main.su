@@ -8,6 +8,7 @@ MsgBus.h:43:5:bool FC::MsgBus::getBodyAngularVelocity(FC::BodyAngularVelocity*)	
 MsgBus.h:44:5:bool FC::MsgBus::getBodyMag(FC::BodyMag*)	32	static
 MsgBus.h:45:5:bool FC::MsgBus::getGPS(FC::GPS*)	32	static
 MsgBus.h:46:5:bool FC::MsgBus::getBarometer(FC::Barometer*)	32	static
+MsgBus.h:47:5:bool FC::MsgBus::getLidar(FC::Lidar*)	24	static
 MsgBus.h:49:5:bool FC::MsgBus::getController(FC::Controller*)	24	static
 MsgBus.h:50:5:bool FC::MsgBus::getVehicleAttitueSP(FC::VehicleAttitueSP*)	32	static
 MsgBus.h:53:5:bool FC::MsgBus::getAttitude(FC::Attitude*)	32	static
@@ -22,33 +23,34 @@ ModuleAttitudeController.h:46:21:static void FC::ModuleAttitudeController::setSi
 ModuleAHRS.h:51:17:static void FC::ModuleAHRS::main()	184	static
 ModulePositionController.h:30:14:static void FC::ModulePositionController::main()	976	static
 ModulePositionController.h:66:21:static void FC::ModulePositionController::setSignal(FC::PcSignal)	16	static
-ModuleINS.h:25:14:static void FC::ModuleINS::main()	3928	static
+ModuleINS.h:25:14:static void FC::ModuleINS::main()	3944	static
 ModuleHealth.h:20:14:static void FC::ModuleHealth::main()	48	static
 ModuleSD.h:28:16:static void FC::ModuleSD::main()	520	static
-main.cpp:87:6:void _putchar(char)	16	static
-main.cpp:91:6:void Health_StartTask(void*)	16	static
-main.cpp:95:6:void Debug_StartTask(void*)	440	static
-main.cpp:233:6:void MPU9250_StartTask(void*)	24	static
-main.cpp:242:6:void BME280_StartTask(void*)	16	static
-main.cpp:248:6:void IST8310_StartTask(void*)	16	static
-main.cpp:254:6:void SD_StartTask(void*)	16	static
-main.cpp:258:6:void AHRS_StartTask(void*)	16	static
-main.cpp:262:6:void Commander_StartTask(void*)	16	static
-main.cpp:266:6:void Buzzer_StartTask(void*)	16	static
-main.cpp:273:6:void AC_StartTask(void*)	16	static
-main.cpp:277:6:void INS_StartTask(void*)	16	static
-main.cpp:281:6:void PC_StartTask(void*)	16	static
-main.cpp:295:6:void cppMain()	24	static
-main.cpp:365:6:void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef*)	16	static
-main.cpp:393:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	80	static
-main.cpp:428:6:void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef*)	16	static
-main.cpp:434:6:void HAL_GPIO_EXTI_Callback(uint16_t)	16	static
+main.cpp:89:6:void _putchar(char)	16	static
+main.cpp:93:6:void Health_StartTask(void*)	16	static
+main.cpp:97:6:void Debug_StartTask(void*)	456	static
+main.cpp:243:6:void MPU9250_StartTask(void*)	24	static
+main.cpp:252:6:void BME280_StartTask(void*)	16	static
+main.cpp:258:6:void IST8310_StartTask(void*)	16	static
+main.cpp:264:6:void SD_StartTask(void*)	16	static
+main.cpp:268:6:void AHRS_StartTask(void*)	16	static
+main.cpp:272:6:void Commander_StartTask(void*)	16	static
+main.cpp:276:6:void Buzzer_StartTask(void*)	16	static
+main.cpp:283:6:void AC_StartTask(void*)	16	static
+main.cpp:287:6:void INS_StartTask(void*)	16	static
+main.cpp:291:6:void PC_StartTask(void*)	16	static
+main.cpp:305:6:void cppMain()	24	static
+main.cpp:375:6:void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef*)	16	static
+main.cpp:403:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	80	static
+main.cpp:438:6:void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef*)	16	static
+main.cpp:444:6:void HAL_GPIO_EXTI_Callback(uint16_t)	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::SensorAccel]	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::SensorGyro]	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::RC]	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::SensorMag]	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::SensorGPS]	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::SensorBaro]	16	static
+Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::SensorLidar]	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::ModuleAHRS]	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::ModuleINS]	16	static
 Freq.h:18:18:static uint16_t FC::Freq<T>::checkFreq() [with T = FC::ModuleAttitudeController]	16	static

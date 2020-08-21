@@ -31,6 +31,7 @@
 #include "Module/ModuleCommander.h"
 #include <Module/ModuleAHRS.h>
 #include <Module/ModuleBuzzer.h>
+#include <Utils/Constants.h>
 #include "Module/ModuleHealth.h"
 #include "Module/ModuleSD.h"
 #include "Module/ModuleAttitudeController.h"
@@ -38,8 +39,6 @@
 #include "Module/ModulePositionController.h"
 
 #include "Actuator/Motor.h"
-
-#include "Utils/Constant.h"
 
 #include "printf.h"
 
@@ -54,7 +53,7 @@ using namespace FC;
 
 
 float attitude;
-uint16_t hzAccel, hzBaro, hzGyro, hzGPS, hzMag, hzAHRS, hzRC, hzAtti, hzPos, hzINS;
+uint16_t hzAccel, hzBaro, hzGyro, hzGPS, hzMag, hzAHRS, hzRC, hzAtti, hzPos, hzINS, hzLidar;
 uint16_t pwm1, pwm2, pwm3, pwm4, pwm5, pwm6;
 float att_roll, att_pitch, att_yaw;
 uint16_t ctl_roll, ctl_pitch, ctl_yaw, ctl_throtle;
@@ -76,6 +75,9 @@ float mag_biasX, mag_biasY, mag_biasZ;
 float mag_scaleX, mag_scaleY, mag_scaleZ;
 
 float sp_roll, sp_pitch, sp_throtle, sp_yaw;
+
+float lidar_alt;
+uint8_t lidar_valid;
 
 uint8_t mode_arm, mode_flight;
 
@@ -110,6 +112,8 @@ void Debug_StartTask(void *argument){
 	struct ModeFlag modeFlag;
 
 	struct VehicleAttitueSP attitudeSP;
+
+	struct Lidar lidar;
 //	osDelay(2000);
 //	sensorBaro.setSeaLevelPressure(gps.alt);
 	while(1){
@@ -126,6 +130,7 @@ void Debug_StartTask(void *argument){
 		hzAtti = health.attitudeController;
 		hzPos = health.positionController;
 		hzINS = health.ins;
+		hzLidar = health.lidar;
 //		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 
 		msgBus.getMotorPWM(&pwm);
@@ -135,6 +140,11 @@ void Debug_StartTask(void *argument){
 		pwm4 = pwm.m4;
 		pwm5 = pwm.m5;
 		pwm6 = pwm.m6;
+
+		if(msgBus.getLidar(&lidar)){
+			lidar_alt = lidar.altitude;
+			lidar_valid = lidar.valid;
+		}
 
 		msgBus.getAttitude(&att);
 		att_roll = att.roll;
@@ -427,7 +437,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	if(Lidar1D_CaptureCallback(htim)){
-		sensorLidar.setDistance(lidar1D.distance_mm/100.0);
+		sensorLidar.setDistance(lidar1D.distance_mm/1000.0f);
 	}
 }
 

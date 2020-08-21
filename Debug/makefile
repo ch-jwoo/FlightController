@@ -19,6 +19,7 @@ RM := rm -rf
 -include Drivers/STM32H7xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
+-include CPP/Utils/subdir.mk
 -include CPP/PeripheralInterface/subdir.mk
 -include CPP/MsgBus/subdir.mk
 -include CPP/Module/subdir.mk

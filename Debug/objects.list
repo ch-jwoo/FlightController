@@ -27,6 +27,7 @@
 "CPP/PeripheralInterface/SensorGyro.o"
 "CPP/PeripheralInterface/SensorLidar.o"
 "CPP/PeripheralInterface/SensorMag.o"
+"CPP/Utils/Functions.o"
 "CPP/main.o"
 "Core/Src/adc.o"
 "Core/Src/dma.o"

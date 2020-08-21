@@ -34,6 +34,7 @@ public:
 			health.gps = SensorGPS::checkFreq();
 
 			health.baro = SensorBaro::checkFreq();
+			health.lidar = SensorLidar::checkFreq();
 
 			health.ahrs = ModuleAHRS::checkFreq();
 			health.ins = ModuleINS::checkFreq();
@@ -42,7 +43,6 @@ public:
 			health.positionController = ModulePositionController::checkFreq();
 			//TODO auto, lidar health check
 			health.autoController = 0;
-			health.lidar = 0;
 
 			msgBus.setHealth(health);
 

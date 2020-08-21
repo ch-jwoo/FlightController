@@ -6,8 +6,8 @@
  */
 
 #include <Module/ModuleAttitudeController.h>
+#include <Utils/Functions.h>
 #include "Usec.h"
-#include "Utils/function.h"
 #include "printf.h"
 
 namespace FC {

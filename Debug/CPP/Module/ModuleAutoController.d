@@ -73,7 +73,7 @@ CPP/Module/ModuleAutoController.o: ../CPP/Module/ModuleAutoController.cpp \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- C:/git/pwmTest/CPP/Utils/Constant.h ../Core/Inc/USEC.h \
+ C:/git/pwmTest/CPP/Utils/Constants.h ../Core/Inc/USEC.h \
  ../Core/Inc/main.h ../Core/Inc/tim.h
 
 C:/git/pwmTest/CPP/MsgBus/MsgType.h:
@@ -226,7 +226,7 @@ C:/git/pwmTest/CPP/Module/ModuleAutoController.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 
-C:/git/pwmTest/CPP/Utils/Constant.h:
+C:/git/pwmTest/CPP/Utils/Constants.h:
 
 ../Core/Inc/USEC.h:
 

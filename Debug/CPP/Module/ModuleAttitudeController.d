@@ -60,9 +60,8 @@ CPP/Module/ModuleAttitudeController.o: \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- C:/git/pwmTest/CPP/Utils/Freq.h ../Core/Inc/Usec.h ../Core/Inc/tim.h \
- C:/git/pwmTest/CPP/Utils/function.h C:/git/pwmTest/CPP/Utils/Constant.h \
- C:/git/pwmTest/CPP/Lib/printf.h
+ C:/git/pwmTest/CPP/Utils/Freq.h C:/git/pwmTest/CPP/Utils/Functions.h \
+ ../Core/Inc/Usec.h ../Core/Inc/tim.h C:/git/pwmTest/CPP/Lib/printf.h
 
 C:/git/pwmTest/CPP/Module/ModuleAttitudeController.h:
 
@@ -194,12 +193,10 @@ C:/git/pwmTest/CPP/Actuator/Motor.h:
 
 C:/git/pwmTest/CPP/Utils/Freq.h:
 
+C:/git/pwmTest/CPP/Utils/Functions.h:
+
 ../Core/Inc/Usec.h:
 
 ../Core/Inc/tim.h:
-
-C:/git/pwmTest/CPP/Utils/function.h:
-
-C:/git/pwmTest/CPP/Utils/Constant.h:
 
 C:/git/pwmTest/CPP/Lib/printf.h:

@@ -38,6 +38,7 @@ CPP/Lib \
 CPP/Module \
 CPP/MsgBus \
 CPP/PeripheralInterface \
+CPP/Utils \
 CPP \
 Core/Src \
 Core/Startup \

@@ -8,7 +8,6 @@
 #include <PeripheralInterface/SensorLidar.h>
 #include "Usec.h"
 #include <cmath>
-
 namespace FC {
 
 SensorLidar sensorLidar;
@@ -22,18 +21,28 @@ SensorLidar::SensorLidar()
 {}
 
 void SensorLidar::setDistance(float distance /*[m]*/){
+	if(millisecond() - lastUpdatedMillisec < MINIMUM_TIME_INTERVAL_MILLISEC) return;
 	if(distance == 0.0f) return;
-	if(!msgBus.getAttitude(&attitudeSub)) return;		/* can't acquisite attitude */
 
-	float altitude = distance * cos(attitudeSub.roll) * sin(attitudeSub.pitch);
+	msgBus.getAttitude(&attitudeSub);
+	if(attitudeSub.roll > MAX_RADIAN || attitudeSub.roll < -MAX_RADIAN ||
+	   attitudeSub.pitch > MAX_RADIAN || attitudeSub.pitch < -MAX_RADIAN){
+
+		lidarPub.timestamp = microsecond();
+		lidarPub.valid = false;
+		msgBus.setLidar(lidarPub);
+		return;
+	}
+	float altitude = distance * abs((double)cos(attitudeSub.roll) * cos(attitudeSub.pitch));
 
 	if(calRefFlag) calAverage(altitude);
 
 	lidarPub.timestamp = microsecond();
 	lidarPub.altitude = altitude;
-	lidarPub.valid = 0;
+	lidarPub.valid = true;
 	msgBus.setLidar(lidarPub);
 
+	lastUpdatedMillisec = millisecond();
 	freqCnt++;
 }
 

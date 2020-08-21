@@ -52,6 +52,7 @@ private:
 	struct NedAccel nedAccelSub;
 	struct GPS gpsSub;
 	struct Barometer baroSub;
+	struct Lidar lidar;
 
 	struct LocalPosition localPositionPub;
 

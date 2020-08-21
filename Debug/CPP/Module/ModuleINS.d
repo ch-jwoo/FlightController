@@ -57,12 +57,12 @@ CPP/Module/ModuleINS.o: ../CPP/Module/ModuleINS.cpp \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  C:/git/pwmTest/CPP/Module/ModulePositionController.h \
+ C:/git/pwmTest/CPP/Utils/Constants.h \
  C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h \
  C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h \
  C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h \
  C:/git/pwmTest/CPP/Utils/Freq.h ../Core/Inc/freertosVariable.h \
- ../Core/Inc/main.h C:/git/pwmTest/CPP/Utils/Constant.h \
- C:/git/pwmTest/CPP/Module/ModuleCommander.h \
+ ../Core/Inc/main.h C:/git/pwmTest/CPP/Module/ModuleCommander.h \
  C:/git/pwmTest/CPP/Module/ModuleBuzzer.h ../Core/Inc/tim.h \
  ../Core/Inc/Usec.h ../Core/Inc/tim.h C:/git/pwmTest/CPP/Lib/printf.h
 
@@ -186,6 +186,8 @@ C:/git/pwmTest/CPP/MsgBus/MsgType.h:
 
 C:/git/pwmTest/CPP/Module/ModulePositionController.h:
 
+C:/git/pwmTest/CPP/Utils/Constants.h:
+
 C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h:
 
 C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h:
@@ -197,8 +199,6 @@ C:/git/pwmTest/CPP/Utils/Freq.h:
 ../Core/Inc/freertosVariable.h:
 
 ../Core/Inc/main.h:
-
-C:/git/pwmTest/CPP/Utils/Constant.h:
 
 C:/git/pwmTest/CPP/Module/ModuleCommander.h:
 
