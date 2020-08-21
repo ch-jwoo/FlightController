@@ -79,8 +79,8 @@ HAL_StatusTypeDef Lidar1D_run(){
 }
 
 
-void Lidar1D_CaptureCallback(TIM_HandleTypeDef *htim){
-	if(htim->Instance != lidar1D.htim->Instance) return;
+uint8_t Lidar1D_CaptureCallback(TIM_HandleTypeDef *htim){
+	if(htim->Instance != lidar1D.htim->Instance) return 0;	/* success */
 
 	if(htim->Channel == lidar1D.activeChannel1){
 //		IC1Value = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
@@ -89,4 +89,5 @@ void Lidar1D_CaptureCallback(TIM_HandleTypeDef *htim){
 	if(htim->Channel == lidar1D.activeChannel2){
 		lidar1D.distance_mm = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
 	}
+	return 1;
 }

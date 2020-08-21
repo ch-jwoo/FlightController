@@ -30,9 +30,15 @@ extern Lidar1D_t lidar1D;
 /*
  *  set timer, channel
  *  timer count 1 microsecond
+ *  global interrupt enable
+ *  input filter 15
+ *  Channel1 : Input Capture direct mode, detect rising edge
+ *  Channel2 : Input Capture indirect mode, detect falling edge
  *  ex) system clock 168Mhz
  *  	Prescaler : 168-1
  *  	Period : max
+ *
+ *  reference : https://m.blog.naver.com/PostView.nhn?blogId=ysahn2k&logNo=221260639215&proxyReferer=https:%2F%2Fwww.google.com%2F
  */
 void Lidar1D_init(TIM_HandleTypeDef *htim, uint32_t directChannel, uint32_t indirectChannel);
 
@@ -45,8 +51,7 @@ HAL_StatusTypeDef Lidar1D_run();
  *  callback on
  *  void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
  */
-void Lidar1D_CaptureCallback(TIM_HandleTypeDef *htim);
-
+uint8_t Lidar1D_CaptureCallback(TIM_HandleTypeDef *htim);
 
 #ifdef __cplusplus
 }

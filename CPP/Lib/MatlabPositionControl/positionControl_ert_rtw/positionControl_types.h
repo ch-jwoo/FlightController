@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionControl'.
 //
-// Model version                  : 1.7
+// Model version                  : 1.8
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Wed Aug 19 08:09:50 2020
+// C/C++ source code generated on : Fri Aug 21 23:47:28 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -18,13 +18,8 @@
 //
 #ifndef RTW_HEADER_positionControl_types_h_
 #define RTW_HEADER_positionControl_types_h_
-#include "rtwtypes.h"
 
 // Model Code Variants
-
-// Parameters (default storage)
-typedef struct P_positionControl_T_ P_positionControl_T;
-
 #endif                                 // RTW_HEADER_positionControl_types_h_
 
 //

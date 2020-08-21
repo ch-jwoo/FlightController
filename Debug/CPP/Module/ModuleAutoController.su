@@ -1,0 +1,56 @@
+cmath:87:3:constexpr float std::acos(float)	16	static
+cmath:106:3:constexpr float std::asin(float)	16	static
+cmath:463:3:constexpr float std::sqrt(float)	16	static
+MsgBus.h:51:5:void FC::MsgBus::setVehiclePositionSP(const FC::VehiclePositionSP&)	24	static
+MsgBus.h:56:5:bool FC::MsgBus::getLocalPosition(FC::LocalPosition*)	32	static
+MsgBus.h:58:5:bool FC::MsgBus::getModeFlag(FC::ModeFlag*)	24	static
+MsgBus.h:64:5:bool FC::MsgBus::getVehicleWP(FC::VehicleWP*)	32	static
+USEC.h:18:26:uint64_t microsecond()	12	static
+ModuleAutoController.cpp:18:1:FC::ModuleAutoController::ModuleAutoController()	16	static
+ModuleAutoController.cpp:25:6:void FC::ModuleAutoController::oneStep()	16	static
+ModuleAutoController.cpp:74:6:void FC::ModuleAutoController::waypointToLocalNed()	24	static
+cmath:415:5:constexpr typename __gnu_cxx::__promote_2<_Tp, _Up>::__type std::pow(_Tp, _Up) [with _Tp = double; _Up = int]	24	static
+ModuleAutoController.cpp:98:6:void FC::ModuleAutoController::geoToECEF(double, double, float, double*, double*, double*)	88	static
+ModuleAutoController.cpp:119:6:void FC::ModuleAutoController::llaToLocalNed(double, double, float, double, double, float, float*, float*, float*)	352	static
+Vector.hpp:20:7:matrix::Vector<float, 3>::Vector(const matrix::Vector<float, 3>&)	16	static
+Vector3.hpp:29:7:matrix::Vector3<float>::Vector3(const matrix::Vector3<float>&)	16	static
+stl_algobase.h:219:5:constexpr const _Tp& std::max(const _Tp&, const _Tp&) [with _Tp = double]	16	static
+ModuleAutoController.cpp:162:6:void FC::ModuleAutoController::guidance(float, float, float, float, float, float, float, float, float, float, float, float, float*, float*, float*, float*, float*, float*)	552	static
+ModuleAutoController.cpp:226:6:void FC::ModuleAutoController::setPosition()	24	static
+ModuleAutoController.cpp:241:6:void FC::ModuleAutoController::doLand()	24	static
+ModuleAutoController.cpp:261:6:void FC::ModuleAutoController::doTakeoff()	48	static
+ModuleAutoController.cpp:289:6:void FC::ModuleAutoController::doGuidance()	48	static
+ModuleAutoController.cpp:308:6:void FC::ModuleAutoController::doRTL()	48	static
+ModuleAutoController.cpp:326:6:void FC::ModuleAutoController::doHovering()	24	static
+ModuleAutoController.cpp:346:6:void FC::ModuleAutoController::doTransition()	32	static
+Matrix.hpp:66:14:matrix::Matrix<Type, M, N>::Matrix(const Type*) [with Type = double; unsigned int M = 3; unsigned int N = 3]	16	static
+Matrix.hpp:66:14:matrix::Matrix<Type, M, N>::Matrix(const Type*) [with Type = double; unsigned int M = 3; unsigned int N = 1]	16	static
+Matrix.hpp:150:24:matrix::Matrix<Type, M, P> matrix::Matrix<Type, M, N>::operator*(const matrix::Matrix<Type, N, P>&) const [with unsigned int P = 1; Type = double; unsigned int M = 3; unsigned int N = 3]	48	static
+Matrix.hpp:107:18:Type& matrix::Matrix<Type, M, N>::operator()(size_t, size_t) [with Type = double; unsigned int M = 3; unsigned int N = 1]	24	static
+Matrix.hpp:63:5:constexpr matrix::Matrix<Type, M, N>::Matrix() [with Type = float; unsigned int M = 3; unsigned int N = 1]	16	static
+Vector.hpp:25:5:constexpr matrix::Vector<Type, M>::Vector() [with Type = float; unsigned int M = 3]	16	static
+Vector3.hpp:47:5:matrix::Vector3<Type>::Vector3(Type, Type, Type) [with Type = float]	32	static
+Matrix.hpp:76:5:matrix::Matrix<Type, M, N>::Matrix(const matrix::Matrix<Type, M, N>&) [with Type = float; unsigned int M = 3; unsigned int N = 1]	16	static
+Vector3.hpp:73:20:matrix::Vector3<Type> matrix::Vector3<Type>::operator-(matrix::Vector3<Type>) const [with Type = float]	40	static
+Vector.hpp:79:10:Type matrix::Vector<Type, M>::norm() const [with Type = float; unsigned int M = 3]	24	static
+Matrix.hpp:283:31:matrix::Matrix<Type, M, N> matrix::Matrix<Type, M, N>::operator/(Type) const [with Type = float; unsigned int M = 3; unsigned int N = 1]	24	static
+Vector3.hpp:37:5:matrix::Vector3<Type>::Vector3(const Matrix31&) [with Type = float]	16	static
+Vector.hpp:52:18:Type& matrix::Vector<Type, M>::operator()(size_t) [with Type = float; unsigned int M = 3]	24	static
+Vector.hpp:61:10:Type matrix::Vector<Type, M>::dot(const MatrixM1&) const [with Type = float; unsigned int M = 3]	40	static
+cmath:494:5:constexpr typename __gnu_cxx::__enable_if<std::__is_integer<_Tp>::__value, double>::__type std::tan(_Tp) [with _Tp = unsigned char]	16	static
+stl_algobase.h:195:5:constexpr const _Tp& std::min(const _Tp&, const _Tp&) [with _Tp = double]	16	static
+Vector3.hpp:78:20:matrix::Vector3<Type> matrix::Vector3<Type>::operator-() const [with Type = float]	32	static
+Vector3.hpp:83:20:matrix::Vector3<Type> matrix::Vector3<Type>::operator*(Type) const [with Type = float]	40	static
+Vector3.hpp:68:20:matrix::Vector3<Type> matrix::Vector3<Type>::operator+(matrix::Vector3<Type>) const [with Type = float]	40	static
+Vector3.hpp:59:13:matrix::Vector3<Type> matrix::Vector3<Type>::cross(const Matrix31&) const [with Type = float]	48	static
+Matrix.hpp:449:10:void matrix::Matrix<Type, M, N>::setZero() [with Type = double; unsigned int M = 3; unsigned int N = 1]	16	static
+Matrix.hpp:97:17:Type matrix::Matrix<Type, M, N>::operator()(size_t, size_t) const [with Type = double; unsigned int M = 3; unsigned int N = 3]	32	static
+Matrix.hpp:97:17:Type matrix::Matrix<Type, M, N>::operator()(size_t, size_t) const [with Type = double; unsigned int M = 3; unsigned int N = 1]	32	static
+Matrix.hpp:209:24:matrix::Matrix<Type, M, N> matrix::Matrix<Type, M, N>::operator-(const matrix::Matrix<Type, M, N>&) const [with Type = float; unsigned int M = 3; unsigned int N = 1]	48	static
+Matrix.hpp:269:24:matrix::Matrix<Type, M, N> matrix::Matrix<Type, M, N>::operator*(Type) const [with Type = float; unsigned int M = 3; unsigned int N = 1]	48	static
+Vector.hpp:27:5:matrix::Vector<Type, M>::Vector(const MatrixM1&) [with Type = float; unsigned int M = 3]	16	static
+Matrix.hpp:107:18:Type& matrix::Matrix<Type, M, N>::operator()(size_t, size_t) [with Type = float; unsigned int M = 3; unsigned int N = 1]	24	static
+Vector.hpp:43:17:Type matrix::Vector<Type, M>::operator()(size_t) const [with Type = float; unsigned int M = 3]	24	static
+Matrix.hpp:97:17:Type matrix::Matrix<Type, M, N>::operator()(size_t, size_t) const [with Type = float; unsigned int M = 3; unsigned int N = 1]	24	static
+Matrix.hpp:224:24:matrix::Matrix<Type, M, N> matrix::Matrix<Type, M, N>::operator-() const [with Type = float; unsigned int M = 3; unsigned int N = 1]	40	static
+Matrix.hpp:195:24:matrix::Matrix<Type, M, N> matrix::Matrix<Type, M, N>::operator+(const matrix::Matrix<Type, M, N>&) const [with Type = float; unsigned int M = 3; unsigned int N = 1]	48	static

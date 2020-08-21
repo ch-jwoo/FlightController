@@ -4,8 +4,8 @@ cmath:463:3:constexpr float std::sqrt(float)	16	static
 msgBus.h:42:5:bool FC::MsgBus::getBodyAccel(FC::BodyAccel*)	32	static
 msgBus.h:43:5:bool FC::MsgBus::getBodyAngularVelocity(FC::BodyAngularVelocity*)	32	static
 msgBus.h:44:5:bool FC::MsgBus::getBodyMag(FC::BodyMag*)	32	static
-msgBus.h:52:5:void FC::MsgBus::setAttitude(const FC::Attitude&)	24	static
-msgBus.h:53:5:void FC::MsgBus::setNedAccel(const FC::NedAccel&)	24	static
+msgBus.h:53:5:void FC::MsgBus::setAttitude(const FC::Attitude&)	24	static
+msgBus.h:54:5:void FC::MsgBus::setNedAccel(const FC::NedAccel&)	24	static
 Usec.h:18:26:uint64_t microsecond()	12	static
 ModuleAHRS.cpp:17:1:FC::ModuleAHRS::ModuleAHRS()	24	static
 ModuleAHRS.cpp:33:6:void FC::ModuleAHRS::oneStep()	128	static

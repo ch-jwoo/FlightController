@@ -91,6 +91,7 @@ void _putchar(char character){
 void Health_StartTask(void *argument){
 	ModuleHealth::main();
 }
+
 void Debug_StartTask(void *argument){
 	uint32_t tick;
 	tick = osKernelGetTickCount();
@@ -347,8 +348,8 @@ void cppMain(){
      */
 	SBUS_init(&huart7);
 
-//	Lidar1D_init(&htim15, TIM_CHANNEL_1, TIM_CHANNEL_2);
-//	Lidar1D_run();
+	Lidar1D_init(&htim15, TIM_CHANNEL_1, TIM_CHANNEL_2);
+	Lidar1D_run();
 
 	m1.start();
 	m2.start();
@@ -425,7 +426,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
-	Lidar1D_CaptureCallback(htim);
+	if(Lidar1D_CaptureCallback(htim)){
+		sensorLidar.setDistance(lidar1D.distance_mm/100.0);
+	}
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){

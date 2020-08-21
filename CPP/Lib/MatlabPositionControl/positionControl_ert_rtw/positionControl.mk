@@ -2,7 +2,7 @@
 ## Makefile generated for Simulink model 'positionControl'. 
 ## 
 ## Makefile     : positionControl.mk
-## Generated on : Wed Aug 19 08:09:53 2020
+## Generated on : Fri Aug 21 23:29:50 2020
 ## MATLAB Coder version: 5.0 (R2020a)
 ## 
 ## Build Info:
@@ -29,7 +29,7 @@ MATLAB_ROOT               = C:/PROGRA~1/MATLAB/R2020a
 MATLAB_BIN                = C:/PROGRA~1/MATLAB/R2020a/bin
 MATLAB_ARCH_BIN           = $(MATLAB_BIN)/win64
 MASTER_ANCHOR_DIR         = 
-START_DIR                 = C:/Users/Yeojun/ONEDRI~1.EDU/2020_R~1/FLIGHT~3/CPP/Lib/MATLAB~2
+START_DIR                 = C:/Users/Yeojun/ONEDRI~1.EDU/2020_R~1/POSCON~1
 SOLVER                    = 
 SOLVER_OBJ                = 
 CLASSIC_INTERFACE         = 0

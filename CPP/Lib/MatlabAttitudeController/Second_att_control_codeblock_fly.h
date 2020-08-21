@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'Second_att_control_codeblock_fly'.
 //
-// Model version                  : 1.31
+// Model version                  : 1.32
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Aug 17 10:05:41 2020
+// C/C++ source code generated on : Fri Aug 21 18:46:18 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -84,6 +84,7 @@ class px4_AlgorithmModelClass {
  public:
   // Block signals (default storage)
   typedef struct {
+    real32_T Gain;                     // '<Root>/Gain'
     real32_T Max_angle_coef_m[2];      // '<S1>/Max_angle_coef'
     real32_T pitchrollerror;           // '<S4>/Sum'
     real32_T P_pr;                     // '<S4>/P_pr'
@@ -100,7 +101,7 @@ class px4_AlgorithmModelClass {
     real32_T D_pr;                     // '<S5>/D_pr'
     real32_T P_pr_d;                   // '<S5>/Sum16'
     real32_T Saturation;               // '<S5>/Saturation'
-    real32_T Gain;                     // '<S5>/Gain'
+    real32_T Gain_p;                   // '<S5>/Gain'
     real32_T pitchrollerror_m;         // '<S4>/Sum2'
     real32_T P_pr1;                    // '<S4>/P_pr1'
     real32_T DiscreteTimeIntegrator1;  // '<S4>/Discrete-Time Integrator1'
@@ -182,6 +183,9 @@ class px4_AlgorithmModelClass {
                               // Mask Parameter: DiscretePIDController_InitialCo
                                  //  Referenced by: '<S41>/Integrator'
 
+    real32_T Gain_Gain;                // Computed Parameter: Gain_Gain
+                                          //  Referenced by: '<Root>/Gain'
+
     real32_T DiscreteTimeIntegrator_gainval;
                            // Computed Parameter: DiscreteTimeIntegrator_gainval
                               //  Referenced by: '<S4>/Discrete-Time Integrator'
@@ -207,7 +211,7 @@ class px4_AlgorithmModelClass {
     real32_T Saturation_LowerSat;     // Computed Parameter: Saturation_LowerSat
                                          //  Referenced by: '<S5>/Saturation'
 
-    real32_T Gain_Gain;                // Computed Parameter: Gain_Gain
+    real32_T Gain_Gain_p;              // Computed Parameter: Gain_Gain_p
                                           //  Referenced by: '<S5>/Gain'
 
     real32_T DiscreteTimeIntegrator1_gainval;

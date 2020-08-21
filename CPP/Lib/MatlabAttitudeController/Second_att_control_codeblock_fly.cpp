@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'Second_att_control_codeblock_fly'.
 //
-// Model version                  : 1.31
+// Model version                  : 1.32
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Aug 17 10:05:41 2020
+// C/C++ source code generated on : Fri Aug 21 18:46:18 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -92,14 +92,20 @@ void px4_AlgorithmModelClass::step()
   real32_T u1;
   real32_T u2;
 
-  // Gain: '<S1>/Max_angle_coef' incorporates:
+  // Gain: '<Root>/Gain' incorporates:
   //   Inport: '<Root>/set_pitch'
+
+  Second_att_control_codeblock__B.Gain =
+    Second_att_control_codeblock__P.Gain_Gain *
+    Second_att_control_codeblock__U.set_pitch;
+
+  // Gain: '<S1>/Max_angle_coef' incorporates:
   //   Inport: '<Root>/set_roll'
 
   Second_att_control_codeblock__B.Max_angle_coef_m[0] = Max_angle_coef *
     Second_att_control_codeblock__U.set_roll;
   Second_att_control_codeblock__B.Max_angle_coef_m[1] = Max_angle_coef *
-    Second_att_control_codeblock__U.set_pitch;
+    Second_att_control_codeblock__B.Gain;
 
   // Sum: '<S4>/Sum' incorporates:
   //   Inport: '<Root>/Roll'
@@ -194,8 +200,8 @@ void px4_AlgorithmModelClass::step()
   // End of Saturate: '<S5>/Saturation'
 
   // Gain: '<S5>/Gain'
-  Second_att_control_codeblock__B.Gain =
-    Second_att_control_codeblock__P.Gain_Gain *
+  Second_att_control_codeblock__B.Gain_p =
+    Second_att_control_codeblock__P.Gain_Gain_p *
     Second_att_control_codeblock__B.Saturation;
 
   // Sum: '<S4>/Sum2' incorporates:
@@ -323,7 +329,7 @@ void px4_AlgorithmModelClass::step()
   // MATLAB Function: '<S1>/pwm_out1' incorporates:
   //   Inport: '<Root>/set_thrust'
 
-  u0 = rt_roundf_snf(((-Second_att_control_codeblock__B.Gain -
+  u0 = rt_roundf_snf(((-Second_att_control_codeblock__B.Gain_p -
                        Second_att_control_codeblock__B.Sum_f) *
                       Second_att_control_codeblock__U.set_thrust / 3.0F +
                       Second_att_control_codeblock__U.set_thrust) * 1000.0F);
@@ -343,7 +349,7 @@ void px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M1 = static_cast<uint16_T>(tmp);
-  u0 = rt_roundf_snf(((Second_att_control_codeblock__B.Gain +
+  u0 = rt_roundf_snf(((Second_att_control_codeblock__B.Gain_p +
                        Second_att_control_codeblock__B.Sum_f) *
                       Second_att_control_codeblock__U.set_thrust / 3.0F +
                       Second_att_control_codeblock__U.set_thrust) * 1000.0F);
@@ -363,7 +369,7 @@ void px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M2 = static_cast<uint16_T>(tmp);
-  u0 = rt_roundf_snf((((Second_att_control_codeblock__B.Gain / 2.0F +
+  u0 = rt_roundf_snf((((Second_att_control_codeblock__B.Gain_p / 2.0F +
                         Second_att_control_codeblock__B.Gain1) -
                        Second_att_control_codeblock__B.Sum_f) *
                       Second_att_control_codeblock__U.set_thrust / 3.0F +
@@ -385,7 +391,7 @@ void px4_AlgorithmModelClass::step()
 
   Second_att_control_codeblock__B.M3 = static_cast<uint16_T>(tmp);
   u0 = rt_roundf_snf((((-Second_att_control_codeblock__B.Gain1 -
-                        Second_att_control_codeblock__B.Gain / 2.0F) +
+                        Second_att_control_codeblock__B.Gain_p / 2.0F) +
                        Second_att_control_codeblock__B.Sum_f) *
                       Second_att_control_codeblock__U.set_thrust / 3.0F +
                       Second_att_control_codeblock__U.set_thrust) * 1000.0F);
@@ -406,7 +412,7 @@ void px4_AlgorithmModelClass::step()
 
   Second_att_control_codeblock__B.M4 = static_cast<uint16_T>(tmp);
   u0 = rt_roundf_snf((((Second_att_control_codeblock__B.Gain1 -
-                        Second_att_control_codeblock__B.Gain / 2.0F) +
+                        Second_att_control_codeblock__B.Gain_p / 2.0F) +
                        Second_att_control_codeblock__B.Sum_f) *
                       Second_att_control_codeblock__U.set_thrust / 3.0F +
                       Second_att_control_codeblock__U.set_thrust) * 1000.0F);
@@ -426,7 +432,7 @@ void px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M5 = static_cast<uint16_T>(tmp);
-  u0 = rt_roundf_snf((((Second_att_control_codeblock__B.Gain / 2.0F +
+  u0 = rt_roundf_snf((((Second_att_control_codeblock__B.Gain_p / 2.0F +
                         -Second_att_control_codeblock__B.Gain1) -
                        Second_att_control_codeblock__B.Sum_f) *
                       Second_att_control_codeblock__U.set_thrust / 3.0F +

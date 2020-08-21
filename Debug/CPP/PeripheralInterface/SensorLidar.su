@@ -1,0 +1,11 @@
+cmath:184:3:constexpr float std::cos(float)	16	static
+cmath:425:3:constexpr float std::sin(float)	16	static
+MsgBus.h:47:5:void FC::MsgBus::setLidar(const FC::Lidar&)	16	static
+MsgBus.h:53:5:bool FC::MsgBus::getAttitude(FC::Attitude*)	32	static
+Usec.h:18:26:uint64_t microsecond()	12	static
+SensorLidar.cpp:16:1:FC::SensorLidar::SensorLidar()	16	static
+SensorLidar.cpp:24:6:void FC::SensorLidar::setDistance(float)	40	static
+SensorLidar.cpp:40:6:void FC::SensorLidar::setRefDistance()	16	static
+SensorLidar.cpp:46:6:void FC::SensorLidar::calAverage(float)	24	static
+SensorLidar.cpp:58:1:void __static_initialization_and_destruction_0(int, int)	16	static
+SensorLidar.cpp:58:1:cpp)	8	static

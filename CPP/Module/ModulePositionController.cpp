@@ -33,7 +33,7 @@ void ModulePositionController::oneStep(){
 
 	input.set_x = targetX;
 	input.set_y = targetY;
-	input.set_z = -targetZ;
+	input.set_z = targetZ;
 	input.set_yaw = targetYaw;;
 
 	input.estim_dx = localPositionSub.vx;

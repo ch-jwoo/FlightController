@@ -44,6 +44,7 @@ public:
     SIMPLE_FUNC_IMPL(BodyMag, BodyMag, bodyMag)
     SIMPLE_FUNC_IMPL(GPS, GPS, gps)
     SIMPLE_FUNC_IMPL(Barometer, Barometer, barometer)
+    SIMPLE_FUNC_IMPL(Lidar, Lidar, lidar)
 
     SIMPLE_FUNC_IMPL(Controller, Controller, controller)
     SIMPLE_FUNC_IMPL(VehicleAttitueSP, VehicleAttitueSP, vehicleAttitudeSP)
@@ -69,6 +70,7 @@ private:
     struct BodyMag bodyMag;
     struct GPS gps;
     struct Barometer barometer;
+    struct Lidar lidar;
 
     /* control */
     struct Controller controller;

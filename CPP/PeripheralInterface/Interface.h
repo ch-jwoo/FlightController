@@ -14,6 +14,7 @@
 #include <PeripheralInterface/SensorGyro.h>
 #include <PeripheralInterface/SensorMag.h>
 #include "SensorBaro.h"
+#include "SensorLidar.h"
 
 namespace FC{
 
@@ -23,6 +24,7 @@ extern SensorGyro sensorGyro;
 extern SensorMag sensorMag;
 extern SensorBaro sensorBaro;
 extern SensorGPS sensorGPS;
+extern SensorLidar sensorLidar;
 
 }
 

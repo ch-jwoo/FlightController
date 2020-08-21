@@ -77,8 +77,8 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
  C:/git/pwmTest/CPP/PeripheralInterface/SensorGyro.h \
  C:/git/pwmTest/CPP/PeripheralInterface/SensorMag.h \
  ../CPP/PeripheralInterface/SensorBaro.h C:/git/pwmTest/CPP/Lib/printf.h \
- ../CPP/Module/ModuleCommander.h ../CPP/Module/ModuleHealth.h \
- ../CPP/Module/ModulePositionController.h \
+ ../CPP/PeripheralInterface/SensorLidar.h ../CPP/Module/ModuleCommander.h \
+ ../CPP/Module/ModuleHealth.h ../CPP/Module/ModulePositionController.h \
  C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h \
  C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h \
  C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h \
@@ -274,6 +274,8 @@ C:/git/pwmTest/CPP/PeripheralInterface/SensorMag.h:
 ../CPP/PeripheralInterface/SensorBaro.h:
 
 C:/git/pwmTest/CPP/Lib/printf.h:
+
+../CPP/PeripheralInterface/SensorLidar.h:
 
 ../CPP/Module/ModuleCommander.h:
 

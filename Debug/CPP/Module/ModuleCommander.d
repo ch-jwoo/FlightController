@@ -77,7 +77,8 @@ CPP/Module/ModuleCommander.o: ../CPP/Module/ModuleCommander.cpp \
  C:/git/pwmTest/CPP/PeripheralInterface/SensorGyro.h \
  C:/git/pwmTest/CPP/PeripheralInterface/SensorMag.h \
  C:/git/pwmTest/CPP/PeripheralInterface/SensorBaro.h \
- C:/git/pwmTest/CPP/Lib/printf.h
+ C:/git/pwmTest/CPP/Lib/printf.h \
+ C:/git/pwmTest/CPP/PeripheralInterface/SensorLidar.h
 
 C:/git/pwmTest/CPP/Module/ModuleCommander.h:
 
@@ -246,3 +247,5 @@ C:/git/pwmTest/CPP/PeripheralInterface/SensorMag.h:
 C:/git/pwmTest/CPP/PeripheralInterface/SensorBaro.h:
 
 C:/git/pwmTest/CPP/Lib/printf.h:
+
+C:/git/pwmTest/CPP/PeripheralInterface/SensorLidar.h:

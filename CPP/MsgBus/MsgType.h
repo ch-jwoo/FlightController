@@ -101,6 +101,12 @@ struct Barometer{
     float altitude;			/* meter */
 };
 
+struct Lidar{
+	uint64_t timestamp;
+	float altitude;
+	bool valid;
+};
+
 
 /* vehicle control */
 struct Controller{
@@ -123,7 +129,7 @@ struct VehiclePositionSP{
 	uint64_t timestamp;
 	float x;				/* [m] */
 	float y;				/* [m] */
-	float alt;				/* [m] */
+	float z;				/* [m] */
 	float yaw;				/* rad */
 	float roll;				/* rad */
 };

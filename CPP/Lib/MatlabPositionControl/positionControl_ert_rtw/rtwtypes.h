@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionControl'.
 //
-// Model version                  : 1.7
+// Model version                  : 1.8
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Wed Aug 19 08:09:50 2020
+// C/C++ source code generated on : Fri Aug 21 23:47:28 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -70,6 +70,68 @@ typedef unsigned long ulong_T;
 typedef char char_T;
 typedef unsigned char uchar_T;
 typedef char_T byte_T;
+
+//===========================================================================*
+//  Complex number type definitions                                           *
+// ===========================================================================
+#define CREAL_T
+
+typedef struct {
+  real32_T re;
+  real32_T im;
+} creal32_T;
+
+typedef struct {
+  real64_T re;
+  real64_T im;
+} creal64_T;
+
+typedef struct {
+  real_T re;
+  real_T im;
+} creal_T;
+
+#define CINT8_T
+
+typedef struct {
+  int8_T re;
+  int8_T im;
+} cint8_T;
+
+#define CUINT8_T
+
+typedef struct {
+  uint8_T re;
+  uint8_T im;
+} cuint8_T;
+
+#define CINT16_T
+
+typedef struct {
+  int16_T re;
+  int16_T im;
+} cint16_T;
+
+#define CUINT16_T
+
+typedef struct {
+  uint16_T re;
+  uint16_T im;
+} cuint16_T;
+
+#define CINT32_T
+
+typedef struct {
+  int32_T re;
+  int32_T im;
+} cint32_T;
+
+#define CUINT32_T
+
+typedef struct {
+  uint32_T re;
+  uint32_T im;
+} cuint32_T;
 
 //=======================================================================*
 //  Min and Max:                                                          *

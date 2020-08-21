@@ -1,5 +1,5 @@
-MsgBus.h:48:5:bool FC::MsgBus::getController(FC::Controller*)	24	static
-MsgBus.h:57:5:void FC::MsgBus::setModeFlag(const FC::ModeFlag&)	16	static
+MsgBus.h:49:5:bool FC::MsgBus::getController(FC::Controller*)	24	static
+MsgBus.h:58:5:void FC::MsgBus::setModeFlag(const FC::ModeFlag&)	16	static
 Usec.h:18:26:uint64_t microsecond()	12	static
 ModulePositionController.h:66:21:static void FC::ModulePositionController::setSignal(FC::PcSignal)	16	static
 ModuleAttitudeController.h:46:21:static void FC::ModuleAttitudeController::setSignal(FC::AcSignal)	16	static

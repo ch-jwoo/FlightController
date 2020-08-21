@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionEstimator'.
 //
-// Model version                  : 1.21
+// Model version                  : 1.23
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Aug 17 12:21:06 2020
+// C/C++ source code generated on : Fri Aug 21 23:50:19 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -18,64 +18,79 @@
 //    2. RAM efficiency
 // Validation result: Not run
 //
-#include <MatlabPositionEstimator/positionEstimator.h>
+#include "positionEstimator.h"
 
 // Block parameters (default storage)
 positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
   // Mask Parameter: CompareToConstant_const
-  //  Referenced by: '<S35>/Constant'
+  //  Referenced by: '<S37>/Constant'
 
   180.0,
 
   // Mask Parameter: CompareToConstant_const_d
-  //  Referenced by: '<S33>/Constant'
+  //  Referenced by: '<S35>/Constant'
 
   90.0,
 
   // Mask Parameter: CompareToConstant_const_j
-  //  Referenced by: '<S36>/Constant'
+  //  Referenced by: '<S38>/Constant'
 
   180.0,
 
   // Mask Parameter: CompareToConstant_const_n
-  //  Referenced by: '<S29>/Constant'
+  //  Referenced by: '<S31>/Constant'
 
   180.0,
 
   // Mask Parameter: CompareToConstant_const_e
-  //  Referenced by: '<S27>/Constant'
+  //  Referenced by: '<S29>/Constant'
 
   90.0,
 
   // Mask Parameter: CompareToConstant_const_ei
-  //  Referenced by: '<S30>/Constant'
+  //  Referenced by: '<S32>/Constant'
 
   180.0,
 
   // Expression: 0
-  //  Referenced by: '<S21>/Constant1'
+  //  Referenced by: '<S23>/Constant1'
 
   0.0,
 
   // Expression: 180
-  //  Referenced by: '<S21>/Constant'
+  //  Referenced by: '<S23>/Constant'
 
   180.0,
 
   // Expression: -90
-  //  Referenced by: '<S25>/Bias'
+  //  Referenced by: '<S27>/Bias'
 
   -90.0,
 
   // Expression: -1
-  //  Referenced by: '<S25>/Gain'
+  //  Referenced by: '<S27>/Gain'
 
   -1.0,
 
   // Expression: +90
-  //  Referenced by: '<S25>/Bias1'
+  //  Referenced by: '<S27>/Bias1'
 
   90.0,
+
+  // Expression: 360
+  //  Referenced by: '<S30>/Constant2'
+
+  360.0,
+
+  // Expression: 180
+  //  Referenced by: '<S30>/Bias'
+
+  180.0,
+
+  // Expression: -180
+  //  Referenced by: '<S30>/Bias1'
+
+  -180.0,
 
   // Expression: 360
   //  Referenced by: '<S28>/Constant2'
@@ -92,45 +107,45 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
 
   -180.0,
 
-  // Expression: 360
-  //  Referenced by: '<S26>/Constant2'
-
-  360.0,
-
-  // Expression: 180
-  //  Referenced by: '<S26>/Bias'
-
-  180.0,
-
-  // Expression: -180
-  //  Referenced by: '<S26>/Bias1'
-
-  -180.0,
-
   // Expression: 0
-  //  Referenced by: '<S22>/Constant1'
+  //  Referenced by: '<S24>/Constant1'
 
   0.0,
 
   // Expression: 180
-  //  Referenced by: '<S22>/Constant'
+  //  Referenced by: '<S24>/Constant'
 
   180.0,
 
   // Expression: -90
-  //  Referenced by: '<S31>/Bias'
+  //  Referenced by: '<S33>/Bias'
 
   -90.0,
 
   // Expression: -1
-  //  Referenced by: '<S31>/Gain'
+  //  Referenced by: '<S33>/Gain'
 
   -1.0,
 
   // Expression: +90
-  //  Referenced by: '<S31>/Bias1'
+  //  Referenced by: '<S33>/Bias1'
 
   90.0,
+
+  // Expression: 360
+  //  Referenced by: '<S36>/Constant2'
+
+  360.0,
+
+  // Expression: 180
+  //  Referenced by: '<S36>/Bias'
+
+  180.0,
+
+  // Expression: -180
+  //  Referenced by: '<S36>/Bias1'
+
+  -180.0,
 
   // Expression: 360
   //  Referenced by: '<S34>/Constant2'
@@ -147,53 +162,38 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
 
   -180.0,
 
-  // Expression: 360
-  //  Referenced by: '<S32>/Constant2'
-
-  360.0,
-
-  // Expression: 180
-  //  Referenced by: '<S32>/Bias'
-
-  180.0,
-
-  // Expression: -180
-  //  Referenced by: '<S32>/Bias1'
-
-  -180.0,
-
   // Expression: 1
-  //  Referenced by: '<S38>/Constant2'
+  //  Referenced by: '<S40>/Constant2'
 
   1.0,
 
   // Expression: R
-  //  Referenced by: '<S38>/Constant1'
+  //  Referenced by: '<S40>/Constant1'
 
   6.378137E+6,
-
-  // Expression: 1
-  //  Referenced by: '<S40>/Constant'
-
-  1.0,
 
   // Expression: 1
   //  Referenced by: '<S42>/Constant'
 
   1.0,
 
+  // Expression: 1
+  //  Referenced by: '<S44>/Constant'
+
+  1.0,
+
   // Expression: F
-  //  Referenced by: '<S41>/Constant'
+  //  Referenced by: '<S43>/Constant'
 
   0.0033528106647474805,
 
   // Expression: 1
-  //  Referenced by: '<S41>/f'
+  //  Referenced by: '<S43>/f'
 
   1.0,
 
   // Expression: 1
-  //  Referenced by: '<S38>/Constant'
+  //  Referenced by: '<S40>/Constant'
 
   1.0,
 
@@ -203,7 +203,7 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
   0.0,
 
   // Expression: 1
-  //  Referenced by: '<S38>/Constant3'
+  //  Referenced by: '<S40>/Constant3'
 
   1.0,
 
@@ -221,12 +221,27 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
   // Expression: p.R{1}
   //  Referenced by: '<S2>/R1'
 
-  { 100.0, 0.0, 0.0, 100.0 },
+  { 2.0, 0.0, 0.0, 2.0 },
 
   // Expression: 0
   //  Referenced by: '<S2>/MeasurementFcn1Inputs'
 
   0.0,
+
+  // Expression: -1
+  //  Referenced by: '<Root>/NED_convert1'
+
+  -1.0,
+
+  // Expression: p.R{4}
+  //  Referenced by: '<S1>/R4'
+
+  0.01,
+
+  // Expression: 1
+  //  Referenced by: '<S1>/MeasurementFcn4Inputs'
+
+  1.0,
 
   // Expression: -1
   //  Referenced by: '<Root>/NED_convert'
@@ -256,7 +271,7 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
   // Expression: p.R{1}
   //  Referenced by: '<S1>/R1'
 
-  4.0,
+  1.0,
 
   // Expression: 0
   //  Referenced by: '<S1>/MeasurementFcn1Inputs'
@@ -310,23 +325,18 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
 
   0,
 
-  // Computed Parameter: yBlockOrdering_Y0_k
-  //  Referenced by: '<S5>/yBlockOrdering'
-
-  0,
-
   // Computed Parameter: yBlockOrdering_Y0_b
   //  Referenced by: '<S6>/yBlockOrdering'
 
   0,
 
   // Computed Parameter: yBlockOrdering_Y0_a
-  //  Referenced by: '<S13>/yBlockOrdering'
+  //  Referenced by: '<S15>/yBlockOrdering'
 
   0,
 
   // Computed Parameter: yBlockOrdering_Y0_g
-  //  Referenced by: '<S14>/yBlockOrdering'
+  //  Referenced by: '<S16>/yBlockOrdering'
 
   0,
 
@@ -338,7 +348,27 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
   // Expression: true()
   //  Referenced by: '<S1>/BlockOrdering'
 
-  1
+  1,
+
+  // Start of '<S1>/Correct4'
+  {
+    // Computed Parameter: yBlockOrdering_Y0
+    //  Referenced by: '<S7>/yBlockOrdering'
+
+    0
+  }
+  ,
+
+  // End of '<S1>/Correct4'
+
+  // Start of '<S1>/Correct2'
+  {
+    // Computed Parameter: yBlockOrdering_Y0
+    //  Referenced by: '<S5>/yBlockOrdering'
+
+    0
+  }
+  // End of '<S1>/Correct2'
 };
 
 //
