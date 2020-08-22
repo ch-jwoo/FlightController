@@ -53,7 +53,7 @@ void ModuleBuzzer::main() {
 }
 
 ModuleBuzzer::ModuleBuzzer(TIM_HandleTypeDef *htim, uint32_t Channel, uint32_t CLK)
-	: A{Z1, Z2, Z5, Z6}
+//	: A{Z1, Z2, Z5, Z6}
 {
 	  /* creation of Buzzer_Queue */
 	  Buzzer_QueueHandle = osMessageQueueNew (3, sizeof(BuzzerCommand), &Buzzer_Queue_attributes);

@@ -82,7 +82,7 @@ const osThreadAttr_t BME280_Task_attributes = {
 };
 /* Definitions for IST8310_Task */
 osThreadId_t IST8310_TaskHandle;
-uint32_t IST8310_TaskBuffer[ 128 ];
+uint32_t IST8310_TaskBuffer[ 256 ];
 osStaticThreadDef_t IST8310_TaskControlBlock;
 const osThreadAttr_t IST8310_Task_attributes = {
   .name = "IST8310_Task",

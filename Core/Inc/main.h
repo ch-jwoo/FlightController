@@ -88,8 +88,6 @@ void PC_StartTask(void *argument);
 #define BAT_CURRENT_GPIO_Port GPIOC
 #define BAT_VOLTAGE_Pin GPIO_PIN_3
 #define BAT_VOLTAGE_GPIO_Port GPIOC
-#define BUZZER_Pin GPIO_PIN_1
-#define BUZZER_GPIO_Port GPIOA
 #define M7_Pin GPIO_PIN_6
 #define M7_GPIO_Port GPIOA
 #define SD_DETECTION_Pin GPIO_PIN_5

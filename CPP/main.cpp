@@ -37,6 +37,8 @@
 #include "Module/Controller/ModulePositionController.h"
 
 #include "Peripherals/Actuator/Motor.h"
+#include "Peripherals/Etc/LED.h"
+#include "Peripherals/Etc/Buzzer.h"
 
 #include "printf.h"
 
@@ -308,9 +310,15 @@ void BME280_StartTask(void *argument){
 }
 
 void IST8310_StartTask(void *argument){
+	uint32_t tick;
+	tick = osKernelGetTickCount();
+
+	IST8310 ist8310(&rtosI2C2);
+	ist8310.init();
 	while(1){
-//		IST8310_updataIT();
-		osDelay(10); 			/* 100hz */
+		tick += 7;
+		osDelayUntil(tick);		/* 142hz */
+		ist8310.update();
 	}
 }
 
@@ -328,8 +336,14 @@ void Commander_StartTask(void *argument){
 
 void Buzzer_StartTask(void *argument){
 //	ModuleBuzzer::main();
+//	buzzer.start();
 	while(1){
-		osDelay(100);
+//		led1.toggle();
+//		led2.toggle();
+//		led3.toggle();
+//		Note_t a = D5;
+//		buzzer.setNote(a);
+		osDelay(1000);
 	}
 }
 
@@ -362,16 +376,6 @@ void cppMain(){
     /* micro second timer start */
 	HAL_TIM_Base_Start_IT(&htim2);
 
-
-
-
-	/*
-	 * \setting		i2c2
-	 * 				fastmode
-	 * 				using global interrupt
-	 * 	magnetometer in gps module
-	 */
-//	IST8310(&hi2c2);
 
 	/*
 	 *  \setting		uart8
@@ -408,22 +412,10 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c){
 	rtosI2C2.writeCpltCallback(hi2c);
 }
 
-//callback
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 	rtosI2C1.readCpltCallback(hi2c);
 	rtosI2C2.readCpltCallback(hi2c);
 
-	if(hi2c->Instance == ist8310.hi2c->Instance){
-		if(IST8310_i2cRxCpltCallback()){
-//			sensorMag.setMag(ist8310.raw[0], ist8310.raw[1], ist8310.raw[2]);
-		}
-	}
-
-//	if(hi2c->Instance == bme280.hi2c->Instance){
-//		if(BME280_i2cRxCpltCallback()){
-//			sensorBaro.setBaro(bme280.P, bme280.T);
-//		}
-//	}
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
@@ -439,19 +431,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		}
 	}
 
-//	if(huart->Instance == USART6){
-//		if(TM_GPS_Update() == TM_GPS_Result_NewData && gpsUart.gpsData.Fix != 0 /* gps must fixed */){
-//			sensorGPS.setGPS(gpsUart.gpsData.Latitude, gpsUart.gpsData.Longitude, gpsUart.gpsData.Altitude,
-//							 TM_GPS_ConvertSpeed(gpsUart.gpsData.Speed, TM_GPS_Speed_MeterPerSecond), gpsUart.gpsData.Direction, gpsUart.gpsData.HDOP, gpsUart.gpsData.VDOP,
-//							 gpsUart.gpsData.Satellites, gpsUart.gpsData.FixMode, 0/* UTC in microsecond */);
-//		}
-//	}
-
-//	if(TM_GPS_Update(huart) == TM_GPS_Result_NewData){
-//		sensorGPS.setGPS(gpsUart.gpsData.Latitude, gpsUart.gpsData.Longitude, gpsUart.gpsData.Altitude,
-//						 TM_GPS_ConvertSpeed(gpsUart.gpsData.Speed, TM_GPS_Speed_MeterPerSecond), gpsUart.gpsData.Direction, gpsUart.gpsData.HDOP, gpsUart.gpsData.VDOP,
-//						 gpsUart.gpsData.Satellites, gpsUart.gpsData.FixMode, 0/* UTC in microsecond */);
-//	}
 	if(huart->Instance == UART8){
 		if(TM_GPS_Update() == TM_GPS_Result_NewData && gpsUart.gpsData.Fix != 0 /* gps must fixed */){
 			interfaceGPS.setGPS(gpsUart.gpsData.Latitude, gpsUart.gpsData.Longitude, gpsUart.gpsData.Altitude,

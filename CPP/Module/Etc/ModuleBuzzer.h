@@ -14,36 +14,6 @@
 
 namespace FC {
 
-enum notes {
-	C3 = 13100, // do
-	D3 = 14700, // re
-	E3 = 16500, // mi
-	F3 = 17500, // pa
-	G3 = 19600, // sol
-	A3 = 22000, // ra
-	B3 = 24700, // si
-	C4 = 26163, // do (261.63Hz)
-	D4 = 29366, // re (293.66Hz)
-	E4 = 32963, // mi (329.63Hz)
-	F4 = 34923, // pa (349.23Hz)
-	G4 = 39200, // soi (392.00Hz)
-	A4 = 44000, // ra (440.00Hz)
-	B4 = 49388, // si (493.88Hz)
-	C5 = 52325, // do (523.25Hz)
-	D5 = 58700, // re
-	E5 = 65900, // mi
-	F5 = 69800,  // pa
-	A1 = 200000, //Low Battery
-	Z1 = 260000,
-	Z2 = 274000,
-	Z3 = 280000,
-	Z4 = 100000,
-	Z5 = 285000,
-	Z6 = 380000		/* 3800hz */
-};
-
-
-
 enum class BuzzerCommand{
 	Armed,
 	DisArmed,
@@ -101,7 +71,7 @@ private:
 	uint32_t Channel;
 	uint32_t CLK;
 
-	enum notes A[10];// = {Z1, Z2, Z5, Z1, Z2, Z5, Z1, Z2, Z5, Z6};
+//	enum notes A[10];// = {Z1, Z2, Z5, Z1, Z2, Z5, Z1, Z2, Z5, Z6};
 
 	/*
 	 *  handle command using switch

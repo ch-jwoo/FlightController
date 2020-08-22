@@ -1,16 +1,17 @@
 /*
  * IST8310.h
  *
- *  Created on: 2020. 7. 26.
+ *  Created on: Aug 23, 2020
  *      Author: cjb88
  */
 
-#ifndef IST8310_H_
-#define IST8310_IST8310_H_
+#ifndef PERIPHERALS_SENSORS_IST8310_H_
+#define PERIPHERALS_SENSORS_IST8310_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "RtosI2C.h"
+
+namespace FC {
+
 /****************************************************************************
  *
  *   Copyright (c) 2012-2016 PX4 Development Team. All rights reserved.
@@ -72,7 +73,6 @@ extern "C" {
  * Resolution according to datasheet is 0.3µT/LSB
  */
 #define IST8310_RESOLUTION	0.3
-
 
 
 /* Hardware definitions */
@@ -154,73 +154,55 @@ extern "C" {
 #define IST8310_ADDR_TEMPL              0x1c
 #define IST8310_ADDR_TEMPH              0x1d
 
-#define IST8310_DEFAULT_TIMEOUT			100
+class IST8310 {
+public:
+	IST8310(RtosI2C *i2c);
 
-typedef struct{
-	uint8_t x[2];
-	uint8_t y[2];
-	uint8_t z[2];
-} IST8310_buf_t;
+	void init();
 
-typedef struct{
-	int16_t x, y, z;
-} IST8310_count_t;
+	void reset();
 
-typedef struct{
-	I2C_HandleTypeDef *hi2c;
+	bool update();
+
+	inline void writeByte(uint8_t address, uint8_t subAddress, uint8_t data){
+		i2c->write(address, subAddress, &data, 1);
+	}
+
+	inline void readBytes(uint8_t address, uint8_t subAddress, uint8_t count, uint8_t * dest){
+		i2c->read(address, subAddress, dest, count);
+	}
+
+	inline uint8_t readByte(uint8_t address, uint8_t subAddress){
+		uint8_t ret = 0;
+		i2c->read(address, subAddress, &ret, 1);
+		return ret;
+	}
+
+	float raw[3];
+
+	typedef struct{
+		uint8_t x[2];
+		uint8_t y[2];
+		uint8_t z[2];
+	} IST8310_buf_t;
+
+	typedef struct{
+		int16_t x, y, z;
+	} IST8310_count_t;
+private:
+	RtosI2C *i2c;
 	IST8310_buf_t buf;
 	IST8310_count_t count;
-	float raw[3];
-}IST8310_t;
 
-/* internal instance */
-IST8310_t ist8310;
+public:
+	IST8310() = delete;
+	~IST8310() = default;
+	IST8310(const IST8310 &other) = delete;
+	IST8310(IST8310 &&other) = delete;
+	IST8310& operator=(const IST8310 &other) = delete;
+	IST8310& operator=(IST8310 &&other) = delete;
+};
 
-void IST8310(I2C_HandleTypeDef *phi2c);
-void IST8310_updataIT();
-uint8_t IST8310_i2cRxCpltCallback();
-/**
- * Write a register.
- *
- * @param reg       The register to write.
- * @param val       The value to write.
- * @return      OK on write success.
- */
-void IST8310_write_reg(uint8_t reg, uint8_t val);
+} /* namespace FC */
 
-/**
- * Write to a register block.
- *
- * @param address   The register address to write to.
- * @param data      The buffer to write from.
- * @param count     The number of bytes to write.
- * @return      OK on write success.
- */
-void IST8310_write(uint8_t address, uint8_t *data, uint8_t count);
-
-/**
- * Read a register.
- *
- * @param reg       The register to read.
- * @param val       The value read.
- * @return      OK on read success.
- */
-void IST8310_read_reg(uint8_t reg, uint8_t* val);
-
-/**
- * read register block.
- *
- * @param address   The register address to read from.
- * @param data      The buffer to read into.
- * @param count     The number of bytes to read.
- * @return      OK on write success.
- */
-void IST8310_read(uint8_t address, uint8_t *data, uint8_t count);
-
-void IST8310_reset();
-
-
-#ifdef __cplusplus
-}
-#endif
-#endif /* IST8310_H_ */
+#endif /* PERIPHERALS_SENSORS_IST8310_H_ */
