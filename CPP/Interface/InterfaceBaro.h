@@ -66,7 +66,7 @@ private:
 
 };
 
-extern InterfaceBaro sensorBaro;
+extern InterfaceBaro interfaceBaro;
 
 
 }

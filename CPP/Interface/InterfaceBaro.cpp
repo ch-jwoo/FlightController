@@ -10,7 +10,7 @@
 
 namespace FC{
 
-InterfaceBaro sensorBaro;
+InterfaceBaro interfaceBaro;
 
 void InterfaceBaro::setBaro(float pressure, float temperature){
 	/* invalid pressure */

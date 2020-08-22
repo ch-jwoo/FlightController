@@ -39,8 +39,8 @@ void ModuleCommander::main(){
 	osDelay(1500);
 	interfaceAccel.setBias();
 	interfaceGyro.setBias();
-	sensorBaro.setSeaLevelPressure(26.0); /* inha univ. altitude */
-	sensorBaro.setRefAltitude();
+	interfaceBaro.setSeaLevelPressure(26.0); /* inha univ. altitude */
+	interfaceBaro.setRefAltitude();
 	osDelay(500);
 
 	while(1){
@@ -170,7 +170,7 @@ bool ModuleCommander::toArm(){
 	/* arm initialize */
 	interfaceAccel.setBias();
 	interfaceGyro.setBias();
-	sensorBaro.setRefAltitude();
+	interfaceBaro.setRefAltitude();
 	resetController();
 	osDelay(150);					/* wait sensor calibration */
 

@@ -1,19 +1,16 @@
 /*
- * bme280.h
+ * BME280.h
  *
- *  Created on: Jul 26, 2020
+ *  Created on: Aug 23, 2020
  *      Author: cjb88
  */
 
-#ifndef BME280_H_
-#define BME280_H_
+#ifndef PERIPHERALS_SENSORS_BME280_H_
+#define PERIPHERALS_SENSORS_BME280_H_
 
-#include "i2c.h"
-#include "main.h"
+#include "RtosI2C.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace FC{
 
 
 /* 06/16/2017 Copyright Tlera Corporation
@@ -91,18 +88,42 @@ extern "C" {
 #define  t_10ms   0x06
 #define  t_20ms   0x07
 
-#define BME_DEFAULT_TIMEOUT 100
+class BME280 {
+public:
+	BME280(RtosI2C *i2c, uint8_t Posr, uint8_t Hosr, uint8_t Tosr, uint8_t Mode, uint8_t IIRFilter, uint8_t SBy);
+	void init();
 
-typedef enum {
-	bm_i2cIdle = 0,
-	bm_i2cBME280 = 1,
-	bm_i2cIST8310 = 2,
-}baro_mag_i2cFlag_t;
+	/* update pressure, temperature */
+	bool update();
 
-baro_mag_i2cFlag_t bm_i2cFlag;
+	uint8_t getChipID();
+	void reset();
 
-typedef struct{
-	I2C_HandleTypeDef *hi2c;
+	inline void writeByte(uint8_t address, uint8_t subAddress, uint8_t data){
+		i2c->write(address, subAddress, &data, 1);
+	}
+
+	inline void readBytes(uint8_t address, uint8_t subAddress, uint8_t count, uint8_t * dest){
+		i2c->read(address, subAddress, dest, count);
+	}
+
+	inline uint8_t readByte(uint8_t address, uint8_t subAddress){
+		uint8_t ret = 0;
+		i2c->read(address, subAddress, &ret, 1);
+		return ret;
+	}
+
+	float T;			/*[degC]*/
+	float P;			/*[hPa]*/
+	float H;
+private:
+	RtosI2C *i2c;
+	uint8_t Posr;
+	uint8_t Hosr;
+	uint8_t Tosr;
+	uint8_t Mode;
+	uint8_t IIRFilter;
+	uint8_t SBy;
 
 	uint8_t buf[9];
 	uint8_t  _dig_H1, _dig_H3, _dig_H6;
@@ -113,35 +134,19 @@ typedef struct{
 	int32_t countT;
 	uint32_t countP, countH;
 
-	float T;			/*[degC]*/
-	float P;			/*[hPa]*/
-	float H;
+	int32_t compensateT(int32_t adc_T);
+	uint32_t compensateP(int32_t adc_P);
+	uint32_t compensateH(int32_t adc_H);
 
-} BME280_t;
+public:
+	BME280() = delete;
+	~BME280() = default;
+	BME280(const BME280 &other) = delete;
+	BME280(BME280 &&other) = delete;
+	BME280& operator=(const BME280 &other) = delete;
+	BME280& operator=(BME280 &&other) = delete;
+};
 
-extern BME280_t bme280;
+} /* namespace FC */
 
-void BME280_init(I2C_HandleTypeDef *hi2c, uint8_t Posr, uint8_t Hosr, uint8_t Tosr, uint8_t Mode, uint8_t IIRFilter, uint8_t SBy);
-void BME280_readIT();
-uint8_t BME280_i2cRxCpltCallback();
-
-int32_t BME280_readTemperature();
-int32_t BME280_readPressure();
-int16_t BME280_readHumidity();
-
-int32_t BME280_compensate_T(int32_t adc_T);
-uint32_t BME280_compensate_P(int32_t adc_P);
-uint32_t BME280_compensate_H(int32_t adc_H);
-
-uint8_t BME280_getChipID();
-void BME280_reset();
-
-void BME280_writeByte(uint8_t address, uint8_t subAddress, uint8_t data);
-uint8_t BME280_readByte(uint8_t address, uint8_t subAddress);
-void BME280_readBytes(uint8_t address, uint8_t subAddress, uint8_t count, uint8_t * dest);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* BME280_H_ */
+#endif /* PERIPHERALS_SENSORS_BME280_H_ */

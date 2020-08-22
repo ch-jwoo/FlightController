@@ -70,7 +70,7 @@ const osThreadAttr_t MPU9250_Task_attributes = {
 };
 /* Definitions for BME280_Task */
 osThreadId_t BME280_TaskHandle;
-uint32_t BME280_TaskBuffer[ 128 ];
+uint32_t BME280_TaskBuffer[ 256 ];
 osStaticThreadDef_t BME280_TaskControlBlock;
 const osThreadAttr_t BME280_Task_attributes = {
   .name = "BME280_Task",

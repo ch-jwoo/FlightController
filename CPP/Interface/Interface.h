@@ -22,7 +22,7 @@ extern InterfaceRC interfaceRC;
 extern InterfaceAccel interfaceAccel;
 extern InterfaceGyro interfaceGyro;
 extern InterfaceMag interfaceMag;
-extern InterfaceBaro sensorBaro;
+extern InterfaceBaro interfaceBaro;
 extern InterfaceGPS interfaceGPS;
 extern InterfaceLidar interfaceLidar;
 

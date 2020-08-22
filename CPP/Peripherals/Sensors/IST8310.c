@@ -10,7 +10,6 @@
 #include "main.h"
 
 #include "IST8310.h"
-#include "bme280.h"
 
 #define IST8310_I2C ist8310.hi2c
 
@@ -29,16 +28,12 @@ void IST8310(I2C_HandleTypeDef *hi2c){
  *  150hz gogo
  */
 void IST8310_updataIT(){
-	if(bm_i2cFlag != bm_i2cIdle) return;
 
 	HAL_I2C_Mem_Read_IT(IST8310_I2C, IST8310_BUS_I2C_ADDR, IST8310_ADDR_DATA_OUT_X_LSB, 1, (uint8_t*)&ist8310.buf, sizeof(ist8310.buf));
-	bm_i2cFlag = bm_i2cIST8310;
+
 
 }
 uint8_t IST8310_i2cRxCpltCallback(){
-	if(bm_i2cFlag != bm_i2cIST8310) return 0;
-
-	bm_i2cFlag = bm_i2cIdle;
 
 	/* swap the data we just received */
 	ist8310.count.x = (((int16_t)ist8310.buf.x[1]) << 8) | (int16_t)ist8310.buf.x[0];

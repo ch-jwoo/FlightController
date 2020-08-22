@@ -7,8 +7,8 @@
 
 #ifndef PERIPHERAL_COMS_RTOSI2C_H_
 #define PERIPHERAL_COMS_RTOSI2C_H_
+
 #include "i2c.h"
-#include <cstdint>
 #include "cmsis_os.h"
 
 namespace FC {
@@ -70,6 +70,7 @@ public:
 };
 
 extern RtosI2C rtosI2C1;
+extern RtosI2C rtosI2C2;
 
 } /* namespace FC */
 

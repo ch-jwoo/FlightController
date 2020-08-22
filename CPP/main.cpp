@@ -246,6 +246,12 @@ void MPU9250_StartTask(void *argument){
 
 	uint32_t magTick = osKernelGetTickCount();
 
+	/*
+	 * \setting		i2c1
+	 * 				fastmode
+	 * 				using global interrupt
+	 * 				using dma_rx
+	 */
 	MPU9250 mpu9250(&rtosI2C1, MPU9250_AFS_16G, MPU9250_GFS_2000DPS, MPU9250_MFS_16BITS, MPU9250_M_100HZ);
 	mpu9250.init();
 	while(1){
@@ -272,17 +278,42 @@ void MPU9250_StartTask(void *argument){
 }
 
 void BME280_StartTask(void *argument){
+	uint32_t tick;
+	tick = osKernelGetTickCount();
+
+	/*
+	 * \setting		i2c2
+	 * 				fastmode
+	 * 				using global interrupt
+	 *
+	 * recommended mode : gaming
+	 * Sensor mode : normal mode, standby = 0.5ms
+	 * oversampling : pressureX4, temperatureX1, humidityX0
+	 * IIR filter coefficient : 16
+	 * RMS Noise : 0.3Pa/2.5cm
+	 * Data output rate : 83hz
+	 * Filter bandwidth : 1.75 Hz
+	 * response time : 0.3s
+	 */
+	BME280 bme280(&rtosI2C2, P_OSR_04, H_OSR_00, T_OSR_01, normal, BW0_021ODR,t_00_5ms);
+	bme280.init();
 	while(1){
-		BME280_readIT();
-		osDelay(20); 			/* 50hz */
+		tick += 15;
+		osDelayUntil(tick);		/* 66.6hz */
+
+		if(bme280.update()){
+			interfaceBaro.setBaro(bme280.P, bme280.T);
+		}
 	}
 }
+
 void IST8310_StartTask(void *argument){
 	while(1){
 //		IST8310_updataIT();
 		osDelay(10); 			/* 100hz */
 	}
 }
+
 void SD_StartTask(void *argument){
 	ModuleSD::main();
 }
@@ -331,29 +362,8 @@ void cppMain(){
     /* micro second timer start */
 	HAL_TIM_Base_Start_IT(&htim2);
 
-	/*
-	 * \setting		i2c1
-	 * 				fastmode
-	 * 				using global interrupt
-	 * 				using dma_rx
-	 */
-//	MPU9250(&hi2c1);
 
-	/*
-	 * \setting		i2c2
-	 * 				fastmode
-	 * 				using global interrupt
-	 *
-	 * recommended mode : gaming
-	 * Sensor mode : normal mode, standby = 0.5ms
-	 * oversampling : pressureX4, temperatureX1, humidityX0
-	 * IIR filter coefficient : 16
-	 * RMS Noise : 0.3Pa/2.5cm
-	 * Data output rate : 83hz
-	 * Filter bandwidth : 1.75 Hz
-	 * response time : 0.3s
-	 */
-	BME280_init(&hi2c2, P_OSR_04, H_OSR_00, T_OSR_01, normal, BW0_021ODR,t_00_5ms);
+
 
 	/*
 	 * \setting		i2c2
@@ -395,24 +405,13 @@ void cppMain(){
 
 void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c){
 	rtosI2C1.writeCpltCallback(hi2c);
+	rtosI2C2.writeCpltCallback(hi2c);
 }
 
 //callback
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
-//	if(hi2c->Instance == mpu9250.hi2c->Instance){
-//		switch(MPU9250_i2cRxCpltCallback()){
-//		case 1:
-//			interfaceAccel.setAccel(mpu9250.accel[0]*FC_GRAVITY_ACCEERATION
-//							   , mpu9250.accel[1]*FC_GRAVITY_ACCEERATION
-//							   , mpu9250.accel[2]*FC_GRAVITY_ACCEERATION);
-//			interfaceGyro.setGyro(mpu9250.gyro[0], mpu9250.gyro[1], mpu9250.gyro[2]);
-//			break;
-//		case 2:
-//			interfaceMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
-//			break;
-//		}
-//	}
 	rtosI2C1.readCpltCallback(hi2c);
+	rtosI2C2.readCpltCallback(hi2c);
 
 	if(hi2c->Instance == ist8310.hi2c->Instance){
 		if(IST8310_i2cRxCpltCallback()){
@@ -420,11 +419,11 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 		}
 	}
 
-	if(hi2c->Instance == bme280.hi2c->Instance){
-		if(BME280_i2cRxCpltCallback()){
-			sensorBaro.setBaro(bme280.P, bme280.T);
-		}
-	}
+//	if(hi2c->Instance == bme280.hi2c->Instance){
+//		if(BME280_i2cRxCpltCallback()){
+//			sensorBaro.setBaro(bme280.P, bme280.T);
+//		}
+//	}
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
@@ -470,7 +469,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	if(GPIO_Pin == GPIO_PIN_13){
-		sensorBaro.setSeaLevelPressure(gps_alt);
+		interfaceBaro.setSeaLevelPressure(gps_alt);
 		if(interfaceMag.startCalibrationFlag == false)
 			interfaceMag.startCalibration();
 		else interfaceMag.endCalibration();
