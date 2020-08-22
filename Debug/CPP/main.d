@@ -1,4 +1,8 @@
-CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
+CPP/main.o: ../CPP/main.cpp \
+ C:/git/FlightController/CPP/Interface/Interface.h \
+ C:/git/FlightController/CPP/Interface/InterfaceAccel.h \
+ C:/git/FlightController/CPP/MsgBus/MsgBus.h \
+ C:/git/FlightController/CPP/MsgBus/MsgType.h ../Core/Inc/main.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -41,8 +45,10 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
- ../Core/Inc/usart.h ../Core/Inc/main.h ../Core/Inc/i2c.h \
- ../Core/Inc/tim.h \
+ C:/git/FlightController/CPP/Utils/Constants.h ../Core/Inc/Usec.h \
+ ../Core/Inc/main.h ../Core/Inc/tim.h \
+ C:/git/FlightController/CPP/Module/Estimator/ModuleAHRS.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  ../Core/Inc/FreeRTOSConfig.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
@@ -50,52 +56,60 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
+ ../Core/Inc/freertosVariable.h C:/git/FlightController/CPP/Utils/Freq.h \
+ C:/git/FlightController/CPP/Module/Controller/ModuleAttitudeController.h \
+ C:/git/FlightController/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h \
+ C:/git/FlightController/CPP/Lib/MatlabAttitudeController/rtwtypes.h \
+ C:/git/FlightController/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h \
+ C:/git/FlightController/CPP/Peripherals/Actuator/Motor.h \
+ ../Core/Inc/tim.h C:/git/FlightController/CPP/Interface/InterfaceBaro.h \
+ C:/git/FlightController/CPP/Lib/printf.h \
+ C:/git/FlightController/CPP/Interface/InterfaceGPS.h \
+ C:/git/FlightController/CPP/Interface/InterfaceGyro.h \
+ C:/git/FlightController/CPP/Interface/InterfaceLidar.h \
+ C:/git/FlightController/CPP/Interface/InterfaceMag.h \
+ C:/git/FlightController/CPP/Interface/InterfaceRC.h \
+ C:/git/FlightController/CPP/Module/Manager/ModuleCommander.h \
+ C:/git/FlightController/CPP/Module/Etc/ModuleBuzzer.h \
+ ../Core/Inc/usart.h ../Core/Inc/i2c.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../CPP/Driver/MPU9250.h ../CPP/Driver/sbus.h \
- ../CPP/Driver/tm_stm32_gps.h ../CPP/Driver/IST8310.h \
- ../CPP/Driver/bme280.h ../CPP/Driver/Lidar1D.h \
- ../CPP/PeripheralInterface/Interface.h \
- C:/git/pwmTest/CPP/PeripheralInterface/RC.h \
- C:/git/pwmTest/CPP/MsgBus/MsgType.h \
- C:/git/pwmTest/CPP/Module/ModuleCommander.h \
- C:/git/pwmTest/CPP/Module/ModuleBuzzer.h \
- C:/git/pwmTest/CPP/MsgBus/MsgBus.h ../Core/Inc/Usec.h ../Core/Inc/tim.h \
- C:/git/pwmTest/CPP/Utils/Freq.h \
- C:/git/pwmTest/CPP/PeripheralInterface/SensorAccel.h \
- C:/git/pwmTest/CPP/Utils/Constants.h \
- C:/git/pwmTest/CPP/Module/ModuleAHRS.h ../Core/Inc/freertosVariable.h \
- C:/git/pwmTest/CPP/Module/ModuleAttitudeController.h \
- C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h \
- C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/rtwtypes.h \
- C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h \
- C:/git/pwmTest/CPP/Actuator/Motor.h \
- C:/git/pwmTest/CPP/PeripheralInterface/SensorGPS.h \
- C:/git/pwmTest/CPP/PeripheralInterface/SensorGyro.h \
- C:/git/pwmTest/CPP/PeripheralInterface/SensorMag.h \
- ../CPP/PeripheralInterface/SensorBaro.h C:/git/pwmTest/CPP/Lib/printf.h \
- ../CPP/PeripheralInterface/SensorLidar.h ../CPP/Module/ModuleCommander.h \
- ../CPP/Module/ModuleHealth.h ../CPP/Module/ModulePositionController.h \
- C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h \
- C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h \
- C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h \
- ../CPP/Module/ModuleCommander.h ../CPP/Module/ModuleINS.h \
- C:/git/pwmTest/CPP/Lib/MatlabPositionEstimator/positionEstimator.h \
- C:/git/pwmTest/CPP/Lib/MatlabPositionEstimator/rtwtypes.h \
- C:/git/pwmTest/CPP/Module/ModulePositionController.h \
- ../CPP/Module/ModuleSD.h ../FATFS/App/fatfs.h \
+ C:/git/FlightController/CPP/Peripherals/Sensors/bme280.h \
+ C:/git/FlightController/CPP/Peripherals/Sensors/IST8310.h \
+ C:/git/FlightController/CPP/Peripherals/Sensors/Lidar1D.h \
+ C:/git/FlightController/CPP/Peripherals/Sensors/MPU9250.h \
+ C:/git/FlightController/CPP/Peripherals/Coms/sbus.h \
+ C:/git/FlightController/CPP/Peripherals/Sensors/tm_stm32_gps.h \
+ ../CPP/Module/Manager/ModuleHealth.h \
+ C:/git/FlightController/CPP/Module/Controller/ModulePositionController.h \
+ C:/git/FlightController/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h \
+ C:/git/FlightController/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h \
+ C:/git/FlightController/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h \
+ C:/git/FlightController/CPP/Module/Estimator/ModuleINS.h \
+ C:/git/FlightController/CPP/Lib/MatlabPositionEstimator/positionEstimator.h \
+ C:/git/FlightController/CPP/Lib/MatlabPositionEstimator/rtwtypes.h \
+ ../CPP/Module/Storage/ModuleSD.h ../FATFS/App/fatfs.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h \
  ../Middlewares/Third_Party/FatFs/src/integer.h ../FATFS/Target/ffconf.h \
  ../FATFS/Target/bsp_driver_sd.h ../FATFS/Target/fatfs_platform.h \
  ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/sd_diskio.h \
- ../CPP/Module/ModuleAttitudeController.h ../CPP/Module/ModuleINS.h \
- ../CPP/Module/ModulePositionController.h ../CPP/Actuator/Motor.h
+ ../CPP/Module/Controller/ModuleAttitudeController.h \
+ ../CPP/Module/Estimator/ModuleINS.h \
+ ../CPP/Module/Controller/ModulePositionController.h \
+ ../CPP/Peripherals/Actuator/Motor.h
+
+C:/git/FlightController/CPP/Interface/Interface.h:
+
+C:/git/FlightController/CPP/Interface/InterfaceAccel.h:
+
+C:/git/FlightController/CPP/MsgBus/MsgBus.h:
+
+C:/git/FlightController/CPP/MsgBus/MsgType.h:
 
 ../Core/Inc/main.h:
 
@@ -183,13 +197,17 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
 
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
 
-../Core/Inc/usart.h:
+C:/git/FlightController/CPP/Utils/Constants.h:
+
+../Core/Inc/Usec.h:
 
 ../Core/Inc/main.h:
 
-../Core/Inc/i2c.h:
-
 ../Core/Inc/tim.h:
+
+C:/git/FlightController/CPP/Module/Estimator/ModuleAHRS.h:
+
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -205,101 +223,83 @@ CPP/main.o: ../CPP/main.cpp ../Core/Inc/main.h \
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
 
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
-
 ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 
+../Core/Inc/freertosVariable.h:
+
+C:/git/FlightController/CPP/Utils/Freq.h:
+
+C:/git/FlightController/CPP/Module/Controller/ModuleAttitudeController.h:
+
+C:/git/FlightController/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h:
+
+C:/git/FlightController/CPP/Lib/MatlabAttitudeController/rtwtypes.h:
+
+C:/git/FlightController/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h:
+
+C:/git/FlightController/CPP/Peripherals/Actuator/Motor.h:
+
+../Core/Inc/tim.h:
+
+C:/git/FlightController/CPP/Interface/InterfaceBaro.h:
+
+C:/git/FlightController/CPP/Lib/printf.h:
+
+C:/git/FlightController/CPP/Interface/InterfaceGPS.h:
+
+C:/git/FlightController/CPP/Interface/InterfaceGyro.h:
+
+C:/git/FlightController/CPP/Interface/InterfaceLidar.h:
+
+C:/git/FlightController/CPP/Interface/InterfaceMag.h:
+
+C:/git/FlightController/CPP/Interface/InterfaceRC.h:
+
+C:/git/FlightController/CPP/Module/Manager/ModuleCommander.h:
+
+C:/git/FlightController/CPP/Module/Etc/ModuleBuzzer.h:
+
+../Core/Inc/usart.h:
+
+../Core/Inc/i2c.h:
+
 ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
 
 ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 
-../CPP/Driver/MPU9250.h:
+C:/git/FlightController/CPP/Peripherals/Sensors/bme280.h:
 
-../CPP/Driver/sbus.h:
+C:/git/FlightController/CPP/Peripherals/Sensors/IST8310.h:
 
-../CPP/Driver/tm_stm32_gps.h:
+C:/git/FlightController/CPP/Peripherals/Sensors/Lidar1D.h:
 
-../CPP/Driver/IST8310.h:
+C:/git/FlightController/CPP/Peripherals/Sensors/MPU9250.h:
 
-../CPP/Driver/bme280.h:
+C:/git/FlightController/CPP/Peripherals/Coms/sbus.h:
 
-../CPP/Driver/Lidar1D.h:
+C:/git/FlightController/CPP/Peripherals/Sensors/tm_stm32_gps.h:
 
-../CPP/PeripheralInterface/Interface.h:
+../CPP/Module/Manager/ModuleHealth.h:
 
-C:/git/pwmTest/CPP/PeripheralInterface/RC.h:
+C:/git/FlightController/CPP/Module/Controller/ModulePositionController.h:
 
-C:/git/pwmTest/CPP/MsgBus/MsgType.h:
+C:/git/FlightController/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h:
 
-C:/git/pwmTest/CPP/Module/ModuleCommander.h:
+C:/git/FlightController/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h:
 
-C:/git/pwmTest/CPP/Module/ModuleBuzzer.h:
+C:/git/FlightController/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h:
 
-C:/git/pwmTest/CPP/MsgBus/MsgBus.h:
+C:/git/FlightController/CPP/Module/Estimator/ModuleINS.h:
 
-../Core/Inc/Usec.h:
+C:/git/FlightController/CPP/Lib/MatlabPositionEstimator/positionEstimator.h:
 
-../Core/Inc/tim.h:
+C:/git/FlightController/CPP/Lib/MatlabPositionEstimator/rtwtypes.h:
 
-C:/git/pwmTest/CPP/Utils/Freq.h:
-
-C:/git/pwmTest/CPP/PeripheralInterface/SensorAccel.h:
-
-C:/git/pwmTest/CPP/Utils/Constants.h:
-
-C:/git/pwmTest/CPP/Module/ModuleAHRS.h:
-
-../Core/Inc/freertosVariable.h:
-
-C:/git/pwmTest/CPP/Module/ModuleAttitudeController.h:
-
-C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly.h:
-
-C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/rtwtypes.h:
-
-C:/git/pwmTest/CPP/Lib/MatlabAttitudeController/Second_att_control_codeblock_fly_types.h:
-
-C:/git/pwmTest/CPP/Actuator/Motor.h:
-
-C:/git/pwmTest/CPP/PeripheralInterface/SensorGPS.h:
-
-C:/git/pwmTest/CPP/PeripheralInterface/SensorGyro.h:
-
-C:/git/pwmTest/CPP/PeripheralInterface/SensorMag.h:
-
-../CPP/PeripheralInterface/SensorBaro.h:
-
-C:/git/pwmTest/CPP/Lib/printf.h:
-
-../CPP/PeripheralInterface/SensorLidar.h:
-
-../CPP/Module/ModuleCommander.h:
-
-../CPP/Module/ModuleHealth.h:
-
-../CPP/Module/ModulePositionController.h:
-
-C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl.h:
-
-C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/rtwtypes.h:
-
-C:/git/pwmTest/CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/positionControl_types.h:
-
-../CPP/Module/ModuleCommander.h:
-
-../CPP/Module/ModuleINS.h:
-
-C:/git/pwmTest/CPP/Lib/MatlabPositionEstimator/positionEstimator.h:
-
-C:/git/pwmTest/CPP/Lib/MatlabPositionEstimator/rtwtypes.h:
-
-C:/git/pwmTest/CPP/Module/ModulePositionController.h:
-
-../CPP/Module/ModuleSD.h:
+../CPP/Module/Storage/ModuleSD.h:
 
 ../FATFS/App/fatfs.h:
 
@@ -321,10 +321,10 @@ C:/git/pwmTest/CPP/Module/ModulePositionController.h:
 
 ../FATFS/Target/sd_diskio.h:
 
-../CPP/Module/ModuleAttitudeController.h:
+../CPP/Module/Controller/ModuleAttitudeController.h:
 
-../CPP/Module/ModuleINS.h:
+../CPP/Module/Estimator/ModuleINS.h:
 
-../CPP/Module/ModulePositionController.h:
+../CPP/Module/Controller/ModulePositionController.h:
 
-../CPP/Actuator/Motor.h:
+../CPP/Peripherals/Actuator/Motor.h:

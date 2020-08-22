@@ -1,0 +1,11 @@
+MsgBus.h:46:5:void FC::MsgBus::setBarometer(const FC::Barometer&)	24	static
+Usec.h:18:26:uint64_t microsecond()	12	static
+InterfaceBaro.h:15:2:FC::InterfaceBaro::InterfaceBaro()	16	static
+InterfaceBaro.cpp:15:6:void FC::InterfaceBaro::setBaro(float, float)	32	static
+InterfaceBaro.cpp:34:6:void FC::InterfaceBaro::setSeaLevelPressure(float)	16	static
+InterfaceBaro.cpp:38:6:void FC::InterfaceBaro::setRefAltitude()	16	static
+cmath:415:5:constexpr typename __gnu_cxx::__promote_2<_Tp, _Up>::__type std::pow(_Tp, _Up) [with _Tp = float; _Up = double]	24	static
+InterfaceBaro.cpp:42:7:float FC::InterfaceBaro::calAltitude(float, float)	24	static
+InterfaceBaro.cpp:46:7:float FC::InterfaceBaro::calSeaLevelPressure(float, float)	32	static
+InterfaceBaro.cpp:51:1:void __static_initialization_and_destruction_0(int, int)	16	static
+InterfaceBaro.cpp:51:1:cpp)	8	static

@@ -1,9 +1,0 @@
-MsgBus.h:42:5:void FC::MsgBus::setBodyAccel(const FC::BodyAccel&)	24	static
-Usec.h:18:26:uint64_t microsecond()	12	static
-ModuleAHRS.h:36:24:static void FC::ModuleAHRS::setSignal(FC::AhrsSignal)	16	static
-SensorAccel.cpp:14:1:FC::SensorAccel::SensorAccel()	16	static
-SensorAccel.cpp:20:6:void FC::SensorAccel::setBias()	16	static
-SensorAccel.cpp:28:6:void FC::SensorAccel::setAccel(float, float, float)	32	static
-SensorAccel.cpp:44:6:void FC::SensorAccel::calAverage(float, float, float)	32	static
-SensorAccel.cpp:59:1:void __static_initialization_and_destruction_0(int, int)	16	static
-SensorAccel.cpp:59:1:cpp)	8	static

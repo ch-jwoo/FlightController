@@ -1,0 +1,14 @@
+bme280.c:15:6:BME280_init	48	static
+bme280.c:58:6:BME280_readIT	16	static
+bme280.c:66:9:BME280_i2cRxCpltCallback	8	static
+bme280.c:79:9:BME280_getChipID	16	static
+bme280.c:83:6:BME280_reset	8	static
+bme280.c:87:9:BME280_readTemperature	16	static
+bme280.c:93:9:BME280_readPressure	16	static
+bme280.c:98:9:BME280_readHumidity	16	static
+bme280.c:108:9:BME280_compensate_T	32	static
+bme280.c:120:10:BME280_compensate_P	64	static
+bme280.c:143:10:BME280_compensate_H	24	static
+bme280.c:156:6:BME280_writeByte	32	static
+bme280.c:159:6:BME280_readBytes	40	static
+bme280.c:162:9:BME280_readByte	24	static

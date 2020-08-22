@@ -1,0 +1,9 @@
+MsgBus.h:44:5:void FC::MsgBus::setBodyMag(const FC::BodyMag&)	24	static
+Usec.h:18:26:uint64_t microsecond()	12	static
+InterfaceMag.cpp:14:1:FC::InterfaceMag::InterfaceMag()	16	static
+InterfaceMag.cpp:33:6:void FC::InterfaceMag::setMag(float, float, float)	32	static
+InterfaceMag.cpp:48:6:void FC::InterfaceMag::startCalibration()	24	static
+InterfaceMag.cpp:54:6:void FC::InterfaceMag::endCalibration()	16	static
+InterfaceMag.cpp:58:6:void FC::InterfaceMag::calCalibration(float, float, float)	32	static
+InterfaceMag.cpp:88:1:void __static_initialization_and_destruction_0(int, int)	16	static
+InterfaceMag.cpp:88:1:cpp)	8	static

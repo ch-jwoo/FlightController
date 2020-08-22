@@ -29,15 +29,20 @@ CPP_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-CPP/Actuator \
-CPP/Driver \
+CPP/Interface \
 CPP/Lib/MatlabAttitudeController \
 CPP/Lib/MatlabPositionControl/positionControl_ert_rtw \
 CPP/Lib/MatlabPositionEstimator \
 CPP/Lib \
-CPP/Module \
+CPP/Module/Controller \
+CPP/Module/Estimator \
+CPP/Module/Etc \
+CPP/Module/Manager \
+CPP/Module/Storage \
 CPP/MsgBus \
-CPP/PeripheralInterface \
+CPP/Peripherals/Actuator \
+CPP/Peripherals/Coms \
+CPP/Peripherals/Sensors \
 CPP/Utils \
 CPP \
 Core/Src \

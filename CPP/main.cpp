@@ -6,6 +6,7 @@
  */
 
 //essential
+#include <Interface/Interface.h>
 #include "main.h"
 #include "usart.h"
 #include "i2c.h"
@@ -19,26 +20,23 @@
 //#include "cstdlib"
 
 //selfmade
-#include "Driver/MPU9250.h"
-#include "Driver/sbus.h"
-#include "Driver/tm_stm32_gps.h"
-#include "Driver/IST8310.h"
-#include "Driver/bme280.h"
-#include "Driver/Lidar1D.h"
-
-#include "PeripheralInterface/Interface.h"
-
-#include "Module/ModuleCommander.h"
-#include <Module/ModuleAHRS.h>
-#include <Module/ModuleBuzzer.h>
+#include <Module/Manager/ModuleCommander.h>
+#include <Module/Estimator/ModuleAHRS.h>
+#include <Module/Etc/ModuleBuzzer.h>
+#include <Peripherals/Sensors/bme280.h>
+#include <Peripherals/Sensors/IST8310.h>
+#include <Peripherals/Sensors/Lidar1D.h>
+#include <Peripherals/Sensors/MPU9250.h>
+#include <Peripherals/Coms/sbus.h>
+#include <Peripherals/Sensors/tm_stm32_gps.h>
 #include <Utils/Constants.h>
-#include "Module/ModuleHealth.h"
-#include "Module/ModuleSD.h"
-#include "Module/ModuleAttitudeController.h"
-#include "Module/ModuleINS.h"
-#include "Module/ModulePositionController.h"
+#include "Module/Manager/ModuleHealth.h"
+#include "Module/Storage/ModuleSD.h"
+#include "Module/Controller/ModuleAttitudeController.h"
+#include "Module/Estimator/ModuleINS.h"
+#include "Module/Controller/ModulePositionController.h"
 
-#include "Actuator/Motor.h"
+#include "Peripherals/Actuator/Motor.h"
 
 #include "printf.h"
 
@@ -376,13 +374,13 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 	if(hi2c->Instance == mpu9250.hi2c->Instance){
 		switch(MPU9250_i2cRxCpltCallback()){
 		case 1:
-			sensorAccel.setAccel(mpu9250.accel[0]*FC_GRAVITY_ACCEERATION
+			interfaceAccel.setAccel(mpu9250.accel[0]*FC_GRAVITY_ACCEERATION
 							   , mpu9250.accel[1]*FC_GRAVITY_ACCEERATION
 							   , mpu9250.accel[2]*FC_GRAVITY_ACCEERATION);
-			sensorGyro.setGyro(mpu9250.gyro[0], mpu9250.gyro[1], mpu9250.gyro[2]);
+			interfaceGyro.setGyro(mpu9250.gyro[0], mpu9250.gyro[1], mpu9250.gyro[2]);
 			break;
 		case 2:
-			sensorMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
+			interfaceMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
 			break;
 		}
 	}
@@ -404,7 +402,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == sbus.huart->Instance){
 		if(SBUS_uartRxCpltCallback() == SBUS_Result_NewData){
-			rc.setRC(SBUS_getChannel(2),	/* roll */
+			interfaceRC.setRC(SBUS_getChannel(2),	/* roll */
 					 SBUS_getChannel(3),	/* pitch */
 					 SBUS_getChannel(4), 	/* yaw */
 					 SBUS_getChannel(1),	/* throttle */
@@ -428,7 +426,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 //	}
 	if(huart->Instance == UART8){
 		if(TM_GPS_Update() == TM_GPS_Result_NewData && gpsUart.gpsData.Fix != 0 /* gps must fixed */){
-			sensorGPS.setGPS(gpsUart.gpsData.Latitude, gpsUart.gpsData.Longitude, gpsUart.gpsData.Altitude,
+			interfaceGPS.setGPS(gpsUart.gpsData.Latitude, gpsUart.gpsData.Longitude, gpsUart.gpsData.Altitude,
 							 TM_GPS_ConvertSpeed(gpsUart.gpsData.Speed, TM_GPS_Speed_MeterPerSecond), gpsUart.gpsData.Direction, gpsUart.gpsData.HDOP, gpsUart.gpsData.VDOP,
 							 gpsUart.gpsData.Satellites, gpsUart.gpsData.FixMode, 0/* UTC in microsecond */);
 		}
@@ -437,7 +435,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	if(Lidar1D_CaptureCallback(htim)){
-		sensorLidar.setDistance(lidar1D.distance_mm/1000.0f);
+		interfaceLidar.setDistance(lidar1D.distance_mm/1000.0f);
 	}
 }
 
@@ -447,7 +445,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 //		if(sensorMag.startCalibrationFlag == false)
 //			sensorMag.startCalibration();
 //		else sensorMag.endCalibration();
-		sensorAccel.setBias();
-		sensorGyro.setBias();
+		interfaceAccel.setBias();
+		interfaceGyro.setBias();
 	}
 }

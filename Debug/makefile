@@ -20,15 +20,20 @@ RM := rm -rf
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include CPP/Utils/subdir.mk
--include CPP/PeripheralInterface/subdir.mk
+-include CPP/Peripherals/Sensors/subdir.mk
+-include CPP/Peripherals/Coms/subdir.mk
+-include CPP/Peripherals/Actuator/subdir.mk
 -include CPP/MsgBus/subdir.mk
--include CPP/Module/subdir.mk
+-include CPP/Module/Storage/subdir.mk
+-include CPP/Module/Manager/subdir.mk
+-include CPP/Module/Etc/subdir.mk
+-include CPP/Module/Estimator/subdir.mk
+-include CPP/Module/Controller/subdir.mk
 -include CPP/Lib/MatlabPositionEstimator/subdir.mk
 -include CPP/Lib/MatlabPositionControl/positionControl_ert_rtw/subdir.mk
 -include CPP/Lib/MatlabAttitudeController/subdir.mk
 -include CPP/Lib/subdir.mk
--include CPP/Driver/subdir.mk
--include CPP/Actuator/subdir.mk
+-include CPP/Interface/subdir.mk
 -include CPP/subdir.mk
 -include subdir.mk
 -include objects.mk
@@ -80,8 +85,8 @@ FlightController_STM32H743.bin \
 all: FlightController_STM32H743.elf secondary-outputs
 
 # Tool invocations
-FlightController_STM32H743.elf: $(OBJS) $(USER_OBJS) C:\git\pwmTest\STM32H743ZITX_FLASH.ld
-	arm-none-eabi-g++ -o "FlightController_STM32H743.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\git\pwmTest\STM32H743ZITX_FLASH.ld" -Wl,-Map="FlightController_STM32H743.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+FlightController_STM32H743.elf: $(OBJS) $(USER_OBJS) C:\git\FlightController\STM32H743ZITX_FLASH.ld
+	arm-none-eabi-g++ -o "FlightController_STM32H743.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\git\FlightController\STM32H743ZITX_FLASH.ld" -Wl,-Map="FlightController_STM32H743.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
