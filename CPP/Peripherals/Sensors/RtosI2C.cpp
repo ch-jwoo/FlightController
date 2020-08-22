@@ -10,7 +10,7 @@
 namespace FC {
 
 RtosI2C rtosI2C1(&hi2c1, I2C_DMA);
-RtosI2C rtosI2C2(&hi2c2, I2C_DMA);
+//RtosI2C rtosI2C2(&hi2c2, I2C_DMA);
 
 RtosI2C::RtosI2C(I2C_HandleTypeDef *hi2c, RtosI2Ctype type)
 : hi2c(hi2c)

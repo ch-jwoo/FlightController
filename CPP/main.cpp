@@ -84,6 +84,8 @@ uint32_t channel;
 uint16_t timeCheck;
 int test = 0;
 
+float raw_magX, raw_magY, raw_magZ;
+
 void _putchar(char character){
 	HAL_UART_Transmit(&huart3, (uint8_t*)&character, 1, 10);
 }
@@ -217,21 +219,21 @@ void Debug_StartTask(void *argument){
 //		osKernelUnlock();
 
 		/* mag calibration */
-//		mag_minX = sensorMag.min[0];
-//		mag_minY = sensorMag.min[1];
-//		mag_minZ = sensorMag.min[2];
-//
-//		mag_maxX = sensorMag.max[0];
-//		mag_maxY = sensorMag.max[1];
-//		mag_maxZ = sensorMag.max[2];
-//
-//		mag_scaleX = sensorMag.scale[0];
-//		mag_scaleY = sensorMag.scale[1];
-//		mag_scaleZ = sensorMag.scale[2];
-//
-//		mag_biasX = sensorMag.bias[0];
-//		mag_biasY = sensorMag.bias[1];
-//		mag_biasZ = sensorMag.bias[2];
+		mag_minX = interfaceMag.min[0];
+		mag_minY = interfaceMag.min[1];
+		mag_minZ = interfaceMag.min[2];
+
+		mag_maxX = interfaceMag.max[0];
+		mag_maxY = interfaceMag.max[1];
+		mag_maxZ = interfaceMag.max[2];
+
+		mag_scaleX = interfaceMag.scale[0];
+		mag_scaleY = interfaceMag.scale[1];
+		mag_scaleZ = interfaceMag.scale[2];
+
+		mag_biasX = interfaceMag.bias[0];
+		mag_biasY = interfaceMag.bias[1];
+		mag_biasZ = interfaceMag.bias[2];
 		/* mag calibration end */
 
 //		osDelay(5);
@@ -241,12 +243,34 @@ void Debug_StartTask(void *argument){
 void MPU9250_StartTask(void *argument){
 	uint32_t tick;
 	tick = osKernelGetTickCount();
+
+	uint32_t magTick = osKernelGetTickCount();
+
+	MPU9250 mpu9250(&rtosI2C1, MPU9250_AFS_16G, MPU9250_GFS_2000DPS, MPU9250_MFS_16BITS, MPU9250_M_100HZ);
+	mpu9250.init();
 	while(1){
 		tick += 5;
 		osDelayUntil(tick);/* 200hz */
-		MPU9250_updateDMA();
+		if(mpu9250.updateMPU9250())	{
+			interfaceAccel.setAccel(mpu9250.accel[0]*FC_GRAVITY_ACCEERATION,
+									mpu9250.accel[1]*FC_GRAVITY_ACCEERATION,
+									mpu9250.accel[2]*FC_GRAVITY_ACCEERATION);
+			interfaceGyro.setGyro(mpu9250.gyro[0]*FC_DEG2RAD,
+								  mpu9250.gyro[1]*FC_DEG2RAD,
+								  mpu9250.gyro[2]*FC_DEG2RAD);
+		}
+		if(osKernelGetTickCount() - magTick > 15){		/* 66hz */
+			if(mpu9250.updateAK8963()){
+				raw_magX = mpu9250.mag[0];
+				raw_magY = mpu9250.mag[1];
+				raw_magZ = mpu9250.mag[2];
+				interfaceMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
+				magTick = osKernelGetTickCount();
+			}
+		}
 	}
 }
+
 void BME280_StartTask(void *argument){
 	while(1){
 		BME280_readIT();
@@ -313,7 +337,7 @@ void cppMain(){
 	 * 				using global interrupt
 	 * 				using dma_rx
 	 */
-	MPU9250(&hi2c1);
+//	MPU9250(&hi2c1);
 
 	/*
 	 * \setting		i2c2
@@ -369,21 +393,26 @@ void cppMain(){
     printf_("boot complete\r\n");
 }
 
+void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c){
+	rtosI2C1.writeCpltCallback(hi2c);
+}
+
 //callback
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
-	if(hi2c->Instance == mpu9250.hi2c->Instance){
-		switch(MPU9250_i2cRxCpltCallback()){
-		case 1:
-			interfaceAccel.setAccel(mpu9250.accel[0]*FC_GRAVITY_ACCEERATION
-							   , mpu9250.accel[1]*FC_GRAVITY_ACCEERATION
-							   , mpu9250.accel[2]*FC_GRAVITY_ACCEERATION);
-			interfaceGyro.setGyro(mpu9250.gyro[0], mpu9250.gyro[1], mpu9250.gyro[2]);
-			break;
-		case 2:
-			interfaceMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
-			break;
-		}
-	}
+//	if(hi2c->Instance == mpu9250.hi2c->Instance){
+//		switch(MPU9250_i2cRxCpltCallback()){
+//		case 1:
+//			interfaceAccel.setAccel(mpu9250.accel[0]*FC_GRAVITY_ACCEERATION
+//							   , mpu9250.accel[1]*FC_GRAVITY_ACCEERATION
+//							   , mpu9250.accel[2]*FC_GRAVITY_ACCEERATION);
+//			interfaceGyro.setGyro(mpu9250.gyro[0], mpu9250.gyro[1], mpu9250.gyro[2]);
+//			break;
+//		case 2:
+//			interfaceMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
+//			break;
+//		}
+//	}
+	rtosI2C1.readCpltCallback(hi2c);
 
 	if(hi2c->Instance == ist8310.hi2c->Instance){
 		if(IST8310_i2cRxCpltCallback()){
@@ -442,9 +471,9 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	if(GPIO_Pin == GPIO_PIN_13){
 		sensorBaro.setSeaLevelPressure(gps_alt);
-//		if(sensorMag.startCalibrationFlag == false)
-//			sensorMag.startCalibration();
-//		else sensorMag.endCalibration();
+		if(interfaceMag.startCalibrationFlag == false)
+			interfaceMag.startCalibration();
+		else interfaceMag.endCalibration();
 		interfaceAccel.setBias();
 		interfaceGyro.setBias();
 	}

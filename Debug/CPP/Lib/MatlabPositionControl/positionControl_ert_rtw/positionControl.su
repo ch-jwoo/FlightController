@@ -1,7 +1,0 @@
-positionControl.cpp:70:6:void positionControlModelClass::step()	72	static
-positionControl.cpp:546:6:void positionControlModelClass::initialize()	16	static
-positionControl.cpp:590:6:void positionControlModelClass::terminate()	16	static
-positionControl.cpp:596:1:positionControlModelClass::positionControlModelClass()	16	static
-positionControl.cpp:606:1:positionControlModelClass::~positionControlModelClass()	16	static
-positionControl.cpp:612:56:const positionControlModelClass::P_positionControl_T& positionControlModelClass::getBlockParameters() const	16	static
-positionControl.cpp:619:6:void positionControlModelClass::setBlockParameters(const positionControlModelClass::P_positionControl_T*)	16	static

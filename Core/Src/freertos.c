@@ -58,7 +58,7 @@ const osThreadAttr_t defaultTask_attributes = {
 };
 /* Definitions for MPU9250_Task */
 osThreadId_t MPU9250_TaskHandle;
-uint32_t MPU9250_TaskBuffer[ 128 ];
+uint32_t MPU9250_TaskBuffer[ 256 ];
 osStaticThreadDef_t MPU9250_TaskControlBlock;
 const osThreadAttr_t MPU9250_Task_attributes = {
   .name = "MPU9250_Task",

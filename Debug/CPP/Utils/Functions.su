@@ -1,4 +1,0 @@
-Functions.cpp:16:7:float FC::map(uint16_t, uint16_t, uint16_t, float, float)	24	static
-Functions.cpp:21:7:float FC::radianThreshold(float)	16	static
-Functions.cpp:31:7:float FC::deg2rad(float)	16	static
-Functions.cpp:35:7:float FC::rad2deg(float)	16	static

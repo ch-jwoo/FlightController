@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
 #include "usart.h"
+#include "string.h"
 
 #define SBUS_BUF_SIZE 25		//rcv buffer
 #define SBUS_DMA_BUF_SIZE 25 	// DMA buffer

@@ -77,8 +77,9 @@ void PC_StartTask(void *argument);
 #define WINCH_CONTROL2_GPIO_Port GPIOE
 #define Lidar_Pin GPIO_PIN_5
 #define Lidar_GPIO_Port GPIOE
-#define B1_Pin GPIO_PIN_13
-#define B1_GPIO_Port GPIOC
+#define BLUE_SWITCH_Pin GPIO_PIN_13
+#define BLUE_SWITCH_GPIO_Port GPIOC
+#define BLUE_SWITCH_EXTI_IRQn EXTI15_10_IRQn
 #define LED2_Pin GPIO_PIN_3
 #define LED2_GPIO_Port GPIOF
 #define LED3_Pin GPIO_PIN_4

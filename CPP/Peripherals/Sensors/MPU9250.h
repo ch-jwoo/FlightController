@@ -1,16 +1,19 @@
-#ifndef MPU9250_H
-#define MPU9250_H
- 
+/*
+ * MPU9250.h
+ *
+ *  Created on: 2020. 8. 23.
+ *      Author: cjb88
+ */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include "main.h"
-#include "i2c.h"
-#include "string.h"
+#ifndef PERIPHERALS_SENSORS_MPU9250_H_
+#define PERIPHERALS_SENSORS_MPU9250_H_
+
+#include "RtosI2C.h"
+
+namespace FC {
 
 
-// See also MPU-9250 Register Map and Descriptions, Revision 4.0, RM-MPU-9250A-00, Rev. 1.4, 9/9/2013 for registers not listed in 
+// See also MPU-9250 Register Map and Descriptions, Revision 4.0, RM-MPU-9250A-00, Rev. 1.4, 9/9/2013 for registers not listed in
 // above document; the MPU9250 and MPU9150 are virtually identical but the latter has a different register map
 //
 //Magnetometer Registers
@@ -32,8 +35,8 @@ extern "C" {
 #define AK8963_ASAY      0x11  // Fuse ROM y-axis sensitivity adjustment value
 #define AK8963_ASAZ      0x12  // Fuse ROM z-axis sensitivity adjustment value
 
-#define SELF_TEST_X_GYRO 0x00                  
-#define SELF_TEST_Y_GYRO 0x01                                                                          
+#define SELF_TEST_X_GYRO 0x00
+#define SELF_TEST_Y_GYRO 0x01
 #define SELF_TEST_Z_GYRO 0x02
 
 /*#define X_FINE_GAIN      0x03 // [7:0] fine gain
@@ -47,7 +50,7 @@ extern "C" {
 #define ZA_OFFSET_L_TC   0x0B */
 
 #define SELF_TEST_X_ACCEL 0x0D
-#define SELF_TEST_Y_ACCEL 0x0E    
+#define SELF_TEST_Y_ACCEL 0x0E
 #define SELF_TEST_Z_ACCEL 0x0F
 
 #define SELF_TEST_A      0x10
@@ -63,15 +66,15 @@ extern "C" {
 #define GYRO_CONFIG      0x1B
 #define ACCEL_CONFIG     0x1C
 #define ACCEL_CONFIG2    0x1D
-#define LP_ACCEL_ODR     0x1E   
-#define WOM_THR          0x1F   
+#define LP_ACCEL_ODR     0x1E
+#define WOM_THR          0x1F
 
 #define MOT_DUR          0x20  // Duration counter threshold for motion interrupt generation, 1 kHz rate, LSB = 1 ms
 #define ZMOT_THR         0x21  // Zero-motion detection threshold bits [7:0]
 #define ZRMOT_DUR        0x22  // Duration counter threshold for zero motion interrupt generation, 16 Hz rate, LSB = 64 ms
 
 #define FIFO_EN          0x23
-#define I2C_MST_CTRL     0x24   
+#define I2C_MST_CTRL     0x24
 #define I2C_SLV0_ADDR    0x25
 #define I2C_SLV0_REG     0x26
 #define I2C_SLV0_CTRL    0x27
@@ -147,7 +150,7 @@ extern "C" {
 #define DMP_RW_PNT       0x6E  // Set read/write pointer to a specific start address in specified DMP bank
 #define DMP_REG          0x6F  // Register in DMP from which to read or to which to write
 #define DMP_REG_1        0x70
-#define DMP_REG_2        0x71 
+#define DMP_REG_2        0x71
 #define FIFO_COUNTH      0x72
 #define FIFO_COUNTL      0x73
 #define FIFO_R_W         0x74
@@ -159,7 +162,7 @@ extern "C" {
 #define ZA_OFFSET_H      0x7D
 #define ZA_OFFSET_L      0x7E
 
-// Using the MSENSR-9250 breakout board, ADO is set to 0 
+// Using the MSENSR-9250 breakout board, ADO is set to 0
 // Seven-bit device address is 110100 for ADO = 0 and 110101 for ADO = 1
 //mbed uses the eight-bit device address, so shift seven-bit addresses left by one!
 #define ADO 0
@@ -167,15 +170,8 @@ extern "C" {
 #define MPU9250_ADDRESS 0x69<<1  // Device address when ADO = 1
 #else
 #define MPU9250_ADDRESS 0x68<<1  // Device address when ADO = 0
-#endif  
+#endif
 
-#define MPU9250_DEFAULT_TIMEOUT 100
-#define MPU9250_DEG2RAD 0.017453292519f
-
-#define MPU9250_HZ_CHECK_TICK 1000	//1hz
-#define AK8963_UPDATE_TICK 10		//100hz
-
-// Set initial input parameters
 typedef enum {
 	MPU9250_AFS_2G = 0,
 	MPU9250_AFS_4G,
@@ -200,142 +196,79 @@ typedef enum {
 	MPU9250_M_100HZ = 0x06 // 100 Hz continuous magnetometer
 } MPU9250_M_MODE_t;
 
-typedef enum {
-	MPU9250_dmaIdle = 0,
-	MPU9250_dmaMPU9250 = 1,
-	MPU9250_dmaAK8963 = 2
-} MPU9250_DmaFlag_t;
+class MPU9250 {
+public:
+	MPU9250(RtosI2C *i2c,
+			MPU9250_Ascale_t Ascale, MPU9250_Gscale_t Gscale, MPU9250_Mscale_t Mscale, MPU9250_M_MODE_t Mmode);
 
-typedef enum {
-	MPU9250_Fail = 0,
-	MPU9250_Success = 1
-} MPU9250_Result_t;
+	void init();
 
-typedef struct {
-	I2C_HandleTypeDef *hi2c;
+	void calibrateMPU9250();
+
+	void resetMPU9250();
+
+	void initMPU9250();
+	void initAK8963();
+
+	bool updateMPU9250();
+	bool updateAK8963();
+
+	inline void writeByte(uint8_t address, uint8_t subAddress, uint8_t data){
+		i2c->write(address, subAddress, &data, 1);
+	}
+
+	inline void readBytes(uint8_t address, uint8_t subAddress, uint8_t count, uint8_t * dest){
+		i2c->read(address, subAddress, dest, count);
+	}
+
+	inline uint8_t readByte(uint8_t address, uint8_t subAddress){
+		uint8_t ret = 0;
+		i2c->read(address, subAddress, &ret, 1);
+		return ret;
+	}
+
+	float accel[3];		/* norm accel [g] */
+	float gyro[3];		/* deg/s */
+	float mag[3];		/* mag */
+	float tmp;
+
+private:
+	RtosI2C *i2c;
 	MPU9250_Ascale_t Ascale;
 	MPU9250_Gscale_t Gscale;
 	MPU9250_Mscale_t Mscale;
 	MPU9250_M_MODE_t Mmode;
 
 	float aRes, gRes, mRes;
+
 	int16_t accelCount[3];
 	int16_t gyroCount[3];
 	int16_t magCount[3];
 	int16_t tmpCount;
 
-	float magBias[3];	//accel, gyro bias are written on mpu9250 register
+
+	uint8_t buffer[14];
 	float magCalibration[3];
 
-	float accel[3], gyro[3], mag[3], tmp;	//norm accel vector, gyro(rad/s), mag, tmp
+	float getAres(MPU9250_Ascale_t Ascale);
+	float getGres(MPU9250_Gscale_t Gscale);
+	float getMres(MPU9250_Mscale_t Mscale);
 
-	uint8_t MPU9250_buffer[14];
-	uint8_t AK8963_buffer[7];
+	bool calRawMPU9250();
+	void calCalibMPU9250();
 
-	uint32_t AK8963_lastUpdate;
+	bool calRawAK8963();
+	void calCalibAK8963();
 
-	MPU9250_DmaFlag_t dmaFlag;
-}MPU9250_t;
+public:
+	MPU9250() = delete;
+	~MPU9250() = default;
+	MPU9250(const MPU9250 &other) = delete;
+	MPU9250(MPU9250 &&other) = delete;
+	MPU9250& operator=(const MPU9250 &other) = delete;
+	MPU9250& operator=(MPU9250 &&other) = delete;
+};
 
-MPU9250_t mpu9250;
+} /* namespace FC */
 
-
-/*
- *  initialize mpu9250 object
- */
-void MPU9250(I2C_HandleTypeDef *phi2c);
-
-/*
- *  periodically call this function
- *  accel, gyro update rate equal to rate of calling this function
- *
- *  this function calc hz
- *  this function check whether dma is used
- *
- */
-void MPU9250_updateDMA();
-/*
- *  called by rxCpltCallback
- *  this function check
- *  \return imu(1), mag(2)
- */
-uint8_t MPU9250_i2cRxCpltCallback();
-
-/*
- *  copy mpu9250 dma buffer to mpu9250 accel, gyro raw buffer
- */
-MPU9250_Result_t MPU9250_calRawData();
-
-/*
- *  calculate calibrated value of accel, gyro
- */
-void MPU9250_calCalibValue();
-
-/*
- *  copy ak8963 dma buffer to mpu9250 mag raw buffer
- *  axis change to axis of accel sensor
- */
-MPU9250_Result_t AK8963_calRawData();
-
-/*
- *  calculate calib value of magnetometer
- */
-void AK8963_calCalibValue();
-
-/*
- *  private function
- */
-
-/*
- * reset MPU9250
- */
-void MPU9250_resetMPU9250();
-
-/*
- *  calibrate accel, gyro sensor
- */
-void MPU9250_calibrateMPU9250();
-
-/*
- *  initialize MPU9250, AK8963
- *  set sample rate, DLPF bandwidth
- *  we use
- *  - MPU9250 : accel 1khz, gyro 1khz,
- *  			DLPF bandwidth : 44, 42hz
- *  			sample rate : 200hz
- *  - AK8963 :  sample rate : 100hz
- */
-void MPU9250_initMPU9250();
-void MPU9250_initAK8963();
-
-/*
- *  set mpu9250.aRes, gRes, mRes from Ascale, Gscale, Mscale
- */
-void MPU9250_getMres();
-void MPU9250_getGres();
-void MPU9250_getAres();
-
-// Accelerometer and gyroscope self test; check calibration wrt factory settings
-void MPU9250_SelfTest(float * destination);	// not used in this project
-
-/*
- *  i2c communication with MPU9250
- */
-void MPU9250_writeByte(uint8_t address, uint8_t subAddress, uint8_t data);
-void MPU9250_readBytes(uint8_t address, uint8_t subAddress, uint8_t count, uint8_t * dest);
-char MPU9250_readByte(uint8_t address, uint8_t subAddress);
-
-/*
- *  lock and read data (accel, gyro, mag, temp)
- */
-void MPU9250_readAccelData();
-void MPU9250_readGyroData();
-void MPU9250_readMagData();
-uint16_t MPU9250_readTempData();
-
-float invSqrt(float x);
-
-#ifdef __cplusplus
-}
-#endif
-#endif
+#endif /* PERIPHERALS_SENSORS_MPU9250_H_ */

@@ -15,8 +15,8 @@ InterfaceMag::InterfaceMag()
 : bodyMag{0, }
 , startCalibrationFlag(false)
 , endCalibrationFlag(false)
-, bias{-216.450f,-276.416f, -170.502f}
-, scale{0.95011f, 1.04095f, 1.01334f}
+, bias{3.120899f, 2.735853f, 3.669738f}
+, scale{0.9618968f, 1.004566f, 1.036340f}
 , min{0, }, max{0, }
 {
 	/*

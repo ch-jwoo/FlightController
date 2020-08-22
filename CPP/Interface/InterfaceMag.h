@@ -21,7 +21,6 @@ public:
 
     bool startCalibrationFlag;
 
-private:
     bool endCalibrationFlag;
 
     float bias[3];
@@ -29,6 +28,7 @@ private:
     float min[3];
     float max[3];
 
+private:
     /*
      *  calibration mag
      *  reference : https://github.com/kriswiner/MPU6050/wiki/Simple-and-Effective-Magnetometer-Calibration
