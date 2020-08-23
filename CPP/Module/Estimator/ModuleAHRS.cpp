@@ -21,7 +21,7 @@ ModuleAHRS::ModuleAHRS()
 	, attitudePub{}
 	, nedAccelPub{}
 	, lastUpdate{0}
-	, beta{0.6f}
+	, beta{0.1f}
 	, q0{1.0f}
 	, q1{0.0f}
 	, q2{0.0f}

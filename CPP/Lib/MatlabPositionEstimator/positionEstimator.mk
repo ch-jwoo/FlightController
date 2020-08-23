@@ -2,7 +2,7 @@
 ## Makefile generated for Simulink model 'positionEstimator'. 
 ## 
 ## Makefile     : positionEstimator.mk
-## Generated on : Fri Aug 21 23:06:24 2020
+## Generated on : Sun Aug 23 16:25:31 2020
 ## MATLAB Coder version: 5.0 (R2020a)
 ## 
 ## Build Info:
@@ -29,7 +29,7 @@ MATLAB_ROOT               = C:/PROGRA~1/MATLAB/R2020a
 MATLAB_BIN                = C:/PROGRA~1/MATLAB/R2020a/bin
 MATLAB_ARCH_BIN           = $(MATLAB_BIN)/win64
 MASTER_ANCHOR_DIR         = 
-START_DIR                 = C:/Users/Yeojun/ONEDRI~1.EDU/2020_R~1/ekfdat/ekftest/EKF_TO~1/JUNUEK~2
+START_DIR                 = C:/Users/Yeojun/ONEDRI~1.EDU/2020_R~1/CONTRO~1/JUNUEK~1
 SOLVER                    = 
 SOLVER_OBJ                = 
 CLASSIC_INTERFACE         = 0

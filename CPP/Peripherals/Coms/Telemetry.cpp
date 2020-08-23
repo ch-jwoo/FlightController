@@ -19,6 +19,8 @@ Telemetry::Telemetry(UART_HandleTypeDef *huart)
 
 	rcvMutexHandle = osMutexNew(NULL);
 	rcvQueueId = osMessageQueueNew(1, sizeof(uint8_t), NULL);
+
+//	__HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
 }
 
 void Telemetry::send(uint8_t *pData, uint16_t Size){
@@ -29,16 +31,36 @@ void Telemetry::send(uint8_t *pData, uint16_t Size){
 	osMutexRelease(sendMutexHandle);
 }
 
-void Telemetry::receive(uint8_t *pData, uint16_t Size){
+uint16_t Telemetry::receive(uint8_t *pData, uint16_t Size){
 	uint8_t ret = 0;
 	osMutexAcquire(rcvMutexHandle, osWaitForever);
+	rxData = pData;
+	rxSize = Size;
 	HAL_UART_Receive_DMA(huart, pData, Size);
 	osMessageQueueGet(rcvQueueId, (void*)&ret, NULL, osWaitForever);
 	osMutexRelease(rcvMutexHandle);
+	return rxSize;
 }
 
 void Telemetry::rcvCompleteCallback(UART_HandleTypeDef *huart){
 	if(huart->Instance != this->huart->Instance) return;
+	uint8_t ret = 0;
+	osMessageQueuePut(rcvQueueId, (void*)&ret, 0, 0);
+}
+
+void Telemetry::rcvIdleCallback(){
+	uint32_t temp;
+	uint32_t idleFlag = __HAL_UART_GET_FLAG(huart, UART_FLAG_IDLE);
+	if(idleFlag == RESET) return;
+
+	__HAL_UART_CLEAR_IDLEFLAG(huart);
+
+	temp = huart->Instance->ISR;
+	temp = huart->Instance->RDR;
+	HAL_UART_DMAStop(huart);
+	temp = ((DMA_Stream_TypeDef*)(huart->hdmarx->Instance))->NDTR;
+	rxSize = rxSize - temp;
+
 	uint8_t ret = 0;
 	osMessageQueuePut(rcvQueueId, (void*)&ret, 0, 0);
 }

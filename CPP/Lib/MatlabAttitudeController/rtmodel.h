@@ -18,7 +18,7 @@
 //
 #ifndef RTW_HEADER_rtmodel_h_
 #define RTW_HEADER_rtmodel_h_
-#include "Second_att_control_codeblock_fly.h"
+#include <MatlabAttitudeController/Second_att_control_codeblock_fly.h>
 
 //
 //  ROOT_IO_FORMAT: 0 (Individual arguments)

@@ -18,9 +18,9 @@
 //
 #ifndef RTW_HEADER_Second_att_control_codeblock_fly_h_
 #define RTW_HEADER_Second_att_control_codeblock_fly_h_
+#include <MatlabAttitudeController/rtwtypes.h>
+#include <MatlabAttitudeController/Second_att_control_codeblock_fly_types.h>
 #include <cmath>
-#include "rtwtypes.h"
-#include "Second_att_control_codeblock_fly_types.h"
 
 // Macros for accessing real-time model data structure
 

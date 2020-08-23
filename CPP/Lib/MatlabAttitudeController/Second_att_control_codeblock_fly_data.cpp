@@ -16,8 +16,8 @@
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
-#include "Second_att_control_codeblock_fly.h"
-#include "Second_att_control_codeblock_fly_private.h"
+#include <MatlabAttitudeController/Second_att_control_codeblock_fly.h>
+#include <MatlabAttitudeController/Second_att_control_codeblock_fly_private.h>
 
 // Block parameters (default storage)
 px4_AlgorithmModelClass::P_Second_att_control_codebloc_T px4_AlgorithmModelClass::

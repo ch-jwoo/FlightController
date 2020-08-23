@@ -9,7 +9,7 @@
 //
 // Model version                  : 1.23
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Fri Aug 21 23:50:19 2020
+// C/C++ source code generated on : Sun Aug 23 17:00:49 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -18,7 +18,7 @@
 //    2. RAM efficiency
 // Validation result: Not run
 //
-#include "positionEstimator.h"
+#include <MatlabPositionEstimator/positionEstimator.h>
 
 // Block parameters (default storage)
 positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
@@ -236,7 +236,7 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
   // Expression: p.R{4}
   //  Referenced by: '<S1>/R4'
 
-  0.001,
+  0.01,
 
   // Expression: 1
   //  Referenced by: '<S1>/MeasurementFcn4Inputs'
@@ -281,7 +281,7 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
   // Expression: p.Q
   //  Referenced by: '<S1>/Q'
 
-  0.2,
+  1.0,
 
   // Expression: 0
   //  Referenced by: '<S1>/StateTransitionFcnInputs'
@@ -301,7 +301,7 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
   // Expression: p.Q
   //  Referenced by: '<S2>/Q'
 
-  0.2,
+  0.01,
 
   // Expression: 0
   //  Referenced by: '<S2>/StateTransitionFcnInputs'

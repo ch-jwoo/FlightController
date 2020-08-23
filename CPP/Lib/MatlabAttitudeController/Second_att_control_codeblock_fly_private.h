@@ -18,7 +18,7 @@
 //
 #ifndef RTW_HEADER_Second_att_control_codeblock_fly_private_h_
 #define RTW_HEADER_Second_att_control_codeblock_fly_private_h_
-#include "rtwtypes.h"
+#include <MatlabAttitudeController/rtwtypes.h>
 
 extern real32_T rt_roundf_snf(real32_T u);
 

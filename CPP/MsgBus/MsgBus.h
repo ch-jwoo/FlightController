@@ -54,6 +54,7 @@ public:
     SIMPLE_FUNC_IMPL(NedAccel, NedAccel, nedAccel)
 
     SIMPLE_FUNC_IMPL(LocalPosition, LocalPosition, localPosition)
+    SIMPLE_FUNC_IMPL(GlobalPosition, GlobalPosition, globalPosition)
 
     SIMPLE_FUNC_IMPL(ModeFlag, ModeFlag, modeFlag)
 
@@ -83,6 +84,7 @@ private:
 
     /* INS */
     struct LocalPosition localPosition;
+    struct GlobalPosition globalPosition;
 
     /* flight state */
     struct ModeFlag modeFlag;

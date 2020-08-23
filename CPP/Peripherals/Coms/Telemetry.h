@@ -33,10 +33,15 @@ public:
 
 	/*
 	 *  receive msg using dma, mutex
+	 *  \pram[in]		*pData		receive data address
+	 *  \pram[in]		Size		receive data size
+	 *  \return						received data size
 	 */
-	void receive(uint8_t *pData, uint16_t Size);
+	uint16_t receive(uint8_t *pData, uint16_t Size);
 
 	void rcvCompleteCallback(UART_HandleTypeDef *huart);
+
+	void rcvIdleCallback();
 
 	void sendCompleteCallback(UART_HandleTypeDef *huart);
 private:
@@ -47,6 +52,9 @@ private:
 
 	osMutexId_t rcvMutexHandle;
 	osMessageQueueId_t rcvQueueId;
+
+	uint8_t *rxData;
+	uint16_t rxSize;
 
 public:
 	Telemetry() = default;

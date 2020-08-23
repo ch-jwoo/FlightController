@@ -34,8 +34,7 @@ Motor::Motor(TIM_HandleTypeDef *htim, uint32_t Channel)
 { }
 
 void Motor::start(){
-	HAL_StatusTypeDef res;
-	res = HAL_TIM_PWM_Start(htim, Channel);
+	HAL_TIM_PWM_Start(htim, Channel);
 	setPWM(1000);
 }
 

@@ -94,6 +94,17 @@ struct LocalPosition{
 	float refAlt;
 };
 
+struct GlobalPosition{
+	uint64_t timestamp;
+
+	double lat;
+	double lon;
+	float alt;
+	float refAlt;
+
+	float yaw;
+};
+
 struct Barometer{
     uint64_t timestamp;
     float pressure;			/* hPa */

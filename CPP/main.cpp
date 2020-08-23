@@ -39,6 +39,7 @@
 #include "Peripherals/Actuator/Motor.h"
 #include "Peripherals/Etc/LED.h"
 #include "Peripherals/Etc/Buzzer.h"
+#include "Peripherals/Coms/Telemetry.h"
 
 #include "printf.h"
 
@@ -116,6 +117,7 @@ void Debug_StartTask(void *argument){
 	struct VehicleAttitueSP attitudeSP;
 
 	struct Lidar lidar;
+//	char msg[] = "hello!\r\n";
 //	osDelay(2000);
 //	sensorBaro.setSeaLevelPressure(gps.alt);
 	while(1){
@@ -238,6 +240,7 @@ void Debug_StartTask(void *argument){
 		mag_biasZ = interfaceMag.bias[2];
 		/* mag calibration end */
 
+//		telem.send((uint8_t*)msg, sizeof(msg));
 //		osDelay(5);
 	}
 }
@@ -418,6 +421,10 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 
 }
 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
+	telem.sendCompleteCallback(huart);
+}
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == sbus.huart->Instance){
@@ -438,6 +445,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 							 gpsUart.gpsData.Satellites, gpsUart.gpsData.FixMode, 0/* UTC in microsecond */);
 		}
 	}
+
+	telem.rcvCompleteCallback(huart);
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
@@ -456,3 +465,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 		interfaceGyro.setBias();
 	}
 }
+
+
+//void USART2_IRQHandler(void)
+//{
+//	HAL_UART_IRQHandler(&huart2);
+//	telem.rcvIdleCallback();
+//}

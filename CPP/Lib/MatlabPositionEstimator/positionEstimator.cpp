@@ -9,7 +9,7 @@
 //
 // Model version                  : 1.23
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Fri Aug 21 23:50:19 2020
+// C/C++ source code generated on : Sun Aug 23 17:00:49 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -18,7 +18,7 @@
 //    2. RAM efficiency
 // Validation result: Not run
 //
-#include "positionEstimator.h"
+#include <MatlabPositionEstimator/positionEstimator.h>
 #define NumBitsPerChar                 8U
 
 extern real_T rt_modd_snf(real_T u0, real_T u1);
@@ -629,13 +629,13 @@ void positionEstimatorModelClass::step()
   real_T a_0[36];
   real_T b_a_0[36];
   real_T u;
-  static const real_T a_1[9] = { 1.0, 0.0, 0.0, 0.005, 1.0, 0.0, 1.25E-5, 0.005,
+  static const real_T a_1[9] = { 1.0, 0.0, 0.0, 0.02, 1.0, 0.0, 0.0002, 0.02,
     1.0 };
 
-  static const real_T b[9] = { 1.0, 0.005, 1.25E-5, 0.0, 1.0, 0.005, 0.0, 0.0,
-    1.0 };
+  static const real_T b[9] = { 1.0, 0.02, 0.0002, 0.0, 1.0, 0.02, 0.0, 0.0, 1.0
+  };
 
-  static const real_T b_a_1[3] = { 6.25E-6, 0.0025, 1.0 };
+  static const real_T b_a_1[3] = { 0.0001, 0.01, 1.0 };
 
   static const real_T a_2[36] = { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0,
     0.0, 0.0, 0.0, 0.005, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.005, 0.0, 1.0, 0.0,

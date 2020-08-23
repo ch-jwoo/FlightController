@@ -16,8 +16,8 @@
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
-#include "Second_att_control_codeblock_fly.h"
-#include "Second_att_control_codeblock_fly_private.h"
+#include <MatlabAttitudeController/Second_att_control_codeblock_fly.h>
+#include <MatlabAttitudeController/Second_att_control_codeblock_fly_private.h>
 
 // Exported block parameters
 real32_T Angle_rate_pitch_kI = 1.0F;   // Variable: Angle_rate_pitch_kI

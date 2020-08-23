@@ -261,8 +261,8 @@ function RTW_rtwnameSIDMap() {
 	this.sidHashMap["positionEstimator:1:977"] = {rtwname: "<S1>/R3"};
 	this.rtwnameHashMap["<S1>/R4"] = {sid: "positionEstimator:1:987"};
 	this.sidHashMap["positionEstimator:1:987"] = {rtwname: "<S1>/R4"};
-	this.rtwnameHashMap["<S1>/StateTransitionFcnInputs"] = {sid: "positionEstimator:1:796"};
-	this.sidHashMap["positionEstimator:1:796"] = {rtwname: "<S1>/StateTransitionFcnInputs"};
+	this.rtwnameHashMap["<S1>/StateTransitionFcnInputs"] = {sid: "positionEstimator:1:992"};
+	this.sidHashMap["positionEstimator:1:992"] = {rtwname: "<S1>/StateTransitionFcnInputs"};
 	this.rtwnameHashMap["<S1>/checkMeasurementFcn1Signals"] = {sid: "positionEstimator:1:937"};
 	this.sidHashMap["positionEstimator:1:937"] = {rtwname: "<S1>/checkMeasurementFcn1Signals"};
 	this.rtwnameHashMap["<S1>/checkMeasurementFcn2Signals"] = {sid: "positionEstimator:1:969"};
