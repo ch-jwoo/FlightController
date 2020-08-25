@@ -66,6 +66,7 @@ public:
 };
 
 extern Telemetry telem;
+extern uint8_t telemBuffer[];
 
 } /* namespace FC */
 

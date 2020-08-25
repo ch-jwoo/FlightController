@@ -6,7 +6,7 @@
  */
 
 #include "ModuleSD.h"
-
+#include "fatfs.h"
 #include "printf.h"
 
 namespace FC {

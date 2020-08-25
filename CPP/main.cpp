@@ -121,7 +121,7 @@ void Debug_StartTask(void *argument){
 //	osDelay(2000);
 //	sensorBaro.setSeaLevelPressure(gps.alt);
 	while(1){
-		tick += 5;
+		tick += 20;
 		osDelayUntil(tick);
 		msgBus.getHealth(&health);
 		hzAccel = health.accel;
@@ -240,7 +240,10 @@ void Debug_StartTask(void *argument){
 		mag_biasZ = interfaceMag.bias[2];
 		/* mag calibration end */
 
-//		telem.send((uint8_t*)msg, sizeof(msg));
+//		int len = sprintf((char*)telemBuffer, "ready\r\n");
+//		telem.send(telemBuffer, len);
+//		len = telem.receive(telemBuffer, 100);
+//		telem.send(telemBuffer, len);
 //		osDelay(5);
 	}
 }
@@ -467,8 +470,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 }
 
 
-//void USART2_IRQHandler(void)
-//{
-//	HAL_UART_IRQHandler(&huart2);
-//	telem.rcvIdleCallback();
-//}
+void Telem_IdleHandler(void){
+	telem.rcvIdleCallback();
+}

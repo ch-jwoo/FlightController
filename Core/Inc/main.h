@@ -68,6 +68,7 @@ void Health_StartTask(void *argument);
 void AC_StartTask(void *argument);
 void INS_StartTask(void *argument);
 void PC_StartTask(void *argument);
+void Telem_IdleHandler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

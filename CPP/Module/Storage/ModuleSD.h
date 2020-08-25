@@ -8,11 +8,6 @@
 #ifndef MODULE_MODULESD_H_
 #define MODULE_MODULESD_H_
 
-#include "main.h"
-#include "fatfs.h"
-#include <cstring>
-
-
 #include "MsgBus/MsgBus.h"
 
 namespace FC {

@@ -10,6 +10,7 @@
 namespace FC {
 
 Telemetry telem(&huart2);
+uint8_t telemBuffer[100];
 
 Telemetry::Telemetry(UART_HandleTypeDef *huart)
 : huart(huart)
