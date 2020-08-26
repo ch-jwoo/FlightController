@@ -64,7 +64,7 @@ private:
 	static const uint16_t MAX_PWM = 2000;
 
 	static const uint16_t MIN_CCR = 20000;		/* duty cycle 1ms */
-	static const uint16_t MAX_CCR = 40000;		/* duty cycle 2ms */
+	static const uint16_t MAX_CCR = 39999;		/* duty cycle 2ms */
 };
 
 extern Motor m1;
