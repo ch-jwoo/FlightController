@@ -57,13 +57,16 @@ void ModuleAHRS::oneStep(){
 //						   bodyMagSub.xyz[1],
 //						   bodyMagSub.xyz[2]);
 //	}
+	/*
+	 *  madgwick use gravity vector, so -(bodyAccel)
+	 */
 	msgBus.getBodyMag(&this->bodyMagSub);
 	MadgwickAHRSupdate(bodyAngularVelocitySub.xyz[0],
 					   bodyAngularVelocitySub.xyz[1],
 					   bodyAngularVelocitySub.xyz[2],
-					   bodyAccelSub.xyz[0],
-					   bodyAccelSub.xyz[1],
-					   bodyAccelSub.xyz[2],
+					   -bodyAccelSub.xyz[0],
+					   -bodyAccelSub.xyz[1],
+					   -bodyAccelSub.xyz[2],
 					   bodyMagSub.xyz[0],
 					   bodyMagSub.xyz[1],
 					   bodyMagSub.xyz[2]);

@@ -52,7 +52,7 @@ void InterfaceAccel::calAverage(float x, float y, float z){
 		calBiasFlag = false;
 		biasX = averX;
 		biasY = averY;
-		biasZ = averZ - FC_GRAVITY_ACCEERATION;
+		biasZ = averZ + FC_GRAVITY_ACCEERATION;		/* gravity is not bias */
 	}
 }
 

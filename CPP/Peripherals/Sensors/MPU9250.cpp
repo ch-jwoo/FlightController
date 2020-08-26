@@ -268,9 +268,9 @@ void MPU9250::initAK8963()
 
 bool MPU9250::calRawMPU9250(){
 	// accel axis reverse
-	accelCount[0] = -((((int16_t)buffer[0]) << 8) | buffer[1]);
-	accelCount[1] = -((((int16_t)buffer[2]) << 8) | buffer[3]);
-	accelCount[2] = -((((int16_t)buffer[4]) << 8) | buffer[5]);
+	accelCount[0] = ((((int16_t)buffer[0]) << 8) | buffer[1]);
+	accelCount[1] = ((((int16_t)buffer[2]) << 8) | buffer[3]);
+	accelCount[2] = ((((int16_t)buffer[4]) << 8) | buffer[5]);
 	tmpCount = (int16_t) (buffer[6] << 8 | buffer[7]);
 	gyroCount[0] = (((int16_t)buffer[8]) << 8) | buffer[9];
 	gyroCount[1] = (((int16_t)buffer[10]) << 8) | buffer[11];

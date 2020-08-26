@@ -240,11 +240,11 @@ void Debug_StartTask(void *argument){
 		mag_biasZ = interfaceMag.bias[2];
 		/* mag calibration end */
 
-//		int len = sprintf((char*)telemBuffer, "ready\r\n");
-//		telem.send(telemBuffer, len);
-//		len = telem.receive(telemBuffer, 100);
-//		telem.send(telemBuffer, len);
-//		osDelay(5);
+		int len = sprintf((char*)telemBuffer, "ready\r\n");
+		telem.send(telemBuffer, len);
+		len = telem.receive(telemBuffer, 100);
+		telem.send(telemBuffer, len);
+		osDelay(5);
 	}
 }
 
@@ -400,8 +400,12 @@ void cppMain(){
      */
 	SBUS_init(&huart7);
 
-	Lidar1D_init(&htim15, TIM_CHANNEL_1, TIM_CHANNEL_2);
-	Lidar1D_run();
+	/*
+	 *  TODO if lidar not connected, the lidar altitude is 6
+	 *  so if you don't use lidar, this code must uncommente
+	 */
+//	Lidar1D_init(&htim15, TIM_CHANNEL_1, TIM_CHANNEL_2);
+//	Lidar1D_run();
 
 	m1.start();
 	m2.start();

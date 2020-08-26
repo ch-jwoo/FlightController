@@ -25,7 +25,7 @@ void ModuleINS::onestep(){
 		input.AhrsFlag = true;
 		input.ax = nedAccelSub.xyz[0];
 		input.ay = nedAccelSub.xyz[1];
-		input.az = nedAccelSub.xyz[2] - FC_GRAVITY_ACCEERATION;		/* subtract gravity */
+		input.az = nedAccelSub.xyz[2] + FC_GRAVITY_ACCEERATION;		/* subtract gravity */
 	}
 	else input.AhrsFlag = false;
 
