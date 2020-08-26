@@ -24,6 +24,10 @@ Telemetry::Telemetry(UART_HandleTypeDef *huart)
 //	__HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
 }
 
+void Telemetry::init(){
+	__HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
+}
+
 void Telemetry::send(uint8_t *pData, uint16_t Size){
 	uint8_t ret = 0;
 	osMutexAcquire(sendMutexHandle, osWaitForever);

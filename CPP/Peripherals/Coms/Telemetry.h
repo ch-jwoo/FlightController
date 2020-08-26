@@ -25,6 +25,8 @@ public:
 	 */
 	Telemetry(UART_HandleTypeDef *huart);
 
+	void init();
+
 	/*
 	 *  send msg using dma
 	 *  using mutex in this function

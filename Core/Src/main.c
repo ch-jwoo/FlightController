@@ -115,7 +115,6 @@ int main(void)
   MX_TIM15_Init();
   /* USER CODE BEGIN 2 */
 
-  __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
   cppMain();
   /* USER CODE END 2 */
 

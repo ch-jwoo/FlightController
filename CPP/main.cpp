@@ -386,6 +386,8 @@ void cppMain(){
 //	Lidar1D_init(&htim15, TIM_CHANNEL_1, TIM_CHANNEL_2);
 //	Lidar1D_run();
 
+	telem.init();
+
 	m1.start();
 	m2.start();
 	m3.start();
