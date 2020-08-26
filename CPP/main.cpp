@@ -117,9 +117,6 @@ void Debug_StartTask(void *argument){
 	struct VehicleAttitueSP attitudeSP;
 
 	struct Lidar lidar;
-//	char msg[] = "hello!\r\n";
-//	osDelay(2000);
-//	sensorBaro.setSeaLevelPressure(gps.alt);
 	while(1){
 		tick += 20;
 		osDelayUntil(tick);
@@ -135,7 +132,6 @@ void Debug_StartTask(void *argument){
 		hzPos = health.positionController;
 		hzINS = health.ins;
 		hzLidar = health.lidar;
-//		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 
 		msgBus.getMotorPWM(&pwm);
 		pwm1 = pwm.m1;
@@ -171,26 +167,20 @@ void Debug_StartTask(void *argument){
 			body_gy = bodyAnglularVel.xyz[1];
 			body_gz = bodyAnglularVel.xyz[2];
 		}
-//		osKernelLock();
 		if(msgBus.getBarometer(&baro)){
 			baro_alt = baro.altitude;
-//			printf_("baro : %u %f\r\n", (unsigned int)baro.timestamp, baro_alt);
 		}
 
 		if(msgBus.getNedAccel(&nedAccel)){
 			ned_ax = nedAccel.xyz[0];
 			ned_ay = nedAccel.xyz[1];
 			ned_az = nedAccel.xyz[2];
-//			printf_("ned accel : %u %f %f %f\r\n", (unsigned int)nedAccel.timestamp, nedAccel.xyz[0], nedAccel.xyz[1], nedAccel.xyz[2]);
 		}
 
 		if(msgBus.getGPS(&gps)){
 			gps_lat = gps.lat;
 			gps_lon = gps.lon;
 			gps_alt = gps.alt;
-//			printf_("GPS : %u %f %f %f %f %f %f %f %u %f %f\r\n", (unsigned int)gps.timestamp, gps.lat, gps.lon, gps.alt, gps.velN, gps.velE
-//						   , gps.direction, gps.vel
-//						   , gps.fixType, gps.hdop, gps.vdop);
 		}
 
 		if(msgBus.getLocalPosition(&localPosition)){
@@ -200,7 +190,6 @@ void Debug_StartTask(void *argument){
 			local_vx = localPosition.vx;
 			local_vy = localPosition.vy;
 			local_vz = localPosition.vz;
-//			printf_("ned position : %u %f %f %f\r\n", (unsigned int)localPosition.timestamp, local_x, local_y, local_z);
 		}
 
 		if(msgBus.getBodyMag(&bodyMag)){
@@ -220,7 +209,6 @@ void Debug_StartTask(void *argument){
 			sp_throtle = attitudeSP.throttle;
 			sp_yaw = attitudeSP.yawRate;
 		}
-//		osKernelUnlock();
 
 		/* mag calibration */
 		mag_minX = interfaceMag.min[0];
@@ -341,16 +329,7 @@ void Commander_StartTask(void *argument){
 }
 
 void Buzzer_StartTask(void *argument){
-//	ModuleBuzzer::main();
-//	buzzer.start();
-	while(1){
-//		led1.toggle();
-//		led2.toggle();
-//		led3.toggle();
-//		Note_t a = D5;
-//		buzzer.setNote(a);
-		osDelay(1000);
-	}
+	ModuleBuzzer::main();
 }
 
 void AC_StartTask(void *argument){

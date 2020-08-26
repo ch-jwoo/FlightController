@@ -8,12 +8,11 @@
 #ifndef MODULE_MODULEGCS_H_
 #define MODULE_MODULEGCS_H_
 #include "Mavlink/common/mavlink.h"
-#include "Utils/Constants.h"
-#include "main.h"
 #include "cmsis_os.h"
+#include "Peripherals/Coms/Telemetry.h"
 
-//#define PARAM_TOTAL_NUMBER 46
 namespace FC {
+
 /*
  *  pram id (string)
  *  pram value
@@ -29,47 +28,30 @@ struct Parameters{
 class ModuleGCS {
 public:
 	/* UART2 Callback Function */
-	void GCS_uartRxCpltCallback();
+//	void GCS_uartRxCpltCallback();
 
-	ModuleGCS();
+	ModuleGCS(Telemetry *ptelem);
+
+	static void main();
 
 	/*
 	 *  essentially send this packet
 	 *  must need to communicate width GCS (1 ~ 5hz)
 	 */
-	static void sendHeartbeat(){
-		ModuleGCS moduleGCS;
-		while(1){
-			moduleGCS.handle_heartbeat();
-			osDelay(1000);
-		}
-	}
-
+	static void heartbeatTask(void *instance);
 	/*
 	 *  originally 50hz but we adopted 20hz because 50hz is so fast
 	 *  for vehicle attitude visualization
 	 *  not essential
 	 */
-	static void sendAttitude(){
-		ModuleGCS moduleGCS;
-		while(1){
-			moduleGCS.handle_attitude();
-			osDelay(50);
-		}
-	}
+	static void attitudeTask(void *instance);
 
 	/*
 	 *  for vehicle position visualization
 	 *  not essential
 	 *  we adopted hz
 	 */
-	static void sendGlobalPositionNed(){
-		ModuleGCS moduleGCS;
-		while(1){
-			moduleGCS.handle_global_position_ned();
-			osDelay(50);
-		}
-	}
+	static void globalPositionNedTask(void *instance);
 
 	/*
 	 *  push/pull waypoints
@@ -77,31 +59,30 @@ public:
 	 *  deal command :
 	 *  	send ACK autopilot version, protocol version etc.
 	 */
-	static void interactionGCS(){
-		ModuleGCS moduleGCS;
-		while(1){
-			moduleGCS.handle_GCS();
-		}
-	}
+//	static void interactionGCS(){
+//		ModuleGCS moduleGCS;
+//		while(1){
+//			moduleGCS.handleRxMSG();
+//		}
+//	}
 
 	~ModuleGCS() = default;
 	ModuleGCS(const ModuleGCS &other) = delete;
 	ModuleGCS(ModuleGCS &&other) = delete;
 	ModuleGCS& operator=(const ModuleGCS &other) = delete;
 	ModuleGCS& operator=(ModuleGCS &&other) = delete;
-private:
 
-	/* Input */
-	struct BodyAngularVelocity bodyAngleVelocitySub{0};
-	struct GlobalPosition globalPositionSub = { 0 };		/* for position visualization */
-	struct LocalPosition localPositionSub = { 0 };			/* for NED velocity */
-	struct Attitude attitudeSub = { 0 };					/* for attitude visualization */
+private:
+	Telemetry *ptelem;
 
 	/* Main Handle Functions */
-	void handle_heartbeat();
-	void handle_attitude();
-	void handle_global_position_ned();
-	void handle_GCS();
+	void sendHeartbeat();
+	void sendAttitude();
+	void sendGlobalPositionNED();
+
+	void communicateGCS();
+
+	void handleRcvMSG(const mavlink_message_t &mavMsg);
 
 	/* Handle Functions (call by handle_GCS()) */
 	/* Handle Mission Message */
@@ -118,22 +99,28 @@ private:
 	void handle_param_request_read();
 	void handle_param_set();
 
-	/* Variables */
+	/*
+	 * member variable. these variable is used in handle receive message
+	 * this variable must not used in sendHeartbeat or attitude or globalPositionNED
+	 */
 	mavlink_message_t sendMsg;
 	mavlink_message_t receiveMsg;
 	mavlink_status_t status;
-	uint8_t tx_buf[MAVLINK_MAX_PACKET_LEN];
-	uint8_t tx_buf1[MAVLINK_MAX_PACKET_LEN];
-	uint8_t rx_buf[MAVLINK_MAX_PACKET_LEN];
+	uint8_t txBuffer[MAVLINK_MAX_PACKET_LEN];
+	uint8_t rxBuffer[MAVLINK_MAX_PACKET_LEN];
+
+	/*
+	 *  vehicle identification
+	 */
 	uint8_t sysId = 1;
 	uint8_t compId = 1;
 	uint8_t target_system = 255;
 	uint8_t target_component = 1;
-	uint8_t len;							/* tx buffer length */
+
 	uint8_t param_count = 0;
 	uint8_t mission_seq = 0;
 	uint8_t mission_count = 0;
-	uint8_t flag = 0;
+
 	static const uint8_t PARAM_TOTAL_NUMBER = 46;
 	struct Parameters params[PARAM_TOTAL_NUMBER] = {{"PC_YAW_P\0", 0.04f,0},
 	                                     {"PC_X_P\0", 0.7f,1},{"PC_X_I\0", 0.0f,2},{"PC_X_D\0", 0.1f,3},
@@ -151,7 +138,20 @@ private:
 	                                     {"AC_PITCH_RATE_P\0", 0.3f,38},{"AC_PITCH_RATE_I\0", 0.3f,39},{"AC_PITCH_RATE_D\0", 0.3f,40},
 	                                     {"AC_YAW_ANG_RATE_P\0", 0.3f,41},{"AC_YAW_RATE_P\0", 0.3f,42},{"AC_YAW_RATE_I\0", 0.3f,43},
 	                                     {"G_TAU\0", 1.5f,44},{"G_M\0", 0.6f,45}};
-}; 
+};
 
+
+/*
+ *  change member function to c
+ */
+extern "C"{
+
+void heartbeatThread(void *param);
+
+void attitudeThread(void *param);
+
+void globalPositionNedThread(void *param);
+
+}
 }/* namespace FC */
 #endif /* MODULE_GCS_H_ */

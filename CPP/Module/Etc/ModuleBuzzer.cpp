@@ -6,8 +6,6 @@
  */
 
 #include "ModuleBuzzer.h"
-#include "tim.h"
-
 
 namespace FC {
 
@@ -28,40 +26,32 @@ static const osMessageQueueAttr_t Buzzer_Queue_attributes = {
 
 
 void ModuleBuzzer::main() {
-//	/*
-//	 *  \timer setting
-//	 *  TIM4, TIM_CHANNEL_1
-//	 *  PCLK 100Mhz
-//	 *  Prescaler 0
-//	 *  Counter Period 10-1
-//	 */
-//
-//	/* edit timer. */
-//	ModuleBuzzer buzzer(&htim4, TIM_CHANNEL_1, 100000000);
-//
-//	BuzzerCommand rcvResult;
-//	while(1){
-//		if(osMessageQueueGet(Buzzer_QueueHandle, (void*)&rcvResult, NULL, osWaitForever) == osOK){
-//			buzzer.commandHandler(rcvResult);
-////			osDelay(10);
-//		}
-//		else{
-//			osMessageQueueReset(Buzzer_QueueHandle);
-//		}
-//		osDelay(10);
-//	}
+
+	/*
+	 *  using peripherals/Etc/Buzzer.h
+	 */
+	ModuleBuzzer moduleBuzzer(&buzzer);
+	BuzzerCommand rcvResult;
+	while(1){
+		if(osMessageQueueGet(Buzzer_QueueHandle, (void*)&rcvResult, NULL, osWaitForever) == osOK){
+			moduleBuzzer.commandHandler(rcvResult);
+		}
+		else{
+			osMessageQueueReset(Buzzer_QueueHandle);
+		}
+		osDelay(10);
+	}
 }
 
-ModuleBuzzer::ModuleBuzzer(TIM_HandleTypeDef *htim, uint32_t Channel, uint32_t CLK)
-//	: A{Z1, Z2, Z5, Z6}
+ModuleBuzzer::ModuleBuzzer(Buzzer *buzzer)
+: pbuzzer(buzzer)
+, armedNotes{C4, G4, C5}
+, disarmedNotes{C5, G4, C4}
+, successedNotes{D5, D5}
+, deniedNotes{D5}
 {
 	  /* creation of Buzzer_Queue */
-	  Buzzer_QueueHandle = osMessageQueueNew (3, sizeof(BuzzerCommand), &Buzzer_Queue_attributes);
-
-	  this->htim = htim;
-	  this->Channel = Channel;
-	  this->CLK = CLK/10;		/* 10 : AutoReload Register+1 */
-	__HAL_TIM_SET_PRESCALER(htim, this->CLK / 4000);
+	  Buzzer_QueueHandle = osMessageQueueNew(3, sizeof(BuzzerCommand), &Buzzer_Queue_attributes);
 }
 
 
@@ -92,29 +82,53 @@ void ModuleBuzzer::commandHandler(BuzzerCommand result){
 
 void ModuleBuzzer::armed(){
 	//TODO armed sound
+    for (uint8_t i = 0 ; i < sizeof(armedNotes)/sizeof(Note_t) ; i++) {
+	  pbuzzer->start();
+      pbuzzer->setNote(armedNotes[i]);
+      osDelay(500);
+
+      /* Make each note sound and cut 1 mileecond */
+      pbuzzer->stop();
+      osDelay(10);
+    }
 }
 
 void ModuleBuzzer::disarmed(){
 	//TODO disarmed sound
+	for (uint8_t i = 0 ; i < sizeof(disarmedNotes)/sizeof(Note_t) ; i++) {
+	    pbuzzer->start();
+		pbuzzer->setNote(disarmedNotes[i]);
+		osDelay(500);
+
+		/* Make each note sound and cut 1 mileecond */
+	    pbuzzer->stop();
+		osDelay(10);
+	}
 }
 
 void ModuleBuzzer::denied(){
 	//TODO denied sound
+	for (uint8_t i = 0 ; i < sizeof(deniedNotes)/sizeof(Note_t) ; i++) {
+	    pbuzzer->start();
+		pbuzzer->setNote(deniedNotes[i]);
+		osDelay(2000);
+
+		/* Make each note sound and cut n mileecond */
+	    pbuzzer->stop();
+		osDelay(5);
+	}
 }
 
 void ModuleBuzzer::success(){
-//	for (uint8_t i = 0 ; i < sizeof(A)/sizeof(enum notes) ; i++) {
-////		__HAL_TIM_SET_PRESCALER(htim, CLK / A[i] * 100);
-//		HAL_TIM_PWM_Start(htim, Channel);
-//		osDelay(500);
-//
-//		/* Make each note sound and cut 1 mileecond */
-//		HAL_TIM_PWM_Stop(htim, Channel);
-//		osDelay(10);
-//	}
-	HAL_TIM_PWM_Start(htim, Channel);
-	osDelay(2000);
-	HAL_TIM_PWM_Stop(htim, Channel);
+	 for (uint8_t i = 0 ; i < sizeof(successedNotes)/sizeof(Note_t) ; i++) {
+	   pbuzzer->start();
+	   pbuzzer->setNote(disarmedNotes[i]);
+	   osDelay(100);
+
+	   /* Make each note sound and cut 1 mileecond */
+	   pbuzzer->stop();
+	   osDelay(10);
+	 }
 }
 
 } /* namespace FC */

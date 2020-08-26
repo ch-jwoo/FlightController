@@ -10,7 +10,7 @@
 
 #include <MsgBus/MsgType.h>
 #include "cmsis_os.h"
-#include "tim.h"
+#include "Peripherals/Etc/Buzzer.h"
 
 namespace FC {
 
@@ -48,7 +48,7 @@ public:
 	 *  \param[in]		Channel		timer channel				ex) TIM_CHANNEL_2
 	 *  \param[in]		PCLK		peripheral clock
 	 */
-	ModuleBuzzer(TIM_HandleTypeDef *htim, uint32_t Channel, uint32_t PCLK);
+	ModuleBuzzer(Buzzer *buzzer);
 
 	/*
 	 *  Give a order to buzzer
@@ -67,11 +67,12 @@ public:
 	ModuleBuzzer(const ModuleBuzzer &other) = delete;
 
 private:
-	TIM_HandleTypeDef *htim;
-	uint32_t Channel;
-	uint32_t CLK;
+	Buzzer *pbuzzer;
 
-//	enum notes A[10];// = {Z1, Z2, Z5, Z1, Z2, Z5, Z1, Z2, Z5, Z6};
+	const Note_t armedNotes[3];
+	const Note_t disarmedNotes[3];
+	const Note_t successedNotes[2];
+	const Note_t deniedNotes[1];
 
 	/*
 	 *  handle command using switch
@@ -87,7 +88,6 @@ private:
 	void denied();
 	void success();
 };
-
 
 } /* namespace FC */
 
