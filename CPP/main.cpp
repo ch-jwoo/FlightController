@@ -120,43 +120,46 @@ void Debug_StartTask(void *argument){
 	while(1){
 		tick += 20;
 		osDelayUntil(tick);
-		msgBus.getHealth(&health);
-		hzAccel = health.accel;
-		hzBaro = health.baro;
-		hzGyro = health.gyro;
-		hzGPS = health.gps;
-		hzMag = health.mag;
-		hzAHRS = health.ahrs;
-		hzRC = health.rc;
-		hzAtti = health.attitudeController;
-		hzPos = health.positionController;
-		hzINS = health.ins;
-		hzLidar = health.lidar;
+		if(msgBus.getHealth(&health)){
+			hzAccel = health.accel;
+			hzBaro = health.baro;
+			hzGyro = health.gyro;
+			hzGPS = health.gps;
+			hzMag = health.mag;
+			hzAHRS = health.ahrs;
+			hzRC = health.rc;
+			hzAtti = health.attitudeController;
+			hzPos = health.positionController;
+			hzINS = health.ins;
+			hzLidar = health.lidar;
+		}
 
-		msgBus.getMotorPWM(&pwm);
-		pwm1 = pwm.m1;
-		pwm2 = pwm.m2;
-		pwm3 = pwm.m3;
-		pwm4 = pwm.m4;
-		pwm5 = pwm.m5;
-		pwm6 = pwm.m6;
+		if(msgBus.getMotorPWM(&pwm)){
+			pwm1 = pwm.m1;
+			pwm2 = pwm.m2;
+			pwm3 = pwm.m3;
+			pwm4 = pwm.m4;
+			pwm5 = pwm.m5;
+			pwm6 = pwm.m6;
+		}
 
 		if(msgBus.getLidar(&lidar)){
 			lidar_alt = lidar.altitude;
 			lidar_valid = lidar.valid;
 		}
 
-		msgBus.getAttitude(&att);
-		att_roll = att.roll;
-		att_pitch = att.pitch;
-		att_yaw = att.yaw;
+		if(msgBus.getAttitude(&att)){
+			att_roll = att.roll;
+			att_pitch = att.pitch;
+			att_yaw = att.yaw;
+		}
 
-		msgBus.getController(&ctl);
-		ctl_roll = ctl.roll;
-		ctl_pitch = ctl.pitch;
-		ctl_yaw = ctl.yaw;
-		ctl_throtle = ctl.throttle;
-
+		if(msgBus.getController(&ctl)){
+			ctl_roll = ctl.roll;
+			ctl_pitch = ctl.pitch;
+			ctl_yaw = ctl.yaw;
+			ctl_throtle = ctl.throttle;
+		}
 		if(msgBus.getBodyAccel(&bodyAccel)){
 			body_ax = bodyAccel.xyz[0];
 			body_ay = bodyAccel.xyz[1];

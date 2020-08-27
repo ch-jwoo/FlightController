@@ -118,7 +118,7 @@ const osThreadAttr_t AHRS_Task_attributes = {
 };
 /* Definitions for Commander_Task */
 osThreadId_t Commander_TaskHandle;
-uint32_t Commander_TaskBuffer[ 512 ];
+uint32_t Commander_TaskBuffer[ 256 ];
 osStaticThreadDef_t Commander_TaskControlBlock;
 const osThreadAttr_t Commander_Task_attributes = {
   .name = "Commander_Task",
@@ -133,7 +133,7 @@ osThreadId_t Debug_TaskHandle;
 const osThreadAttr_t Debug_Task_attributes = {
   .name = "Debug_Task",
   .priority = (osPriority_t) osPriorityAboveNormal,
-  .stack_size = 1024 * 4
+  .stack_size = 512 * 4
 };
 /* Definitions for Buzzer_Task */
 osThreadId_t Buzzer_TaskHandle;
@@ -161,7 +161,7 @@ const osThreadAttr_t Health_Task_attributes = {
 };
 /* Definitions for AC_Task */
 osThreadId_t AC_TaskHandle;
-uint32_t AC_TaskBuffer[ 512 ];
+uint32_t AC_TaskBuffer[ 256 ];
 osStaticThreadDef_t AC_TaskControlBlock;
 const osThreadAttr_t AC_Task_attributes = {
   .name = "AC_Task",
@@ -180,7 +180,7 @@ const osThreadAttr_t INS_Task_attributes = {
 };
 /* Definitions for PC_Task */
 osThreadId_t PC_TaskHandle;
-uint32_t PC_TaskBuffer[ 2048 ];
+uint32_t PC_TaskBuffer[ 512 ];
 osStaticThreadDef_t PC_TaskControlBlock;
 const osThreadAttr_t PC_Task_attributes = {
   .name = "PC_Task",
