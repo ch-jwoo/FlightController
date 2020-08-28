@@ -10,7 +10,6 @@
 #include "Mavlink/common/mavlink.h"
 #include "cmsis_os.h"
 #include "Peripherals/Coms/Telemetry.h"
-
 namespace FC {
 
 /*
@@ -35,23 +34,12 @@ public:
 	static void main();
 
 	/*
-	 *  essentially send this packet
-	 *  must need to communicate width GCS (1 ~ 5hz)
+	 *  send essential packet (heartbeat, attitude, globalPosition)
+	 *  heartbeat		1hz
+	 *  attitude		50hz
+	 *  globalPosition	50ha
 	 */
-	static void heartbeatTask(void *instance);
-	/*
-	 *  originally 50hz but we adopted 20hz because 50hz is so fast
-	 *  for vehicle attitude visualization
-	 *  not essential
-	 */
-	static void attitudeTask(void *instance);
-
-	/*
-	 *  for vehicle position visualization
-	 *  not essential
-	 *  we adopted hz
-	 */
-	static void globalPositionNedTask(void *instance);
+	static void periodicSendTask(void *instance);
 
 	/*
 	 *  push/pull waypoints
@@ -76,9 +64,9 @@ private:
 	Telemetry *ptelem;
 
 	/* Main Handle Functions */
-	void sendHeartbeat();
-	void sendAttitude();
-	void sendGlobalPositionNED();
+	void sendHeartbeat(uint8_t *txBuffer, mavlink_message_t *sendMsg);
+	void sendAttitude(uint8_t *txBuffer, mavlink_message_t *sendMsg);
+	void sendGlobalPositionNED(uint8_t *txBuffer, mavlink_message_t *sendMsg);
 
 	void communicateGCS();
 
@@ -146,11 +134,13 @@ private:
  */
 extern "C"{
 
-void heartbeatThread(void *param);
+void ModuleGCS_PeriodicSendTask(void *param);
 
-void attitudeThread(void *param);
-
-void globalPositionNedThread(void *param);
+//void heartbeatThread(void *param);
+//
+//void attitudeThread(void *param);
+//
+//void globalPositionNedThread(void *param);
 
 }
 }/* namespace FC */

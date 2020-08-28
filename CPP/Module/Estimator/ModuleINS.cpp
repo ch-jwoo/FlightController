@@ -12,6 +12,11 @@
 
 namespace FC {
 
+bool ModuleINS::calGpsHomeFlag = true;
+uint8_t ModuleINS::avgIndexGPS = 0;
+double ModuleINS::avgLat = 0;
+double ModuleINS::avgLon = 0;
+float ModuleINS::avgAlt = 0;
 
 ModuleINS::ModuleINS()
 	: refLat(0)
@@ -31,6 +36,12 @@ void ModuleINS::onestep(){
 
 	if(msgBus.getGPS(&gpsSub)){
 		input.GpsFlag = false;
+		if(calGpsHomeFlag && gpsSub.fixType != 0){
+			calAvgLLA(gpsSub.lat, gpsSub.lon, gpsSub.alt);
+		}
+		else if(!calGpsHomeFlag){
+			/* input set */
+		}
 	}
 	else input.GpsFlag = false;
 
@@ -70,5 +81,28 @@ void ModuleINS::onestep(){
 	msgBus.setLocalPosition(localPositionPub);
 }
 
+void ModuleINS::setAvgLLA(){
+	calGpsHomeFlag = true;
+	avgIndexGPS = 0;
+	avgLat = 0;
+	avgLon = 0;
+	avgAlt = 0;
+}
+
+void ModuleINS::calAvgLLA(double lat, double lon, float alt){
+	float alpha = (avgIndexGPS-1)/avgIndexGPS;
+	avgLat = alpha*avgLat + (1-alpha)*lat;
+	avgLon = alpha*avgLon + (1-alpha)*lon;
+	avgAlt = alpha*avgAlt + (1-alpha)*alt;
+
+	avgIndexGPS++;
+
+	if(avgIndexGPS > AVERAGE_SIZE){
+		calGpsHomeFlag = false;
+		refLat = avgLat;
+		refLon = avgLon;
+		refAlt = avgAlt;
+	}
+}
 
 } /* namespace FC */

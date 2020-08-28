@@ -35,11 +35,15 @@
 #include "Module/Controller/ModuleAttitudeController.h"
 #include "Module/Estimator/ModuleINS.h"
 #include "Module/Controller/ModulePositionController.h"
+#include "Module/Manager/ModuleGCS.h"
 
 #include "Peripherals/Actuator/Motor.h"
 #include "Peripherals/Etc/LED.h"
 #include "Peripherals/Etc/Buzzer.h"
 #include "Peripherals/Coms/Telemetry.h"
+#include "Peripherals/Sensors/MS4525DO.h"
+#include "Peripherals/Sensors/VoltageChecker.h"
+
 
 #include "printf.h"
 
@@ -51,7 +55,6 @@ using namespace FC;
 //#define USE_BME280
 #define USE_SBUS
 //#define USE_AHRS
-
 
 float attitude;
 uint16_t hzAccel, hzBaro, hzGyro, hzGPS, hzMag, hzAHRS, hzRC, hzAtti, hzPos, hzINS, hzLidar;
@@ -79,6 +82,9 @@ float sp_roll, sp_pitch, sp_throtle, sp_yaw;
 
 float lidar_alt;
 uint8_t lidar_valid;
+
+float airspeed_p;
+uint8_t debug_loop;
 
 uint8_t mode_arm, mode_flight;
 
@@ -117,9 +123,19 @@ void Debug_StartTask(void *argument){
 	struct VehicleAttitueSP attitudeSP;
 
 	struct Lidar lidar;
+
+//	MS4525DO ms4525DO(&rtosI2C2);
+	char send[100];
+
 	while(1){
 		tick += 20;
 		osDelayUntil(tick);
+
+		debug_loop++;
+
+//		ms4525DO.update();
+//		airspeed_p = ms4525DO.difPressure;
+
 		if(msgBus.getHealth(&health)){
 			hzAccel = health.accel;
 			hzBaro = health.baro;
@@ -231,11 +247,18 @@ void Debug_StartTask(void *argument){
 		mag_biasZ = interfaceMag.bias[2];
 		/* mag calibration end */
 
-		int len = sprintf((char*)telemBuffer, "ready\r\n");
-		telem.send(telemBuffer, len);
-		len = telem.receive(telemBuffer, 100);
-		telem.send(telemBuffer, len);
-		osDelay(5);
+
+//		printf_("%d\t%d\t%f\t%f\t%f\r\n", ModuleINS::calGpsHomeFlag, ModuleINS::avgIndexGPS, ModuleINS::avgLat, ModuleINS::avgLon, ModuleINS::avgAlt);
+
+//		int len = sprintf((char*)telemBuffer, "ready\r\n");
+//		telem.send(telemBuffer, len);
+//		len = telem.receive(telemBuffer, 100);
+//		telem.send(telemBuffer, len);
+//
+//		int len = telem.receive(telemBuffer, 100);
+//		if(len != 0)
+//			printf_("%s\r\n", (char*)telemBuffer);
+//		osDelay(5);
 	}
 }
 
@@ -347,6 +370,12 @@ void PC_StartTask(void *argument){
 	ModulePositionController::main();
 }
 
+
+void GCS_StartTask(void *argument){
+	ModuleGCS::main();
+//	while(1) osDelay(1000);
+}
+
 /*
  *  Switch
  *  Click : High
@@ -364,10 +393,9 @@ void cppMain(){
     /* micro second timer start */
 	HAL_TIM_Base_Start_IT(&htim2);
 
-
 	/*
 	 *  \setting		uart8
-	 *  				baudrate		38400
+	 *  				baudrate		115200
 	 *  				rx_dma(circular)
 	 */
     TM_GPS_Init(&huart8);
@@ -412,6 +440,11 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 
 }
 
+//void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
+//	voltageChecker.callback(hadc);
+//}
+
+
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
 	telem.sendCompleteCallback(huart);
 }
@@ -440,6 +473,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	telem.rcvCompleteCallback(huart);
 }
 
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
+	printf_("uart error\r\n");
+}
+
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	if(Lidar1D_CaptureCallback(htim)){
 		interfaceLidar.setDistance(lidar1D.distance_mm/1000.0f);
@@ -448,12 +485,13 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	if(GPIO_Pin == GPIO_PIN_13){
-		interfaceBaro.setSeaLevelPressure(gps_alt);
-		if(interfaceMag.startCalibrationFlag == false)
-			interfaceMag.startCalibration();
-		else interfaceMag.endCalibration();
-		interfaceAccel.setBias();
-		interfaceGyro.setBias();
+//		if(interfaceMag.startCalibrationFlag == false)
+//			interfaceMag.startCalibration();
+//		else interfaceMag.endCalibration();
+
+		if(ModuleINS::calGpsHomeFlag == false){
+			ModuleINS::setAvgLLA();
+		}
 	}
 }
 

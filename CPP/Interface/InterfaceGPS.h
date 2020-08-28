@@ -22,8 +22,6 @@ private:
     float refAlt;
 };
 
-
-
 extern InterfaceGPS interfaceGPS;
 
 }

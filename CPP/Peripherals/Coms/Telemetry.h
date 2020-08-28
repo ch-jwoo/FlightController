@@ -58,6 +58,7 @@ private:
 	uint8_t *rxData;
 	uint16_t rxSize;
 
+
 public:
 	Telemetry() = default;
 	~Telemetry() = default;

@@ -21,6 +21,7 @@ enum InsSignal{
 
 class ModuleINS : public positionEstimatorModelClass, public Freq<ModuleINS> {
 public:
+	ModuleINS();
 
 	static void main(){
 		ModuleINS moduleINS;
@@ -30,7 +31,7 @@ public:
 			moduleINS.onestep();
 			ModulePositionController::setSignal(PC_fromEKF);
 			freqCnt++;
-			osDelay(20);
+			osDelay(5);
 		}
 	}
 
@@ -40,12 +41,14 @@ public:
 
 	void onestep();
 
-	ModuleINS();
-	~ModuleINS() = default;
-	ModuleINS(const ModuleINS &other) = delete;
-	ModuleINS(ModuleINS &&other) = delete;
-	ModuleINS& operator=(const ModuleINS &other) = delete;
-	ModuleINS& operator=(ModuleINS &&other) = delete;
+	static void setAvgLLA();
+
+
+	static bool calGpsHomeFlag;
+	static uint8_t avgIndexGPS;
+	static double avgLat;
+	static double avgLon;
+	static float avgAlt;
 
 private:
 	struct Attitude attitudeSub;
@@ -60,7 +63,18 @@ private:
 	double refLon;
 	float refAlt;
 
+
+	void calAvgLLA(double lat, double lon, float alt);
+    const static uint8_t AVERAGE_SIZE = 20;
+
+public:
+	~ModuleINS() = default;
+	ModuleINS(const ModuleINS &other) = delete;
+	ModuleINS(ModuleINS &&other) = delete;
+	ModuleINS& operator=(const ModuleINS &other) = delete;
+	ModuleINS& operator=(ModuleINS &&other) = delete;
 };
+
 
 } /* namespace FC */
 

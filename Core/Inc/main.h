@@ -69,6 +69,7 @@ void AC_StartTask(void *argument);
 void INS_StartTask(void *argument);
 void PC_StartTask(void *argument);
 void Telem_IdleHandler(void);
+void GCS_StartTask(void *argument);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -85,10 +86,6 @@ void Telem_IdleHandler(void);
 #define LED2_GPIO_Port GPIOF
 #define LED3_Pin GPIO_PIN_4
 #define LED3_GPIO_Port GPIOF
-#define BAT_CURRENT_Pin GPIO_PIN_2
-#define BAT_CURRENT_GPIO_Port GPIOC
-#define BAT_VOLTAGE_Pin GPIO_PIN_3
-#define BAT_VOLTAGE_GPIO_Port GPIOC
 #define TELEM_CTS_Pin GPIO_PIN_0
 #define TELEM_CTS_GPIO_Port GPIOA
 #define TELEM_RX_Pin GPIO_PIN_3
@@ -125,8 +122,6 @@ void Telem_IdleHandler(void);
 #define USB_OTG_FS_OVCR_GPIO_Port GPIOG
 #define M6_Pin GPIO_PIN_7
 #define M6_GPIO_Port GPIOC
-#define TELEM_RTS_Pin GPIO_PIN_4
-#define TELEM_RTS_GPIO_Port GPIOD
 #define TELEM_TX_Pin GPIO_PIN_5
 #define TELEM_TX_GPIO_Port GPIOD
 #define SAFETY_SWITCH_Pin GPIO_PIN_7

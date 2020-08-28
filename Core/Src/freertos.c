@@ -190,6 +190,18 @@ const osThreadAttr_t PC_Task_attributes = {
   .cb_size = sizeof(PC_TaskControlBlock),
   .priority = (osPriority_t) osPriorityRealtime,
 };
+/* Definitions for GCS_Task */
+osThreadId_t GCS_TaskHandle;
+uint32_t GCS_TaskBuffer[ 1024 ];
+osStaticThreadDef_t GCS_TaskControlBlock;
+const osThreadAttr_t GCS_Task_attributes = {
+  .name = "GCS_Task",
+  .stack_mem = &GCS_TaskBuffer[0],
+  .stack_size = sizeof(GCS_TaskBuffer),
+  .cb_mem = &GCS_TaskControlBlock,
+  .cb_size = sizeof(GCS_TaskControlBlock),
+  .priority = (osPriority_t) osPriorityNormal2,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -209,6 +221,7 @@ extern void Health_StartTask(void *argument);
 extern void AC_StartTask(void *argument);
 extern void INS_StartTask(void *argument);
 extern void PC_StartTask(void *argument);
+extern void GCS_StartTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -277,6 +290,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of PC_Task */
   PC_TaskHandle = osThreadNew(PC_StartTask, NULL, &PC_Task_attributes);
+
+  /* creation of GCS_Task */
+  GCS_TaskHandle = osThreadNew(GCS_StartTask, NULL, &GCS_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
