@@ -29,43 +29,53 @@ void InterfaceRC::setRC(uint16_t roll, uint16_t pitch, uint16_t yaw, uint16_t th
 	this->controllerPub.throttle = throttle;
 	msgBus.setController(this->controllerPub);
 
-	/* arming */
-	struct ModeFlag modeFlag;
-	msgBus.getModeFlag(&modeFlag);							/* current arm mode */
-	Command rcvArmFlag = Command::DisArm;						/* request arm mode */
-	if( armming > ARMING_THRESHOLD ) rcvArmFlag = Command::Arm;
-	if(modeFlag.armMode != rcvArmFlag && millisecond()-lastArmReq > 500){
-		ModuleCommander::sendCommand(rcvArmFlag); /* send command */
-		lastArmReq = millisecond();
+	msgBus.getArmFlag(&armFlagSub);							/* current arm mode */
+	msgBus.getModeFlag(&modeFlagSub);							/* current arm mode */
+
+	/* current arming */
+	if(armFlagSub.armMode == ArmMode::Arm){
+		/* disarm command */
+		if(armming < ARMING_THRESHOLD && millisecond()-lastArmReq > 500){
+			ModuleCommander::sendCommand(Command::DisArm);
+			lastArmReq = millisecond();
+		}
+	}
+	/* current disArm */
+	else{
+		/* arm command */
+		if(armming > ARMING_THRESHOLD && millisecond()-lastArmReq > 500){
+			ModuleCommander::sendCommand(Command::Arm);
+			lastArmReq = millisecond();
+		}
 	}
 
 	if(millisecond() - lastModeReq > 500){
 		if(mode > FLIGHT_ATTITUDE_MODE_THRSHOLD){
-			if(modeFlag.flightMode != Command::ControlAttitude){
+			if(modeFlagSub.flightMode != FlightMode::AttitudeControl){
 				ModuleCommander::sendCommand(Command::ControlAttitude); /* send command */
 				lastModeReq = millisecond();
 			}
 		}
 		else if(mode > FLIGHT_POSITION_MODE_THRSHOLD){
-			if(modeFlag.flightMode != Command::ControlPosition){
+			if(modeFlagSub.flightMode != FlightMode::PositionControl){
 				ModuleCommander::sendCommand(Command::ControlPosition); /* send command */
 				lastModeReq = millisecond();
 			}
 		}
 		else if(mode > FLIGHT_AUTO_MODE_THRSHOLD){ /* FLIGHT_AUTO_MODE_THRSHOLD */
-			if(modeFlag.flightMode != Command::AutoWaypoint){
+			if(modeFlagSub.flightMode != FlightMode::AutoWaypoint){
 				ModuleCommander::sendCommand(Command::ControlPosition); /* send command */
 				lastModeReq = millisecond();
 			}
 		}
 		else if(mode > FLIGHT_RTL_MODE_THRSHOLD){
-			if(modeFlag.flightMode != Command::AutoRTL){
+			if(modeFlagSub.flightMode != FlightMode::AutoRTL){
 				ModuleCommander::sendCommand(Command::AutoRTL); /* send command */
 				lastModeReq = millisecond();
 			}
 		}
 		else if(mode > FLIGHT_ALT_MODE_THRSHOLD){
-			if(modeFlag.flightMode != Command::ControlALT){
+			if(modeFlagSub.flightMode != FlightMode::AltitudeControl){
 				ModuleCommander::sendCommand(Command::ControlALT); /* send command */
 				lastModeReq = millisecond();
 			}

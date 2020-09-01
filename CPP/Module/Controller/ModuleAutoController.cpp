@@ -19,6 +19,16 @@ ModuleAutoController::ModuleAutoController() {
 	// TODO Auto-generated constructor stub
 }
 	
+void ModuleAutoController::main(){
+	ModuleAutoController moduleAutoController;
+
+	while (1) {
+
+		moduleAutoController.oneStep();
+		osDelay(30);                  /* 30hz */
+	}
+}
+
 /*
 *  ModuleAutoController::oneStep()
 */
@@ -30,7 +40,7 @@ void ModuleAutoController::oneStep() {
 	}
 
 	switch (modeFlag.flightMode){
-	case Command::AutoWaypoint:
+	case FlightMode::AutoWaypoint:
 		switch (waypointNED[curSeq].command){
 			case AutoCommand::Guidance:
 				doGuidance();
@@ -51,18 +61,18 @@ void ModuleAutoController::oneStep() {
 				doTransition();
 				break;
 		}
-		case Command::AutoRTL:
-			doRTL();
-			break;
-		case Command::AutoTakeoff:
-			doTakeoff();
-			break;
-		case Command::AutoLand:
-			doLand();
-			break;
-		case Command::AutoTransition:
-			doTransition();
-			break;
+	case FlightMode::AutoRTL:
+		doRTL();
+		break;
+	case FlightMode::AutoTakeoff:
+		doTakeoff();
+		break;
+	case FlightMode::AutoLand:
+		doLand();
+		break;
+	case FlightMode::AutoTransition:
+		doTransition();
+		break;
 	}
 }
 

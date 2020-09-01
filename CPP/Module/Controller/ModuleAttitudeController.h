@@ -25,21 +25,7 @@ enum AcSignal{
 
 class ModuleAttitudeController : public px4_AlgorithmModelClass, public Freq<ModuleAttitudeController>{
 public:
-	static void main(){
-		ModuleAttitudeController attitudeController;
-		while(1){
-			/* check reset command */
-			if(osThreadFlagsGet() & AC_reset){
-				osThreadFlagsClear(AC_reset);
-				attitudeController.initialize();
-			}
-
-			/* wait AHRS set */
-			osThreadFlagsWait(AC_fromAHRS, osFlagsWaitAny, osWaitForever);
-			attitudeController.oneStep();
-			freqCnt++;
-		}
-	}
+	static void main();
 
 	void oneStep();
 
@@ -57,11 +43,12 @@ public:
 private:
 	struct Attitude attitudeSub;
 	struct BodyAngularVelocity bodyAngularVelocitySub;
+	struct ArmFlag armFlagSub;
 	struct ModeFlag modeFlagSub;
 	struct Controller controllerSub;
 	struct VehicleAttitueSP vehicleAttitudeSpSub;
 
-	struct MotorPWM motorPwmSub;
+	struct MotorPWM motorPwmPub;
 
 	float targetRoll;
 	float targetPitch;

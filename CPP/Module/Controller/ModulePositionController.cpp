@@ -18,11 +18,45 @@ ModulePositionController::ModulePositionController() {
 	// TODO Auto-generated constructor stub
 }
 
+void ModulePositionController::main(){
+	uint8_t firstLoop;
+	ModulePositionController positionController;
+	while(1){
+		firstLoop = 0;
+		/* wait position controller start */
+		osThreadFlagsWait(PC_start, osFlagsWaitAny, osWaitForever);
+		while(1){
+			/* if first loop or reset command, initialize */
+			if(firstLoop || (osThreadFlagsGet() & PC_reset)){
+				osThreadFlagsClear(PC_reset);
+				positionController.initialize();
+			}
+
+			/* wait EKF data */
+			osThreadFlagsWait(PC_fromEKF, osFlagsWaitAny, osWaitForever);
+			positionController.oneStep();
+
+			/* check position controller stop */
+			if(osThreadFlagsGet() & PC_stop){
+				osThreadFlagsClear(PC_stop);
+				break;
+			}
+
+			/* if first loop, send ACK */
+			if(firstLoop < 2){
+				ModuleCommander::sendSignal(CMD_ACK);
+				firstLoop++;
+			}
+			freqCnt++;
+		}
+	}
+}
+
 void ModulePositionController::oneStep(){
 	msgBus.getModeFlag(&modeFlagSub);
 	msgBus.getLocalPosition(&localPositionSub);
 
-	if(modeFlagSub.flightMode == Command::ControlPosition || modeFlagSub.flightMode == Command::ControlALT){
+	if(modeFlagSub.flightMode == FlightMode::PositionControl || modeFlagSub.flightMode == FlightMode::AltitudeControl){
 		setFromRC();
 	}
 	else{
@@ -53,14 +87,14 @@ void ModulePositionController::oneStep(){
 
 
 	/* position control mode */
-	if(modeFlagSub.flightMode == Command::ControlPosition){
+	if(modeFlagSub.flightMode == FlightMode::PositionControl){
 		vehicleAttitudeSpPub.pitch = output.des_pitch;
 		vehicleAttitudeSpPub.roll = output.des_roll;
 		vehicleAttitudeSpPub.yawRate = output.des_yaw_rate;
 	}
 	/* alt hold mode */
 	else {
-		vehicleAttitudeSpPub.pitch = map(controllerSub.pitch, 1000, 2000, -1.0, 1.0);
+		vehicleAttitudeSpPub.pitch = -map(controllerSub.pitch, 1000, 2000, -1.0, 1.0);
 		vehicleAttitudeSpPub.roll = map(controllerSub.roll, 1000, 2000, -1.0, 1.0);
 		vehicleAttitudeSpPub.yawRate = map(controllerSub.yaw, 1000, 2000, -1.0, 1.0);
 	}
@@ -98,7 +132,7 @@ void ModulePositionController::setFromRC(){
 	}
 	else{
 		targetYaw = localPositionSub.yaw + map(controllerSub.yaw, 1000, 2000, -MAX_YAW, MAX_YAW);
-		targetYaw = radianThreshold(targetYaw);
+		targetYaw = radianThreshold(targetYaw, -FC_PI, FC_PI);
 		yawStickSet = false;
 	}
 

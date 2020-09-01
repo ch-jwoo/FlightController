@@ -10,32 +10,24 @@
 #include "cmsis_os.h"
 namespace FC {
 
+/* used in this class (NED xyz) */
 typedef struct {
-	float x;
-	float y;
-	float z;
+	float x;				/*[m]*/
+	float y;				/*[m]*/
+	float z;				/*[m]*/
 	AutoCommand command;
 	uint16_t param;
 }WaypointNED;
+
+enum AutoSignal{
+	AUTO_reset = 0x01
+};
 
 class ModuleAutoController {
 public:
 	ModuleAutoController();
 
-	static void main() {
-		ModuleAutoController moduleAutoController ;
-//		waypointToLocalNed();
-		while (1) {
-			moduleAutoController.oneStep();
-			osDelay(30);                  /* 30hz */
-		}
-	}
-
-	~ModuleAutoController() = default;
-	ModuleAutoController(const ModuleAutoController &other) = delete;
-	ModuleAutoController(ModuleAutoController &&other) = delete;
-	ModuleAutoController& operator=(const ModuleAutoController &other) = delete;
-	ModuleAutoController& operator=(ModuleAutoController &&other) = delete;
+	static void main();
 
 private:
 	/* input */
@@ -55,6 +47,7 @@ private:
 	*  \flag          using for processing in auto mission function
 	*/
 	uint8_t curSeq, nextSeq, missionSeq, flag;
+
 	/*
 	*  setting position variables
 	*  \targetX     target x in ned
@@ -160,6 +153,14 @@ private:
 	void doRTL();
 	void doHovering();
 	void doTransition();
+
+public:
+	~ModuleAutoController() = default;
+	ModuleAutoController(const ModuleAutoController &other) = delete;
+	ModuleAutoController(ModuleAutoController &&other) = delete;
+	ModuleAutoController& operator=(const ModuleAutoController &other) = delete;
+	ModuleAutoController& operator=(ModuleAutoController &&other) = delete;
+
 };
 
 } /* namespace FC */

@@ -5,23 +5,23 @@
 
 namespace FC{
 
-enum class Command{
-	ControlAttitude,
-	ControlALT,
-	ControlPosition,
+enum class ArmMode{
+	Arm,
+	DisArm
+};
 
+enum class FlightMode{
+	AttitudeControl,
+	AltitudeControl,
+	PositionControl,
 	AutoWaypoint,
 	AutoRTL,
 	AutoTakeoff,
 	AutoLand,
-	AutoTransition,
-
-	Arm,
-	DisArm,
-
-	MotorCalibration
+	AutoTransition
 };
 
+/* command for auto mode */
 enum class AutoCommand {
 	Guidance,      /* waypoint flight */
 	RTL,            /* return to launch */
@@ -75,34 +75,34 @@ struct GPS{
 struct LocalPosition{
 	uint64_t timestamp;
 
-	float x;
-	float y;
-	float z;
+	float x;		/*[m]*/
+	float y;		/*[m]*/
+	float z;		/*[m]*/
 
-	float vx;
-	float vy;
-	float vz;
+	float vx;		/*[m/s]*/
+	float vy;		/*[m/s]*/
+	float vz;		/*[m/s]*/
 
-	float ax;
-	float ay;
-	float az;
+	float ax;		/*[m/s^2]*/
+	float ay;		/*[m/s^2]*/
+	float az;		/*[m/s^2]*/
 
-	float yaw;
+	float yaw;		/* -PI ~ PI  */
 
-	double refLat;
-	double refLon;
-	float refAlt;
+	double refLat;	/* deg -90.0 ~ 90.0 */
+	double refLon;	/* deg -180.0 ~ 180.0 */
+	float refAlt;	/*[m]*/
 };
 
 struct GlobalPosition{
 	uint64_t timestamp;
 
-	double lat;
-	double lon;
-	float alt;
-	float refAlt;
+	double lat;			/* deg -90.0 ~ 90.0 */
+	double lon;			/* deg -180.0 ~ 180.0 */
+	float alt;			/*[m]*/
+	float refAlt;		/*[m]*/
 
-	float yaw;
+	float yaw;		 	/* -PI ~ PI  */
 };
 
 struct Barometer{
@@ -159,10 +159,14 @@ struct NedAccel{
     float xyz[3];
 };
 
+struct ArmFlag{
+	uint64_t timestamp;
+	ArmMode armMode;
+};
+
 struct ModeFlag{
 	uint64_t timestamp;
-	Command armMode;
-	Command flightMode;
+	FlightMode flightMode;
 };
 
 

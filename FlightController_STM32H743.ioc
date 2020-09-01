@@ -1,6 +1,8 @@
 #MicroXplorer Configuration settings - do not modify
 ADC3.Channel-1\#ChannelRegularConversion=ADC_CHANNEL_1
-ADC3.IPParameters=Rank-1\#ChannelRegularConversion,Channel-1\#ChannelRegularConversion,SamplingTime-1\#ChannelRegularConversion,OffsetNumber-1\#ChannelRegularConversion,OffsetSignedSaturation-1\#ChannelRegularConversion,NbrOfConversionFlag,Resolution
+ADC3.ContinuousConvMode=ENABLE
+ADC3.ConversionDataManagement=ADC_CONVERSIONDATA_DMA_CIRCULAR
+ADC3.IPParameters=Rank-1\#ChannelRegularConversion,Channel-1\#ChannelRegularConversion,SamplingTime-1\#ChannelRegularConversion,OffsetNumber-1\#ChannelRegularConversion,OffsetSignedSaturation-1\#ChannelRegularConversion,NbrOfConversionFlag,Resolution,ContinuousConvMode,ConversionDataManagement
 ADC3.NbrOfConversionFlag=1
 ADC3.OffsetNumber-1\#ChannelRegularConversion=ADC_OFFSET_NONE
 ADC3.OffsetSignedSaturation-1\#ChannelRegularConversion=DISABLE
@@ -12,7 +14,7 @@ Bdma.ADC3.0.EventEnable=DISABLE
 Bdma.ADC3.0.Instance=BDMA_Channel0
 Bdma.ADC3.0.MemDataAlignment=DMA_MDATAALIGN_HALFWORD
 Bdma.ADC3.0.MemInc=DMA_MINC_ENABLE
-Bdma.ADC3.0.Mode=DMA_NORMAL
+Bdma.ADC3.0.Mode=DMA_CIRCULAR
 Bdma.ADC3.0.PeriphDataAlignment=DMA_PDATAALIGN_HALFWORD
 Bdma.ADC3.0.PeriphInc=DMA_PINC_DISABLE
 Bdma.ADC3.0.Polarity=HAL_DMAMUX_REQ_GEN_RISING
@@ -266,7 +268,7 @@ Mcu.UserConstants=
 Mcu.UserName=STM32H743ZITx
 MxCube.Version=6.0.0
 MxDb.Version=DB.6.0.0
-NVIC.ADC3_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
+NVIC.ADC3_IRQn=true\:10\:0\:true\:false\:true\:true\:true\:true
 NVIC.BDMA_Channel0_IRQn=true\:0\:0\:false\:false\:true\:true\:false\:true
 NVIC.BusFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 NVIC.DMA1_Stream0_IRQn=true\:10\:0\:true\:false\:true\:true\:false\:true

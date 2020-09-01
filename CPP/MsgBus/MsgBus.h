@@ -25,7 +25,8 @@ public:
 	MsgBus()
 		: bodyAccel{0}, bodyAngularVelocity{0}, bodyMag{0}, gps{0}, barometer{0}, controller{0}
 		, attitude{0}, nedAccel{0}
-		, modeFlag{0, Command::DisArm, Command::ControlAttitude}
+		, armFlag{0, ArmMode::DisArm}
+		, modeFlag{0, FlightMode::AttitudeControl}
 		, health{0}
 	{}
 
@@ -56,6 +57,7 @@ public:
     SIMPLE_FUNC_IMPL(LocalPosition, LocalPosition, localPosition)
     SIMPLE_FUNC_IMPL(GlobalPosition, GlobalPosition, globalPosition)
 
+    SIMPLE_FUNC_IMPL(ArmFlag, ArmFlag, armFlag)
     SIMPLE_FUNC_IMPL(ModeFlag, ModeFlag, modeFlag)
 
     SIMPLE_FUNC_IMPL(Health, Health, health)
@@ -87,6 +89,7 @@ private:
     struct GlobalPosition globalPosition;
 
     /* flight state */
+    struct ArmFlag armFlag;
     struct ModeFlag modeFlag;
 
     /* frequency of sensor and module etc. */

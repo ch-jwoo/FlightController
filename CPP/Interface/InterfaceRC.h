@@ -18,6 +18,9 @@ public:
     		   uint16_t armming=0,
 			   uint16_t mode=0);
 private:
+    struct ArmFlag armFlagSub;
+    struct ModeFlag modeFlagSub;
+
     struct Controller controllerPub;
     uint32_t lastArmReq;
     uint32_t lastModeReq;

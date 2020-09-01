@@ -69,8 +69,10 @@ bool ModuleCommander::commandHandler(Command cmd){
 		return toAttitude();
 		break;
 	case Command::ControlALT:
+		return toAltitude();
+		break;
 	case Command::ControlPosition:
-		return toPosition(cmd);
+		return toPosition();
 		break;
 	case Command::AutoWaypoint:
 		return toWaypoint();
@@ -95,8 +97,10 @@ bool ModuleCommander::commandHandler(Command cmd){
 	case Command::MotorCalibration:
 		return toMotorCalibration();
 		break;
+
+	default:
+		return false;
 	}
-	return false;
 }
 
 bool ModuleCommander::toAttitude(){
@@ -106,37 +110,59 @@ bool ModuleCommander::toAttitude(){
 	 */
 
 
-	resetController();
+	resetController(FlightMode::AttitudeControl);
 	/* change to attitude */
 	modeFlagPub.timestamp = microsecond();
-	modeFlagPub.flightMode = Command::ControlAttitude;
+	modeFlagPub.flightMode = FlightMode::AttitudeControl;
 	msgBus.setModeFlag(modeFlagPub);
 
-	stopTheOtherTask();
+	stopTheOtherTask(FlightMode::AttitudeControl);
 
 	ModuleBuzzer::sendCommand(BuzzerCommand::Success);
 	return true;
 }
 
-bool ModuleCommander::toPosition(Command cmd){
+bool ModuleCommander::toAltitude(){
+	msgBus.getModeFlag(&modeFlagSub);
+
+	/* if not altitude and position control, task start */
+	if(modeFlagSub.flightMode != FlightMode::AltitudeControl
+	&& modeFlagSub.flightMode != FlightMode::PositionControl){
+		ModulePositionController::setSignal(PC_start);
+		if(!(osThreadFlagsWait(CMD_ACK, osFlagsWaitAny, 500) & CMD_ACK)){
+			ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
+			return false;
+		}
+	}
+
+	resetController(modeFlagSub.flightMode);
+	modeFlagPub.timestamp = microsecond();
+	modeFlagPub.flightMode = FlightMode::AltitudeControl;
+	msgBus.setModeFlag(modeFlagPub);
+}
+
+bool ModuleCommander::toPosition(){
 	//TODO check condition of position controller
 
-	/* set position controller */
-	ModulePositionController::setSignal(PC_start);
-	if(!(osThreadFlagsWait(CMD_ACK, osFlagsWaitAny, 500) & CMD_ACK)){
-		ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
-		return false;
+	/* if not altitude and position control, task start */
+	if(modeFlagSub.flightMode != FlightMode::AltitudeControl
+	&& modeFlagSub.flightMode != FlightMode::PositionControl){
+		ModulePositionController::setSignal(PC_start);
+		if(!(osThreadFlagsWait(CMD_ACK, osFlagsWaitAny, 500) & CMD_ACK)){
+			ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
+			return false;
+		}
 	}
 
 	/* reset */
-	resetController();
+	resetController(FlightMode::AltitudeControl);
 
 	/* mode set */
 	modeFlagPub.timestamp = microsecond();
-	modeFlagPub.flightMode = cmd;
+	modeFlagPub.flightMode = FlightMode::AltitudeControl;
 	msgBus.setModeFlag(modeFlagPub);
 
-	stopTheOtherTask();
+	stopTheOtherTask(FlightMode::PositionControl);
 
 	ModuleBuzzer::sendCommand(BuzzerCommand::Success);
 }
@@ -158,10 +184,10 @@ bool ModuleCommander::toLand(){
 }
 
 bool ModuleCommander::toArm(){
-	//TODO check arm condition
-
-	/* toArm condition */
 	msgBus.getController(&controllerSub);
+	msgBus.getModeFlag(&modeFlagSub);
+	//TODO check arm condition
+	/* toArm condition */
 	if(controllerSub.throttle > 1050){
 		ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
 		return false; /* can't arm */
@@ -171,18 +197,19 @@ bool ModuleCommander::toArm(){
 	interfaceAccel.setBias();
 	interfaceGyro.setBias();
 	interfaceBaro.setRefAltitude();
-	resetController();
+	resetController(modeFlagSub.flightMode);
 	osDelay(150);					/* wait sensor calibration */
 
-	modeFlagPub.timestamp = microsecond();
-	modeFlagPub.armMode = Command::Arm;
-	msgBus.setModeFlag(modeFlagPub);
+	armFlagPub.timestamp = microsecond();
+	armFlagPub.armMode = ArmMode::Arm;
+	msgBus.setArmFlag(armFlagPub);
 
 	ModuleBuzzer::sendCommand(BuzzerCommand::Success);
 	return true;
 }
 
 bool ModuleCommander::toDisArm(){
+	msgBus.getModeFlag(&modeFlagPub);
 	//TODO check DisArm condition
 //	struct MotorPWM pwm;
 	/* disarm condition check */
@@ -193,11 +220,11 @@ bool ModuleCommander::toDisArm(){
 //
 //	}
 
-	modeFlagPub.timestamp = microsecond();
-	modeFlagPub.armMode = Command::DisArm;
-	msgBus.setModeFlag(modeFlagPub);
+	armFlagPub.timestamp = microsecond();
+	armFlagPub.armMode = ArmMode::DisArm;
+	msgBus.setArmFlag(armFlagPub);
 
-	stopTheOtherTask();
+	stopTheOtherTask(modeFlagPub.flightMode);
 
 	ModuleBuzzer::sendCommand(BuzzerCommand::Success);
 	return true;
@@ -221,30 +248,32 @@ bool ModuleCommander::toMotorCalibration(){
 	osKernelUnlock();
 }
 
-bool ModuleCommander::stopTheOtherTask(){
-	switch(modeFlagPub.flightMode){
-	case Command::ControlAttitude:
+bool ModuleCommander::stopTheOtherTask(FlightMode flightMode){
+	switch(flightMode){
+	case FlightMode::AttitudeControl:
 		ModulePositionController::setSignal(PC_stop);
-	case Command::ControlPosition:
-	case Command::ControlALT:
+	case FlightMode::AltitudeControl:
+	case FlightMode::PositionControl:
 		//TODO stop auto controller
-	case Command::AutoWaypoint:
+	case FlightMode::AutoWaypoint:
 		//??
+	default:
 		break;
 	}
 }
 
-void ModuleCommander::resetController(){
-	switch(modeFlagPub.flightMode){
-	case Command::AutoWaypoint:
+void ModuleCommander::resetController(FlightMode flightMode){
+	switch(flightMode){
+	case FlightMode::AutoWaypoint:
 		//TODO initialize auto controller
 		/* not break */
-	case Command::ControlPosition:
-	case Command::ControlALT:
+	case FlightMode::PositionControl:
+	case FlightMode::AltitudeControl:
 		ModulePositionController::setSignal(PC_reset);
 		/* not break */
-	case Command::ControlAttitude:
+	case FlightMode::AttitudeControl:
 		ModuleAttitudeController::setSignal(AC_reset);
+	default:
 		break;
 	}
 }

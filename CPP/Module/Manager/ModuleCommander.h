@@ -20,6 +20,24 @@ namespace FC{
 
 extern osMessageQueueId_t Commander_QueueHandle;
 
+/* command for commander */
+enum class Command{
+	ControlAttitude,
+	ControlALT,
+	ControlPosition,
+
+	AutoWaypoint,
+	AutoRTL,
+	AutoTakeoff,
+	AutoLand,
+	AutoTransition,
+
+	Arm,
+	DisArm,
+
+	MotorCalibration
+};
+
 enum CmdSignal {
 	CMD_ACK = 0x01,
 	CMD_NACK = 0x02
@@ -51,15 +69,12 @@ public:
 
 	static void sendSignal(enum CmdSignal signal);
 
-	~ModuleCommander() = default;
-	ModuleCommander& operator=(ModuleCommander &&other) = delete;
-	ModuleCommander& operator=(const ModuleCommander &other) = delete;
-	ModuleCommander(ModuleCommander &&other) = delete;
-	ModuleCommander(const ModuleCommander &other) = delete;
 private:
 	struct Controller controllerSub{};
 	struct Health health{};
+	struct ModeFlag modeFlagSub{};
 
+	struct ArmFlag armFlagPub{};
 	struct ModeFlag modeFlagPub{};
 
 	/*
@@ -74,7 +89,8 @@ private:
 	 *  \return Success(1), Denied(0)
 	 */
 	bool toAttitude();
-	bool toPosition(Command cmd);		/* cmd = controlAttitude or controlALT */
+	bool toAltitude();
+	bool toPosition();		/* cmd = controlAttitude or controlALT */
 	bool toWaypoint();
 	bool toRTL();
 	bool toTakeoff();
@@ -88,14 +104,20 @@ private:
 	/*
 	 *  When change mode, stop not using task
 	 */
-	bool stopTheOtherTask();
+	bool stopTheOtherTask(FlightMode flightMode);
 
 	/*
 	 *  reset controller
 	 */
-	void resetController();
+	void resetController(FlightMode flightMode);
 
 //	static const uint16_t DISARM_PWM = 1100;
+public:
+	~ModuleCommander() = default;
+	ModuleCommander& operator=(ModuleCommander &&other) = delete;
+	ModuleCommander& operator=(const ModuleCommander &other) = delete;
+	ModuleCommander(ModuleCommander &&other) = delete;
+	ModuleCommander(const ModuleCommander &other) = delete;
 };
 
 

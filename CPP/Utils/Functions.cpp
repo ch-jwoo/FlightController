@@ -18,12 +18,13 @@ float FC::map(uint16_t value, uint16_t in_min, uint16_t in_max, float out_min, f
 }
 
 
-float FC::radianThreshold(float radian){
-	while(radian >= FC_PI){
-		radian -= FC_2PI;
+float FC::radianThreshold(float radian, float min, float max){
+	float interval = max - min;
+	while(radian >= max){
+		radian -= interval;
 	}
-	while(radian <= -FC_PI){
-		radian += FC_2PI;
+	while(radian <= min){
+		radian += interval;
 	}
 	return radian;
 }

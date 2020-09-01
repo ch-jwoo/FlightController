@@ -86,6 +86,8 @@ uint8_t lidar_valid;
 float airspeed_p;
 uint8_t debug_loop;
 
+float voltage;
+
 uint8_t mode_arm, mode_flight;
 
 uint32_t channel;
@@ -125,10 +127,9 @@ void Debug_StartTask(void *argument){
 	struct Lidar lidar;
 
 //	MS4525DO ms4525DO(&rtosI2C2);
-	char send[100];
 
 	while(1){
-		tick += 20;
+		tick += 1000;
 		osDelayUntil(tick);
 
 		debug_loop++;
@@ -247,6 +248,8 @@ void Debug_StartTask(void *argument){
 		mag_biasZ = interfaceMag.bias[2];
 		/* mag calibration end */
 
+		voltageChecker.start();
+		voltage = voltageChecker.voltage;
 
 //		printf_("%d\t%d\t%f\t%f\t%f\r\n", ModuleINS::calGpsHomeFlag, ModuleINS::avgIndexGPS, ModuleINS::avgLat, ModuleINS::avgLon, ModuleINS::avgAlt);
 
@@ -437,12 +440,11 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c){
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 	rtosI2C1.readCpltCallback(hi2c);
 	rtosI2C2.readCpltCallback(hi2c);
-
 }
 
-//void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
-//	voltageChecker.callback(hadc);
-//}
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
+	voltageChecker.callback(hadc);
+}
 
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){

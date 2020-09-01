@@ -14,24 +14,34 @@ namespace FC {
 
 ModuleAttitudeController::ModuleAttitudeController(){}
 
+void ModuleAttitudeController::main(){
+	ModuleAttitudeController attitudeController;
+	while(1){
+		/* check reset command */
+		if(osThreadFlagsGet() & AC_reset){
+			osThreadFlagsClear(AC_reset);
+			attitudeController.initialize();
+		}
+
+		/* wait AHRS set */
+		osThreadFlagsWait(AC_fromAHRS, osFlagsWaitAny, osWaitForever);
+		attitudeController.oneStep();
+		freqCnt++;
+	}
+}
+
 void ModuleAttitudeController::oneStep(){
+	msgBus.getArmFlag(&armFlagSub);
 	msgBus.getModeFlag(&modeFlagSub);
 
 	/* not armed */
-	if(modeFlagSub.armMode != Command::Arm){
+	if(armFlagSub.armMode != ArmMode::Arm){
 		setMotor(1000, 1000, 1000, 1000, 1000, 1000);
-//		armFlag = false;
 		return;
 	}
 
-	/* change disarm to arm -> initialize */
-//	if(armFlag == false){
-//		armFlag = true;
-//		initialize();
-//	}
-
 	/* manual control */
-	if(modeFlagSub.flightMode == Command::ControlAttitude){
+	if(modeFlagSub.flightMode == FlightMode::AttitudeControl){
 		setFromRC();
 	}
 	/* position control */
@@ -83,7 +93,7 @@ void ModuleAttitudeController::setFromRC(){
 //	targetYawRate = (float)(controllerSub.yaw - 1500)/500.0;			/* map 1000~2000 to -1 ~ 1 */
 //	targetThrottle = (float)(controllerSub.throttle - 1000)/1000.0;		/* map 1000~2000 to 0 ~ 1 */
 	targetRoll = map(controllerSub.roll, 1000, 2000, -1.0, 1.0);
-	targetPitch = map(controllerSub.pitch, 1000, 2000, -1.0, 1.0);
+	targetPitch = -map(controllerSub.pitch, 1000, 2000, -1.0, 1.0);
 	targetYawRate = map(controllerSub.yaw, 1000, 2000, -1.0, 1.0);
 	targetThrottle = map(controllerSub.throttle, 1000, 2000, 0.0, 1.0);
 }
@@ -118,15 +128,15 @@ void ModuleAttitudeController::setMotor(uint16_t pwm1, uint16_t pwm2, uint16_t p
 //	m25.setPWM(pwm6);
 
 
-	motorPwmSub.timestamp = microsecond();
-	motorPwmSub.m1 = pwm1;
-	motorPwmSub.m2 = pwm2;
-	motorPwmSub.m3 = pwm3;
-	motorPwmSub.m4 = pwm4;
-	motorPwmSub.m5 = pwm5;
-	motorPwmSub.m6 = pwm6;
+	motorPwmPub.timestamp = microsecond();
+	motorPwmPub.m1 = pwm1;
+	motorPwmPub.m2 = pwm2;
+	motorPwmPub.m3 = pwm3;
+	motorPwmPub.m4 = pwm4;
+	motorPwmPub.m5 = pwm5;
+	motorPwmPub.m6 = pwm6;
 
-	msgBus.setMotorPWM(motorPwmSub);
+	msgBus.setMotorPWM(motorPwmPub);
 }
 
 } /* namespace FC */

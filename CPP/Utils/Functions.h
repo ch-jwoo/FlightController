@@ -14,7 +14,7 @@ namespace FC{
 
 float map(uint16_t value, uint16_t in_min, uint16_t in_max, float out_min, float out_max);
 
-float radianThreshold(float radian);
+float radianThreshold(float radian, float min, float max);
 
 float deg2rad(float);
 

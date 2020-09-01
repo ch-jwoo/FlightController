@@ -9,6 +9,7 @@
 #include "MsgBus/MsgBus.h"
 #include <Module/Manager/ModuleGCS.h>
 #include "Utils/Constants.h"
+#include "Utils/Functions.h"
 #include "Usec.h"
 #include "usart.h"
 #include "main.h"
@@ -122,14 +123,18 @@ void ModuleGCS::sendGlobalPositionNED(uint8_t *txBuffer, mavlink_message_t *send
 	static struct GlobalPosition globalPositionSub = {0,};
 	static struct LocalPosition localPositionSub = {0,};
 	uint16_t len;
+	float degYaw;
 
 	msgBus.getGlobalPosition(&globalPositionSub);
 	msgBus.getLocalPosition(&localPositionSub);
 
+	degYaw = radianThreshold(localPositionSub.yaw, 0, FC_2PI);
+	degYaw = rad2deg(degYaw);
+
 	mavlink_msg_global_position_int_pack(sysId, compId, sendMsg, millisecond(),
-										 globalPositionSub.lat, globalPositionSub.lon, globalPositionSub.alt,
-										 localPositionSub.refAlt,
-										 localPositionSub.vx, localPositionSub.vy, localPositionSub.vz, globalPositionSub.yaw);
+										 (uint32_t)(globalPositionSub.lat * 10000000), (uint32_t)(globalPositionSub.lon * 10000000), (uint32_t)(globalPositionSub.alt * 1000),
+										 (uint32_t)(localPositionSub.refAlt * 1000),
+										 (uint16_t)(localPositionSub.vx * 100), (uint16_t)(localPositionSub.vy * 100), (uint16_t)(localPositionSub.vz * 100), (uint16_t)(degYaw * 100));
 
 	len = mavlink_msg_to_send_buffer(txBuffer, sendMsg);
 	ptelem->send(txBuffer, len);

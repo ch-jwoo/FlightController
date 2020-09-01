@@ -27,39 +27,7 @@ class ModulePositionController : public positionControlModelClass, public Freq<M
 public:
 	ModulePositionController();
 
-	static void main(){
-		uint8_t firstLoop;
-		ModulePositionController positionController;
-		while(1){
-			firstLoop = 0;
-			/* wait position controller start */
-			osThreadFlagsWait(PC_start, osFlagsWaitAny, osWaitForever);
-			while(1){
-				/* if first loop or reset command, initialize */
-				if(firstLoop || (osThreadFlagsGet() & PC_reset)){
-					osThreadFlagsClear(PC_reset);
-					positionController.initialize();
-				}
-
-				/* wait EKF data */
-				osThreadFlagsWait(PC_fromEKF, osFlagsWaitAny, osWaitForever);
-				positionController.oneStep();
-
-				/* check position controller stop */
-				if(osThreadFlagsGet() & PC_stop){
-					osThreadFlagsClear(PC_stop);
-					break;
-				}
-
-				/* if first loop, send ACK */
-				if(firstLoop < 2){
-					ModuleCommander::sendSignal(CMD_ACK);
-					firstLoop++;
-				}
-				freqCnt++;
-			}
-		}
-	}
+	static void main();
 
 	void oneStep();
 
