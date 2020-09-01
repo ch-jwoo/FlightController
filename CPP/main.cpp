@@ -219,7 +219,6 @@ void Debug_StartTask(void *argument){
 		}
 
 		if(msgBus.getModeFlag(&modeFlag)){
-			mode_arm = (uint8_t)modeFlag.armMode;
 			mode_flight = (uint8_t)modeFlag.flightMode;
 		}
 
