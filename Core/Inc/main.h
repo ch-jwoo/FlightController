@@ -70,6 +70,8 @@ void INS_StartTask(void *argument);
 void PC_StartTask(void *argument);
 void Telem_IdleHandler(void);
 void GCS_StartTask(void *argument);
+void AUTO_StartTask(void *argument);
+extern int hzTest;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

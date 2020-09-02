@@ -14,6 +14,8 @@
 
 namespace FC{
 
+float ModuleAHRS::beta = 0.1f;
+
 ModuleAHRS::ModuleAHRS()
 	: bodyAccelSub{}
 	, bodyAngularVelocitySub{}
@@ -21,13 +23,11 @@ ModuleAHRS::ModuleAHRS()
 	, attitudePub{}
 	, nedAccelPub{}
 	, lastUpdate{0}
-	, beta{0.1f}
 	, q0{1.0f}
 	, q1{0.0f}
 	, q2{0.0f}
 	, q3{0.0f}
 {
-
 }
 
 void ModuleAHRS::oneStep(){
@@ -104,7 +104,7 @@ void ModuleAHRS::oneStep(){
 	msgBus.setNedAccel(nedAccelPub);
 
 	/* Freq class variable */
-	freqCnt++;
+	freqCount();
 }
 
 void ModuleAHRS::MadgwickAHRSupdate(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz){

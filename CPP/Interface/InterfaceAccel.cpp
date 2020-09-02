@@ -38,7 +38,7 @@ void InterfaceAccel::setAccel(float x, float y, float z){
 	ModuleAHRS::setSignal(AHRS_fromAccel);
 
 	/* Freq class variable */
-	freqCnt++;
+	freqCount();
 }
 
 void InterfaceAccel::calAverage(float x, float y, float z){

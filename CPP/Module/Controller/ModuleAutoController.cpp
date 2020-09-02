@@ -5,41 +5,77 @@
 *      Author: choi jun woo is pig
 */
 
-#include "MsgBus/MsgType.h"
-#include "MsgBus/MsgBus.h"
+#include "MsgBus/MsgBus.h">
+#include <Module/Manager/ModuleCommander.h>
 #include "Lib/Matrix/matrix/Dcm.hpp"
+#include "Lib/Matrix/matrix/Matrix.hpp"
 #include "cmath"
 #include <algorithm>
 #include "ModuleAutoController.h"
+
 #include <Utils/Constants.h>
-#include "Lib/Matrix/matrix/Matrix.hpp"
-#include "USEC.h"
+#include "Usec.h"
+#include "cmsis_os.h"
+
+#include "printf.h"
+
 namespace FC {
+FlightMode ModuleAutoController::flightMode = FlightMode::AutoWaypoint;
+
 ModuleAutoController::ModuleAutoController() {
 	// TODO Auto-generated constructor stub
 }
 	
 void ModuleAutoController::main(){
+	uint8_t firstLoop;
 	ModuleAutoController moduleAutoController;
-
 	while (1) {
+		firstLoop = 0;
+		/* wait auto controller start */
+		osThreadFlagsWait(AUTO_start, osFlagsWaitAny, osWaitForever);
+		osThreadFlagsClear(AUTO_reset | AUTO_stop | AUTO_start);
+		while(1){
+			/* if first loop or reset command, initialize */
+			if(osThreadFlagsGet() & AUTO_reset){
+				osThreadFlagsClear(AUTO_reset);
+				moduleAutoController.waypointToLocalNed();
+			}
 
-		moduleAutoController.oneStep();
-		osDelay(30);                  /* 30hz */
+			moduleAutoController.oneStep();
+
+			/* check position controller stop */
+			if(osThreadFlagsGet() & AUTO_stop){
+				osThreadFlagsClear(AUTO_stop);
+				break;
+			}
+
+			/* if first loop, send ACK */
+			if(firstLoop < 2){
+				firstLoop++;
+			}
+			else if(firstLoop == 2){
+				ModuleCommander::sendSignal(CMD_ACK);
+				printf_("auto ACK\r\n");
+				firstLoop++;
+			}
+
+			osDelay(30);    	/* 30hz */
+		}
 	}
+}
+
+void ModuleAutoController::start(FlightMode tempFlightMode){
+	flightMode = tempFlightMode;
+	setSignal(AUTO_start);
 }
 
 /*
 *  ModuleAutoController::oneStep()
 */
 void ModuleAutoController::oneStep() {
-	msgBus.getModeFlag(&modeFlag);
+//	msgBus.getModeFlag(&modeFlag);
 
-	if(1){ /* some signal */
-		waypointToLocalNed();
-	}
-
-	switch (modeFlag.flightMode){
+	switch (flightMode){
 	case FlightMode::AutoWaypoint:
 		switch (waypointNED[curSeq].command){
 			case AutoCommand::Guidance:
@@ -73,7 +109,11 @@ void ModuleAutoController::oneStep() {
 	case FlightMode::AutoTransition:
 		doTransition();
 		break;
+	default:
+		break;
 	}
+
+	freqCount();
 }
 
 /*

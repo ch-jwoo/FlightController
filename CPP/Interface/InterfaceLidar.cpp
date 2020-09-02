@@ -43,7 +43,7 @@ void InterfaceLidar::setDistance(float distance /*[m]*/){
 	msgBus.setLidar(lidarPub);
 
 	lastUpdatedMillisec = millisecond();
-	freqCnt++;
+	freqCount();
 }
 
 void InterfaceLidar::setRefDistance(){

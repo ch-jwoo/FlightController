@@ -41,7 +41,7 @@ void InterfaceGPS::setGPS(double lat, double lon, float alt,
 	msgBus.setGPS(this->gps);
 
 	/* Freq class variable */
-	freqCnt++;
+	freqCount();
 }
 
 }

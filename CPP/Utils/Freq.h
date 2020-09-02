@@ -8,6 +8,8 @@
 #ifndef MODULE_FREQ_H_
 #define MODULE_FREQ_H_
 #include "main.h"
+#include "cmsis_os.h"
+
 namespace FC{
 
 template<typename T>
@@ -16,11 +18,21 @@ public:
 	static uint16_t freqCnt;
 
 	static uint16_t checkFreq(){
+		osKernelLock();
 		uint16_t res = freqCnt;
 		freqCnt = 0;
+		osKernelUnlock();
 		return res;
 	}
 
+	void freqCount(){
+		osKernelLock();
+		freqCnt++;
+		osKernelUnlock();
+	}
+private:
+
+public:
 	Freq() = default;
 	~Freq() = default;
 	Freq(const Freq &other) = delete;

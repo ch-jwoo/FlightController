@@ -38,7 +38,7 @@ void InterfaceGyro::setGyro(float x, float y, float z){
 	msgBus.setBodyAngularVelocity(this->bodyAngularVelocity);
 	ModuleAHRS::setSignal(AHRS_fromGyro);
 
-	freqCnt++;
+	freqCount();
 }
 
 void InterfaceGyro::calAverage(float x, float y, float z){

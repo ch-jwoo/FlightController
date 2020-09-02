@@ -5,6 +5,7 @@
 #include <MsgBus/MsgType.h>
 #include "Usec.h"
 #include "Utils/Freq.h"
+#include "MsgBus/Params.h"
 
 namespace FC{
 
@@ -23,8 +24,11 @@ public:
 
     bool endCalibrationFlag;
 
-    float bias[3];
-    float scale[3];
+    PARAM(bias[3]);
+    PARAM(scale[3]);
+
+//    float bias[3];
+//    float scale[3];
     float min[3];
     float max[3];
 

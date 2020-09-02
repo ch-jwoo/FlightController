@@ -11,7 +11,7 @@
 #include <Module/Manager/ModuleCommander.h>
 #include "Usec.h"
 #include "cmath"
-#include "printf.h"
+
 namespace FC {
 
 ModulePositionController::ModulePositionController() {
@@ -25,9 +25,10 @@ void ModulePositionController::main(){
 		firstLoop = 0;
 		/* wait position controller start */
 		osThreadFlagsWait(PC_start, osFlagsWaitAny, osWaitForever);
+		osThreadFlagsClear(PC_reset | PC_stop | PC_start);
 		while(1){
 			/* if first loop or reset command, initialize */
-			if(firstLoop || (osThreadFlagsGet() & PC_reset)){
+			if(osThreadFlagsGet() & PC_reset){
 				osThreadFlagsClear(PC_reset);
 				positionController.initialize();
 			}
@@ -44,10 +45,12 @@ void ModulePositionController::main(){
 
 			/* if first loop, send ACK */
 			if(firstLoop < 2){
+				firstLoop++;
+			}
+			else if(firstLoop == 2){
 				ModuleCommander::sendSignal(CMD_ACK);
 				firstLoop++;
 			}
-			freqCnt++;
 		}
 	}
 }
@@ -99,6 +102,8 @@ void ModulePositionController::oneStep(){
 		vehicleAttitudeSpPub.yawRate = map(controllerSub.yaw, 1000, 2000, -1.0, 1.0);
 	}
 	msgBus.setVehicleAttitueSP(vehicleAttitudeSpPub);
+
+	freqCount();
 }
 
 void ModulePositionController::setFromRC(){

@@ -12,6 +12,7 @@
 #include "MsgBus/MsgBus.h"
 #include <Module/Controller/ModulePositionController.h>
 #include <Module/Estimator/ModuleINS.h>
+#include "printf.h"
 
 namespace FC {
 
@@ -44,22 +45,24 @@ public:
 			//TODO auto, lidar health check
 			health.autoController = 0;
 
+//			printf("%d %d %d %d %d\r\n", health.accel, health.gyro, health.ahrs, health.ins, health.positionController);
+
 			msgBus.setHealth(health);
 
-			if(health.accel > ACCEL_THRESHOLD &&
-			   health.gyro > GYRO_THRESHOLD &&
-			   health.rc > RC_THRESHOLD &&
-			   health.ahrs > AHRS_THRESHOLD &&
-			   health.attitudeController > ATTITUDE_CTL_THRESHOLD){
-				/* arm(attitude controller) enable */
-
-				if(health.mag > MAG_THRESHOLD &&
-						health.gps > GPS_THRESHOLD &&
-						health.ins > INS_THRESHOLD){
-					/* position controller enable */
-
-				}
-			}
+//			if(health.accel > ACCEL_THRESHOLD &&
+//			   health.gyro > GYRO_THRESHOLD &&
+//			   health.rc > RC_THRESHOLD &&
+//			   health.ahrs > AHRS_THRESHOLD &&
+//			   health.attitudeController > ATTITUDE_CTL_THRESHOLD){
+//				/* arm(attitude controller) enable */
+//
+//				if(health.mag > MAG_THRESHOLD &&
+//						health.gps > GPS_THRESHOLD &&
+//						health.ins > INS_THRESHOLD){
+//					/* position controller enable */
+//
+//				}
+//			}
 		}
 	}
 

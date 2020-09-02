@@ -26,7 +26,6 @@ void ModuleAttitudeController::main(){
 		/* wait AHRS set */
 		osThreadFlagsWait(AC_fromAHRS, osFlagsWaitAny, osWaitForever);
 		attitudeController.oneStep();
-		freqCnt++;
 	}
 }
 
@@ -76,6 +75,9 @@ void ModuleAttitudeController::oneStep(){
 			 (uint16_t)output.PWM_OUT[3],
 			 (uint16_t)output.PWM_OUT[4],
 			 (uint16_t)output.PWM_OUT[5]);
+
+
+	freqCount();
 }
 
 void ModuleAttitudeController::setFromPositionController(){
@@ -105,28 +107,6 @@ void ModuleAttitudeController::setMotor(uint16_t pwm1, uint16_t pwm2, uint16_t p
 	m4.setPWM(pwm4);
 	m5.setPWM(pwm5);
 	m6.setPWM(pwm6);
-
-
-//	m7.setPWM(pwm6);
-//	m8.setPWM(pwm6);
-//	m9.setPWM(pwm6);
-//	m10.setPWM(pwm6);
-//	m11.setPWM(pwm6);
-//	m12.setPWM(pwm6);
-//	m13.setPWM(pwm6);
-//	m14.setPWM(pwm6);
-//	m15.setPWM(pwm6);
-//	m16.setPWM(pwm6);
-//	m17.setPWM(pwm6);
-//	m18.setPWM(pwm6);
-//	m19.setPWM(pwm6);
-//	m20.setPWM(pwm6);
-//	m21.setPWM(pwm6);
-//	m22.setPWM(pwm6);
-//	m23.setPWM(pwm6);
-//	m24.setPWM(pwm6);
-//	m25.setPWM(pwm6);
-
 
 	motorPwmPub.timestamp = microsecond();
 	motorPwmPub.m1 = pwm1;

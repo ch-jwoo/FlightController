@@ -9,6 +9,8 @@
 #include "Utils/Freq.h"
 #include <Module/Controller/ModuleAttitudeController.h>
 
+#include "MsgBus/Params.h"
+
 namespace FC{
 
 enum AhrsSignal{
@@ -18,6 +20,7 @@ enum AhrsSignal{
 
 class ModuleAHRS : public Freq<ModuleAHRS>{
 public:
+    PARAM(beta);
 
 	/*
 	 *  initialize member variable
@@ -61,6 +64,7 @@ public:
     		}
 
     		cnt++;
+
     		osDelay(1);			/* 1000hz */
     	}
     }
@@ -82,7 +86,9 @@ private:
 
     /* used by Madgwick algorithm */
     uint64_t lastUpdate;
-    float beta;
+
+
+//    float beta;
     float q0;
     float q1;
     float q2;

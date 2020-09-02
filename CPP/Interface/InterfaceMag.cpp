@@ -10,24 +10,15 @@
 namespace FC{
 
 InterfaceMag interfaceMag;
+float InterfaceMag::bias[] = {3.120899f, 2.735853f, 3.669738f};
+float InterfaceMag::scale[] = {0.9618968f, 1.004566f, 1.036340f};
 
 InterfaceMag::InterfaceMag()
 : bodyMag{0, }
 , startCalibrationFlag(false)
 , endCalibrationFlag(false)
-, bias{3.120899f, 2.735853f, 3.669738f}
-, scale{0.9618968f, 1.004566f, 1.036340f}
 , min{0, }, max{0, }
 {
-	/*
-	 * mpu9250 cali :
-	 * 		biasX = -216.450f
-	 * 		biasY = -276.416f
-	 * 		biasZ = -170.502f
-	 * 		scaleX = 0.95011f
-	 * 		scaleY = 1.04095f
-	 * 		scaleZ = 1.01334f
-	 */
 }
 
 void InterfaceMag::setMag(float x, float y, float z){
@@ -42,7 +33,7 @@ void InterfaceMag::setMag(float x, float y, float z){
 	msgBus.setBodyMag(this->bodyMag);
 
 	/* Freq class variable */
-	freqCnt++;
+	freqCount();
 }
 
 void InterfaceMag::startCalibration(){

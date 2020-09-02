@@ -149,7 +149,7 @@ const osThreadAttr_t Buzzer_Task_attributes = {
 };
 /* Definitions for Health_Task */
 osThreadId_t Health_TaskHandle;
-uint32_t Health_TaskBuffer[ 256 ];
+uint32_t Health_TaskBuffer[ 512 ];
 osStaticThreadDef_t Health_TaskControlBlock;
 const osThreadAttr_t Health_Task_attributes = {
   .name = "Health_Task",
@@ -188,7 +188,7 @@ const osThreadAttr_t PC_Task_attributes = {
   .stack_size = sizeof(PC_TaskBuffer),
   .cb_mem = &PC_TaskControlBlock,
   .cb_size = sizeof(PC_TaskControlBlock),
-  .priority = (osPriority_t) osPriorityRealtime,
+  .priority = (osPriority_t) osPriorityHigh7,
 };
 /* Definitions for GCS_Task */
 osThreadId_t GCS_TaskHandle;
@@ -201,6 +201,13 @@ const osThreadAttr_t GCS_Task_attributes = {
   .cb_mem = &GCS_TaskControlBlock,
   .cb_size = sizeof(GCS_TaskControlBlock),
   .priority = (osPriority_t) osPriorityNormal2,
+};
+/* Definitions for AUTO_Task */
+osThreadId_t AUTO_TaskHandle;
+const osThreadAttr_t AUTO_Task_attributes = {
+  .name = "AUTO_Task",
+  .priority = (osPriority_t) osPriorityHigh7,
+  .stack_size = 1024 * 4
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -222,6 +229,7 @@ extern void AC_StartTask(void *argument);
 extern void INS_StartTask(void *argument);
 extern void PC_StartTask(void *argument);
 extern void GCS_StartTask(void *argument);
+extern void AUTO_StartTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -293,6 +301,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of GCS_Task */
   GCS_TaskHandle = osThreadNew(GCS_StartTask, NULL, &GCS_Task_attributes);
+
+  /* creation of AUTO_Task */
+  AUTO_TaskHandle = osThreadNew(AUTO_StartTask, NULL, &AUTO_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

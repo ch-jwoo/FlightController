@@ -8,8 +8,10 @@
 #include <Interface/Interface.h>
 #include <Module/Manager/ModuleCommander.h>
 #include <Module/Controller/ModulePositionController.h>
+#include "Module/Controller/ModuleAutoController.h"
 #include <MsgBus/MsgType.h>
 #include <Peripherals/Actuator/Motor.h>
+#include "printf.h"
 
 namespace FC{
 
@@ -135,18 +137,23 @@ bool ModuleCommander::toAltitude(){
 		}
 	}
 
-	resetController(modeFlagSub.flightMode);
+	resetController(FlightMode::AltitudeControl);
+
 	modeFlagPub.timestamp = microsecond();
 	modeFlagPub.flightMode = FlightMode::AltitudeControl;
 	msgBus.setModeFlag(modeFlagPub);
+
+	stopTheOtherTask(FlightMode::AltitudeControl);
+
+	ModuleBuzzer::sendCommand(BuzzerCommand::Success);
 }
 
 bool ModuleCommander::toPosition(){
+	msgBus.getModeFlag(&modeFlagSub);
 	//TODO check condition of position controller
 
 	/* if not altitude and position control, task start */
-	if(modeFlagSub.flightMode != FlightMode::AltitudeControl
-	&& modeFlagSub.flightMode != FlightMode::PositionControl){
+	if(modeFlagSub.flightMode == FlightMode::AttitudeControl){
 		ModulePositionController::setSignal(PC_start);
 		if(!(osThreadFlagsWait(CMD_ACK, osFlagsWaitAny, 500) & CMD_ACK)){
 			ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
@@ -155,20 +162,40 @@ bool ModuleCommander::toPosition(){
 	}
 
 	/* reset */
-	resetController(FlightMode::AltitudeControl);
+	resetController(FlightMode::PositionControl);
 
 	/* mode set */
 	modeFlagPub.timestamp = microsecond();
-	modeFlagPub.flightMode = FlightMode::AltitudeControl;
+	modeFlagPub.flightMode = FlightMode::PositionControl;
 	msgBus.setModeFlag(modeFlagPub);
 
 	stopTheOtherTask(FlightMode::PositionControl);
 
 	ModuleBuzzer::sendCommand(BuzzerCommand::Success);
+	return true;
 }
 
 bool ModuleCommander::toWaypoint(){
-	//TODO change to waypoint autopilot
+	//TODO check condition of autoWaypoint
+
+	ModuleAutoController::start(FlightMode::AutoWaypoint);
+	if(!(osThreadFlagsWait(CMD_ACK, osFlagsWaitAny, 1000) & CMD_ACK)){
+		ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
+		return false;
+	}
+
+	/* reset */
+	resetController(FlightMode::AutoWaypoint);
+
+	/* mode set */
+	modeFlagPub.timestamp = microsecond();
+	modeFlagPub.flightMode = FlightMode::AutoWaypoint;
+	msgBus.setModeFlag(modeFlagPub);
+
+	stopTheOtherTask(FlightMode::AutoWaypoint);
+
+	ModuleBuzzer::sendCommand(BuzzerCommand::Success);
+	return true;
 }
 
 bool ModuleCommander::toRTL(){
@@ -254,7 +281,7 @@ bool ModuleCommander::stopTheOtherTask(FlightMode flightMode){
 		ModulePositionController::setSignal(PC_stop);
 	case FlightMode::AltitudeControl:
 	case FlightMode::PositionControl:
-		//TODO stop auto controller
+		ModuleAutoController::setSignal(AUTO_stop);
 	case FlightMode::AutoWaypoint:
 		//??
 	default:
@@ -265,7 +292,7 @@ bool ModuleCommander::stopTheOtherTask(FlightMode flightMode){
 void ModuleCommander::resetController(FlightMode flightMode){
 	switch(flightMode){
 	case FlightMode::AutoWaypoint:
-		//TODO initialize auto controller
+		ModuleAutoController::setSignal(AUTO_reset);
 		/* not break */
 	case FlightMode::PositionControl:
 	case FlightMode::AltitudeControl:

@@ -15,10 +15,6 @@
 #include "cmsis_os.h"
 #include "timers.h"
 
-//additional
-//#include "cstdio"
-//#include "cstdlib"
-
 //selfmade
 #include <Module/Manager/ModuleCommander.h>
 #include <Module/Estimator/ModuleAHRS.h>
@@ -36,6 +32,7 @@
 #include "Module/Estimator/ModuleINS.h"
 #include "Module/Controller/ModulePositionController.h"
 #include "Module/Manager/ModuleGCS.h"
+#include "Module/Controller/ModuleAutoController.h"
 
 #include "Peripherals/Actuator/Motor.h"
 #include "Peripherals/Etc/LED.h"
@@ -57,7 +54,8 @@ using namespace FC;
 //#define USE_AHRS
 
 float attitude;
-uint16_t hzAccel, hzBaro, hzGyro, hzGPS, hzMag, hzAHRS, hzRC, hzAtti, hzPos, hzINS, hzLidar;
+uint16_t hzAccel, hzBaro, hzGyro, hzGPS, hzMag;
+uint16_t hzAHRS, hzRC, hzAtti, hzPos, hzINS, hzLidar;
 uint16_t pwm1, pwm2, pwm3, pwm4, pwm5, pwm6;
 float att_roll, att_pitch, att_yaw;
 uint16_t ctl_roll, ctl_pitch, ctl_yaw, ctl_throtle;
@@ -129,9 +127,8 @@ void Debug_StartTask(void *argument){
 //	MS4525DO ms4525DO(&rtosI2C2);
 
 	while(1){
-		tick += 1000;
+		tick += 20;
 		osDelayUntil(tick);
-
 		debug_loop++;
 
 //		ms4525DO.update();
@@ -378,6 +375,10 @@ void GCS_StartTask(void *argument){
 //	while(1) osDelay(1000);
 }
 
+void AUTO_StartTask(void *argument){
+	ModuleAutoController::main();
+//	while(1) osDelay(1000);
+}
 /*
  *  Switch
  *  Click : High

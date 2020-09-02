@@ -28,7 +28,7 @@ void InterfaceBaro::setBaro(float pressure, float temperature){
 	msgBus.setBarometer(this->barometerPub);
 
 	/* Freq class variable */
-	freqCnt++;
+	freqCount();
 }
 
 void InterfaceBaro::setSeaLevelPressure(float altitude){

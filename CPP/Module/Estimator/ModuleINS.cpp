@@ -7,8 +7,8 @@
 
 #include "ModuleINS.h"
 #include <Utils/Constants.h>
+#include <Module/Controller/ModulePositionController.h>
 #include "Usec.h"
-#include "printf.h"
 
 namespace FC {
 
@@ -23,6 +23,22 @@ ModuleINS::ModuleINS()
 	, refLon(0)
 	, refAlt(0)
 {}
+
+void ModuleINS::main(){
+	uint32_t tick;
+	tick = osKernelGetTickCount();
+
+	ModuleINS moduleINS;
+	moduleINS.initialize();
+	osDelay(2000);
+	while(1){
+		tick += 5;
+		osDelayUntil(tick);
+
+		moduleINS.onestep();
+		ModulePositionController::setSignal(PC_fromEKF);
+	}
+}
 
 void ModuleINS::onestep(){
 	ExtU input;
@@ -79,6 +95,8 @@ void ModuleINS::onestep(){
 	localPositionPub.yaw = attitudeSub.yaw;
 
 	msgBus.setLocalPosition(localPositionPub);
+
+	freqCount();
 }
 
 void ModuleINS::setAvgLLA(){

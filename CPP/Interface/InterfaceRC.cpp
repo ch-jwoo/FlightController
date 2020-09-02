@@ -64,7 +64,7 @@ void InterfaceRC::setRC(uint16_t roll, uint16_t pitch, uint16_t yaw, uint16_t th
 		}
 		else if(mode > FLIGHT_AUTO_MODE_THRSHOLD){ /* FLIGHT_AUTO_MODE_THRSHOLD */
 			if(modeFlagSub.flightMode != FlightMode::AutoWaypoint){
-				ModuleCommander::sendCommand(Command::ControlPosition); /* send command */
+				ModuleCommander::sendCommand(Command::AutoWaypoint); /* send command */
 				lastModeReq = millisecond();
 			}
 		}
@@ -83,6 +83,6 @@ void InterfaceRC::setRC(uint16_t roll, uint16_t pitch, uint16_t yaw, uint16_t th
 	}
 
 	/* Freq class variable */
-	freqCnt++;
+	freqCount();
 }
 }

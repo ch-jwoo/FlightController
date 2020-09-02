@@ -7,7 +7,11 @@
 
 #ifndef MODULE_MODULEAUTOCONTROLLER_H_
 #define MODULE_MODULEAUTOCONTROLLER_H_
+
+#include "Utils/Freq.h"
+#include "freertosVariable.h"
 #include "cmsis_os.h"
+
 namespace FC {
 
 /* used in this class (NED xyz) */
@@ -20,18 +24,28 @@ typedef struct {
 }WaypointNED;
 
 enum AutoSignal{
-	AUTO_reset = 0x01
+	AUTO_start = 0x01,
+	AUTO_stop = 0x02,
+	AUTO_reset = 0x04
 };
 
-class ModuleAutoController {
+class ModuleAutoController : public Freq<ModuleAutoController> {
 public:
 	ModuleAutoController();
 
 	static void main();
 
+	static void start(FlightMode tempFlightMode);
+
+	static inline void setSignal(enum AutoSignal signal){
+		osThreadFlagsSet(AUTO_TaskHandle, signal);
+	}
+
 private:
+	/* from commander */
+	static FlightMode flightMode;
+
 	/* input */
-	struct ModeFlag modeFlag { 0 };
 	struct LocalPosition localPositionSub { 0 };
 	struct VehicleWP vehicleWPSub { 0 };
 

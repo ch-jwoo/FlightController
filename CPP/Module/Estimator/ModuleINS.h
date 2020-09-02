@@ -8,10 +8,11 @@
 #ifndef MODULE_MODULEINS_H_
 #define MODULE_MODULEINS_H_
 
-#include <MatlabPositionEstimator/positionEstimator.h>
 #include "MsgBus/MsgBus.h"
 #include "cmsis_os.h"
-#include <Module/Controller/ModulePositionController.h>
+
+#include "Utils/Freq.h"
+#include <MatlabPositionEstimator/positionEstimator.h>
 
 namespace FC {
 
@@ -23,17 +24,7 @@ class ModuleINS : public positionEstimatorModelClass, public Freq<ModuleINS> {
 public:
 	ModuleINS();
 
-	static void main(){
-		ModuleINS moduleINS;
-		moduleINS.initialize();
-		osDelay(2000);
-		while(1){
-			moduleINS.onestep();
-			ModulePositionController::setSignal(PC_fromEKF);
-			freqCnt++;
-			osDelay(5);
-		}
-	}
+	static void main();
 
 //	static inline void setSignal(enum InsSignal signal){
 //		if(signal == INS_fromAHRS) osThreadFlagsSet(AC_TaskHandle, INS_fromAHRS);

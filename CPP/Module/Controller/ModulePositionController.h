@@ -7,12 +7,10 @@
 
 #ifndef MODULE_MODULEPOSITIONCONTROLLER_H_
 #define MODULE_MODULEPOSITIONCONTROLLER_H_
-#include <Utils/Constants.h>
 #include "MatlabPositionControl/positionControl.h"
 #include "Utils/Freq.h"
 #include "freertosVariable.h"
 #include "MsgBus/MsgBus.h"
-#include <Module/Manager/ModuleCommander.h>
 
 namespace FC {
 
