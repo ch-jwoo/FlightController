@@ -15,6 +15,8 @@
 #include "main.h"
 #include "cstring"
 #include "Usec.h"
+#include "MsgBus/Params.h"
+#include "MsgBus/Waypoint.h"
 
 #include "printf.h"
 
@@ -32,15 +34,9 @@ void ModuleGCS::main(){
 	taskAtt.priority = osPriorityAboveNormal2;
 	taskAtt.stack_size = 512 * 4;
 
-	printf_("thread create\r\n");
-
 	if(osThreadNew(ModuleGCS_PeriodicSendTask, (void*)&moduleGCS, &taskAtt) == NULL){
-		printf_("thread fail\r\n");
+//		printf_("thread fail\r\n");
 	}
-
-	/* make task */
-
-	printf_("thread create complete\r\n");
 
 	/* while */
 	moduleGCS.communicateGCS();
@@ -61,7 +57,7 @@ void ModuleGCS::periodicSendTask(void *instance){
 			lastTick = millisecond();
 		}
 		moduleGCS->sendAttitude(txBuffer, &sendMsg);
-		moduleGCS->sendGlobalPositionNED(txBuffer, &sendMsg);
+		moduleGCS->sendGlobalPosition(txBuffer, &sendMsg);
 		osDelay(20);
 	}
 }
@@ -119,7 +115,7 @@ void ModuleGCS::sendAttitude(uint8_t *txBuffer, mavlink_message_t *sendMsg){
 	ptelem->send(txBuffer, len);
 }
 
-void ModuleGCS::sendGlobalPositionNED(uint8_t *txBuffer, mavlink_message_t *sendMsg){
+void ModuleGCS::sendGlobalPosition(uint8_t *txBuffer, mavlink_message_t *sendMsg){
 	static struct GlobalPosition globalPositionSub = {0,};
 	static struct LocalPosition localPositionSub = {0,};
 	uint16_t len;
@@ -169,6 +165,12 @@ void ModuleGCS::handleRcvMSG(const mavlink_message_t &mavMsg){
 	case MAVLINK_MSG_ID_MISSION_REQUEST_LIST:
 		handle_mission_request_list();
 		break;
+	case MAVLINK_MSG_ID_MISSION_REQUEST_INT:
+		handle_mission_request_int();
+		break;
+	case MAVLINK_MSG_ID_MISSION_REQUEST:
+		handle_mission_request();
+		break;
 	case MAVLINK_MSG_ID_MISSION_COUNT:
 		handle_mission_count();
 		break;
@@ -186,44 +188,136 @@ void ModuleGCS::handleRcvMSG(const mavlink_message_t &mavMsg){
 	}
 }
 void ModuleGCS::handle_mission_request_list(){
-	mavlink_msg_mission_count_pack(sysId, compId, &sendMsg, target_system, target_component, 0, MAV_MISSION_TYPE_MISSION);
+	mavlink_mission_request_list_t packet;
+	mavlink_msg_mission_request_list_decode(&receiveMsg, &packet);
+
+	if(packet.target_system != sysId) return;
+
+	mavlink_msg_mission_count_pack(sysId, compId, &sendMsg, target_system, target_component, getWaypointLength(), MAV_MISSION_TYPE_MISSION);
 	uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
+
+	ptelem->send(txBuffer, len);
 }
+
+void ModuleGCS::handle_mission_request_int(){
+	mavlink_mission_request_int_t packet;
+	mavlink_msg_mission_request_int_decode(&receiveMsg, &packet);
+
+	if(packet.target_system != sysId) return;
+
+	waypointFC2Mav(sysId, compId, &sendMsg, target_system, target_component, packet.seq);
+	uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
+
+	ptelem->send(txBuffer, len);
+}
+
+void ModuleGCS::handle_mission_request(){
+	mavlink_mission_request_t packet;
+	mavlink_msg_mission_request_decode(&receiveMsg, &packet);
+
+	if(packet.target_system != sysId) return;
+
+	waypointFC2Mav(sysId, compId, &sendMsg, target_system, target_component, packet.seq);
+	uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
+
+	ptelem->send(txBuffer, len);
+}
+
 void ModuleGCS::handle_mission_count(){
 	mavlink_mission_count_t packet;
 	mavlink_msg_mission_count_decode(&receiveMsg, &packet);
+
+	/* prevent overflow */
+	if(packet.count > WAYPOINT_MAX_NUMBER) return;
+
 	mission_count = packet.count;
-//	osDelay(50);
+	mission_seq = 0;
+
 	mavlink_msg_mission_request_int_pack(sysId, compId, &sendMsg, target_system, target_component, mission_seq, MAV_MISSION_TYPE_MISSION);
 	uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
 
 	ptelem->send(txBuffer, len);
-//	osDelay(50);
 }
+
 void ModuleGCS::handle_mission_item_int(){
+	static VehicleWpLLA vehicleWpLLA = {0,};
+
 	mavlink_mission_item_int_t packet;
 	mavlink_msg_mission_item_int_decode(&receiveMsg, &packet);
-	mission_seq=packet.seq;
-//	osDelay(59);
-	if(mission_seq != mission_count-1){
-		mission_seq++;
+
+	/* prevent overflow */
+	if(packet.seq >= mission_count) return;
+
+	/* not correct waypoint */
+	if(mission_seq != packet.seq) return;
+
+	/* first waypoint -> reset struct */
+	if(packet.seq == 0) {
+		std::memset((void*)&vehicleWpLLA, 0, sizeof(vehicleWpLLA));
+		vehicleWpLLA.len = mission_count;
+	}
+
+	/* not used packet */
+	if(!waypointMav2FC(packet, &vehicleWpLLA.wp[packet.seq])) return;
+
+	/* save waypoints */
+	printf_("%u %u %u %f\r\n", packet.seq, mission_seq,  packet.command, packet.param1);
+
+	mission_seq++;
+	if(mission_seq != mission_count){
 		mavlink_msg_mission_request_int_pack(sysId, compId, &sendMsg, target_system, target_component, mission_seq, MAV_MISSION_TYPE_MISSION);
 		uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
 		ptelem->send(txBuffer, len);
 	}
-	else if(mission_seq == mission_count-1){
+	else{
 		mavlink_msg_mission_ack_pack(sysId, compId, &sendMsg, target_system, target_component, MAV_MISSION_ACCEPTED, MAV_MISSION_TYPE_MISSION);
 		uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
 		ptelem->send(txBuffer, len);
-		mission_seq=0;
+		setVehicleWpLLA(vehicleWpLLA);
+//		mission_seq = 0;
+//		mission_count = 0;
 	}
+	/* request next waypoint */
+//	if(mission_seq != mission_count){
+//		for(uint8_t i=0; i<=mission_seq; i++){
+//			if(!(rcvFlag && (1<<i))){
+//				mavlink_msg_mission_request_int_pack(sysId, compId, &sendMsg, target_system, target_component, mission_seq+1, MAV_MISSION_TYPE_MISSION);
+//				uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
+//				ptelem->send(txBuffer, len);
+//			}
+//		}
+//	}
+//	/* mission receive complete */
+//	else{
+//		mavlink_msg_mission_ack_pack(sysId, compId, &sendMsg, target_system, target_component, MAV_MISSION_ACCEPTED, MAV_MISSION_TYPE_MISSION);
+//		uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
+//		ptelem->send(txBuffer, len);
+//		mission_seq = 0;
+//		mission_count = 0;
+//	}
+
+
+
+
+//	if(mission_seq != mission_count-1){
+//		mission_seq++;
+//		mavlink_msg_mission_request_int_pack(sysId, compId, &sendMsg, target_system, target_component, mission_seq, MAV_MISSION_TYPE_MISSION);
+//		uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
+//		ptelem->send(txBuffer, len);
+//	}
+//	else if(mission_seq == mission_count-1){
+//		mavlink_msg_mission_ack_pack(sysId, compId, &sendMsg, target_system, target_component, MAV_MISSION_ACCEPTED, MAV_MISSION_TYPE_MISSION);
+//		uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
+//		ptelem->send(txBuffer, len);
+//		mission_seq=0;
+//	}
 }
 void ModuleGCS::handle_mission_clear_all(){
 	mavlink_msg_mission_ack_pack(sysId, compId, &sendMsg, target_system, target_component, MAV_MISSION_ACCEPTED, MAV_MISSION_TYPE_MISSION);
 	uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
 	ptelem->send(txBuffer, len);
-//	osDelay(10);
 }
+
 void ModuleGCS::handle_command_long(){
 	mavlink_command_long_t packet;
 	mavlink_msg_command_long_decode(&receiveMsg, &packet);
@@ -231,9 +325,10 @@ void ModuleGCS::handle_command_long(){
 	uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
 	ptelem->send(txBuffer, len);
 }
+
 void ModuleGCS::handle_param_request_list(){
-   for(int i = 0; i< PARAM_TOTAL_NUMBER;i++){
-		mavlink_msg_param_value_pack(sysId, compId, &sendMsg, params[i].id, params[i].value, MAV_PARAM_TYPE_REAL32, PARAM_TOTAL_NUMBER, params[i].index);
+   for(int i = 0; i< getParamLength(); i++){
+		mavlink_msg_param_value_pack(sysId, compId, &sendMsg, getParamID(i), getParamValue(i), MAV_PARAM_TYPE_REAL32, getParamLength(), i);
 		uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
 		ptelem->send(txBuffer, len);
 		osDelay(10);
@@ -247,9 +342,9 @@ void ModuleGCS::handle_param_request_read(){
 	mavlink_msg_param_request_read_decode(&receiveMsg, &packet);
 
 	uint8_t i = 0;
-	while(i < PARAM_TOTAL_NUMBER){
-		if(strcmp(packet.param_id,params[i].id)){
-		   mavlink_msg_param_value_pack(sysId, compId, &sendMsg, params[i].id, params[i].value, MAV_PARAM_TYPE_REAL32, PARAM_TOTAL_NUMBER, params[i].index);
+	while(i < getParamLength()){
+		if(strcmp(packet.param_id, getParamID(i))){
+		   mavlink_msg_param_value_pack(sysId, compId, &sendMsg, getParamID(i), getParamValue(i), MAV_PARAM_TYPE_REAL32, getParamLength(), i);
 		   uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
 		   ptelem->send(txBuffer, len);
 		   i++;
@@ -261,44 +356,19 @@ void ModuleGCS::handle_param_request_read(){
 void ModuleGCS::handle_param_set(){
 	mavlink_param_set_t packet;
 	mavlink_msg_param_set_decode(&receiveMsg, &packet);
-	for(int i =0; i<PARAM_TOTAL_NUMBER;i++){
-		if(strcmp(packet.param_id, params[i].id)){
-		   mavlink_msg_param_value_pack(sysId, compId, &sendMsg, packet.param_id, packet.param_value, MAV_PARAM_TYPE_REAL32, PARAM_TOTAL_NUMBER, params[i].index);
-		   uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
-		   ptelem->send(txBuffer, len);
-		   //TODO: printf_ is not executed
-		   break;
-		}
-	}
+
+	uint16_t paramIndex = getParamIndexFromID(packet.param_id);
+
+	setParamValue(paramIndex, packet.param_value);
+
+	mavlink_msg_param_value_pack(sysId, compId, &sendMsg, getParamID(paramIndex), getParamValue(paramIndex), MAV_PARAM_TYPE_REAL32, getParamLength(), paramIndex);
+    uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
+    ptelem->send(txBuffer, len);
 }
 
 void ModuleGCS_PeriodicSendTask(void *param){
 	ModuleGCS::periodicSendTask(param);
 }
-
-//void heartbeatThread(void *param){
-//	ModuleGCS::heartbeatTask(param);
-//}
-//
-//void attitudeThread(void *param){
-//	ModuleGCS::attitudeTask(param);
-//}
-//
-//void globalPositionNedThread(void *param){
-//	ModuleGCS::globalPositionNedTask(param);
-//}
-
-//void ModuleGCS::GCS_uartRxCpltCallback(){
-//	  mavlink_parse_char(MAVLINK_COMM_0, rxBuffer[0], &receiveMsg, &status);
-////	         memcpy(tx_buf,txBuffer,MAVLINK_MAX_PACKET_LEN);
-////          printf_("message: %d\r\n",rev_msg.msgid);
-//
-//	  HAL_UART_Receive_IT(&huart2, rxBuffer, 1);
-//}
-
-/*
-*  ModuleGCS::oneStep()
-*/
 
 }/* namespace FC */
 

@@ -16,5 +16,10 @@
 #define FC_DEG2RAD 0.017453292519943295
 #define FC_RAD2DEG 57.29577951308232
 
+/* earth eccentricity */
+#define EARTH_ECCENTRICTIY 0.08181919
+
+/* earth radius in [m] */
+#define EARTH_RADIUS 6378137
 
 #endif /* UTILS_CONSTANTS_H_ */

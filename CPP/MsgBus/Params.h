@@ -9,7 +9,6 @@
 #define MSGBUS_PARAMS_H_
 
 #include <cstdint>
-#include <array>
 
 namespace FC {
 
@@ -25,6 +24,8 @@ typedef enum{
 
 	/* ahrs beta */
 	Madgwick_beta,
+
+	ParameterEnd,		/* temporary */
 
 	/* ins covariance */
 	EKF_VerticalAccelCov,
@@ -107,13 +108,25 @@ typedef enum{
 	/* fixedwing */
 
 	/* auto controller */
+	MC_L2,					/* */
+	MC_D,
+
+	FW_L2,
+	FW_D
 } ParamIndex_t;
 
 void paramInit();
 
+const char* getParamID(uint8_t index);
+
 float getParamValue(uint8_t index);
 
-void setParamValue(uint8_t index, float value);
+uint16_t getParamLength();
+
+uint16_t getParamIndexFromID(const char* id);
+
+void setParamValue(uint16_t index, float value);
+
 
 #define PARAM(parameter) static float parameter;
 

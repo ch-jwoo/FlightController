@@ -14,6 +14,7 @@
 #include "ModuleAutoController.h"
 
 #include <Utils/Constants.h>
+#include "Utils/Functions.h"
 #include "Usec.h"
 #include "cmsis_os.h"
 
@@ -21,6 +22,9 @@
 
 namespace FC {
 FlightMode ModuleAutoController::flightMode = FlightMode::AutoWaypoint;
+
+float ModuleAutoController::MC_D = 0.7f;		/* D */
+float ModuleAutoController::MC_L2 = 1.5f;		/* L2 */
 
 ModuleAutoController::ModuleAutoController() {
 	// TODO Auto-generated constructor stub
@@ -38,7 +42,7 @@ void ModuleAutoController::main(){
 			/* if first loop or reset command, initialize */
 			if(osThreadFlagsGet() & AUTO_reset){
 				osThreadFlagsClear(AUTO_reset);
-				moduleAutoController.waypointToLocalNed();
+				moduleAutoController.waypointLla2LocalNed();
 			}
 
 			moduleAutoController.oneStep();
@@ -77,7 +81,7 @@ void ModuleAutoController::oneStep() {
 
 	switch (flightMode){
 	case FlightMode::AutoWaypoint:
-		switch (waypointNED[curSeq].command){
+		switch (vehicleWpNED.wp[curSeq].command){
 			case AutoCommand::Guidance:
 				doGuidance();
 				break;
@@ -121,85 +125,21 @@ void ModuleAutoController::oneStep() {
 *  step1: getting localPosition waypoints with msgBus
 *  step2: calculating waypoints position in ned
 */
-void ModuleAutoController::waypointToLocalNed() {
-
-	msgBus.getLocalPosition(&this->localPositionSub);
-
-	msgBus.getVehicleWP(&this->vehicleWPSub);
-
-	for (int i = 0; i < vehicleWPSub.len; i++) {
-		llaToLocalNed(localPositionSub.refLat, localPositionSub.refLat, localPositionSub.refAlt,
-					  vehicleWPSub.wp[i].lat, vehicleWPSub.wp[i].lon, vehicleWPSub.wp[i].alt,
-					  &waypointNED[i].x, &waypointNED[i].y, &waypointNED[i].z);
-		waypointNED[i].command = waypointNED[i].command;
-		waypointNED[i].param = waypointNED[i].param;
+void ModuleAutoController::waypointLla2LocalNed() {
+	WaypointLLA waypointLLA;
+	msgBus.getLocalPosition(&localPositionSub);
+	for (int i = 0; i < getWaypointLength(); i++) {
+		waypointLLA = getWaypointLLA(i);
+		lla2LocalNed(localPositionSub.refLat, localPositionSub.refLat, localPositionSub.refAlt,
+					  waypointLLA.lat, waypointLLA.lon, waypointLLA.alt,
+					  &vehicleWpNED.wp[i].x, &vehicleWpNED.wp[i].y, &vehicleWpNED.wp[i].z);
+		vehicleWpNED.wp[i].command = waypointLLA.command;
+		vehicleWpNED.wp[i].param = waypointLLA.param;
 	}
 
 	curSeq = 0;
 	nextSeq = 1;
 	flag = 0;
-}
-
-/*
-*  ModuleAutoController::geoToECEF();
-*  step1: calculating radius of curvature
-*  step2: converting geodetic position to ECEF position
-*/
-void ModuleAutoController::geoToECEF(double lat, double lon, float alt, double *ecefX, double *ecefY, double *ecefZ) {
-	/* radus of curvature */
-	double radius = EARTH_RADIUS / (1 - sqrt(1 - pow(EARTH_ECCENTRICTIY * sin(lat), 2)));
-
-	/*cosine sine function with latitude and longitude*/
-	double cosLat = cos(lat);
-	double cosLon = cos(lon);
-	double sinLat = sin(lat);
-	double sinLon = sin(lon);
-	/*ECEF position*/
-	*ecefX = (radius + alt)*cosLat * cosLon;
-	*ecefY = (radius + alt)*cosLat * sinLon;
-	*ecefZ = (radius * (1 - pow((double)EARTH_ECCENTRICTIY, 2)) + alt) * sinLat;
-}
-
-/*
-*  ModuleAutoController::llaToLocalNed();
-*  step1: calculating direction cosine matrix for local ned position
-*  step2: subtracting ECEF position Reference ECEF position
-*  step3: calculating local ned position
-*/
-void ModuleAutoController::llaToLocalNed(double lat, double lon, float alt,
-		double refLat, double refLon, float refAlt,
-		float *localNedX, float *localNedY, float *localNedZ){
-
-	/* reference ecef axis */
-	double refEcefX, refEcefY, refEcefZ;
-	geoToECEF(refLat, refLon, refAlt, &refEcefX, &refEcefY, &refEcefZ);
-
-	/* target ecef axis */
-	double ecefX, ecefY, ecefZ;
-	geoToECEF(lat, lon, alt, &ecefX, &ecefY, &ecefZ);
-
-	/*
-	*  z axis rotate 'longitude'
-	*  y axis rotate '-latitude-90'
-	*/
-	double dcm[9] = { -sin(refLat) * cos(refLon), -sin(refLat) * sin(refLon),  cos(refLat),
-				   -sin(refLon)             ,  cos(refLon)             ,  0,
-				   -cos(refLat) * cos(refLon), -cos(refLat) * sin(refLon), -sin(refLat) };
-
-	matrix::Matrix<double, 3, 3> dcmMatrix(dcm);
-
-	/*ECEF - RefECEF*/
-	double temp[3] = { ecefX - refEcefX,
-					ecefY - refEcefY,
-					ecefZ - refEcefZ };
-
-	matrix::Matrix<double, 3, 1> tempMatrix(temp);
-	matrix::Matrix<double, 3, 1> nedMatrix = dcmMatrix * tempMatrix;
-
-	/*local ned position*/
-	*localNedX = nedMatrix(1, 1);
-	*localNedY = nedMatrix(2, 1);
-	*localNedZ = nedMatrix(3, 1);
 }
 
 /*
@@ -243,12 +183,12 @@ void ModuleAutoController::guidance(float previousWaypointX, float previousWaypo
 
 
 	crossTrackError = N.dot(curPos - lastPos);
-	l2 = velocity.norm() * tau;
+	l2 = velocity.norm() * MC_L2;
 	/* calculate D_dt */
 	if (crossTrackError > l2)
-		D_dt = std::min<double>(crossTrackError / tan(ceptAngle), l2 * M_dp);
+		D_dt = std::min<double>(crossTrackError / tan(ceptAngle), l2 * MC_D);
 	else
-		D_dt = std::max<double>(std::min<double>(crossTrackError / tan(ceptAngle), l2 * M_dp), sqrt(pow(l2, 2) - pow(crossTrackError, 2)));
+		D_dt = std::max<double>(std::min<double>(crossTrackError / tan(ceptAngle), l2 * MC_D), sqrt(pow(l2, 2) - pow(crossTrackError, 2)));
 
 	targetDist = T.dot(nextPos - curPos) - D_dt;
 	matrix::Vector3f targetPos = -T * std::max<double>(0, targetDist) + nextPos;
@@ -261,7 +201,7 @@ void ModuleAutoController::guidance(float previousWaypointX, float previousWaypo
 	else
 		tempAng = crossAng;
 
-	aCmd = 2 * sin(tempAng) * velocity.norm() / tau;
+	aCmd = 2 * sin(tempAng) * velocity.norm() / MC_L2;
 	/* setting target position */
 	*targetRoll = atan(aCmd / FC_GRAVITY_ACCEERATION);
 	*targetYaw = tempAng * FC_PI / 180;
@@ -326,7 +266,13 @@ void ModuleAutoController::doTakeoff() {
 		if (localPositionSub.z >= 4.5) flag == 3;
 	}
 	else {
-		guidance(0.0f, 0.0f, localPositionSub.z, localPositionSub.x, localPositionSub.y, localPositionSub.z, waypointNED[curSeq].x, waypointNED[curSeq].y, waypointNED[curSeq].z, localPositionSub.vx, localPositionSub.vy, localPositionSub.vz, &targetYaw, &targetRoll, &targetX, &targetY, &targetZ, &dist);
+		guidance(0.0f, 0.0f, localPositionSub.z,
+				vehicleWpNED.wp[curSeq].x, vehicleWpNED.wp[curSeq].y, vehicleWpNED.wp[curSeq].z,
+				localPositionSub.x, localPositionSub.y, localPositionSub.z,
+				localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
+				&targetYaw, &targetRoll,
+				&targetX, &targetY, &targetZ, &dist);
+
 		setPosition();
 		if (dist < 20) {
 			flag = SET;
@@ -342,7 +288,12 @@ void ModuleAutoController::doGuidance() {
 
 	msgBus.getLocalPosition(&this->localPositionSub);
 
-	guidance(waypointNED[curSeq].x, waypointNED[curSeq].y, waypointNED[curSeq].z, localPositionSub.x, localPositionSub.y, localPositionSub.z, waypointNED[nextSeq].x, waypointNED[nextSeq].y, waypointNED[nextSeq].z, localPositionSub.vx, localPositionSub.vy, localPositionSub.vz, &targetYaw, &targetRoll, &targetX, &targetY, &targetZ, &dist);
+	guidance(vehicleWpNED.wp[curSeq].x, vehicleWpNED.wp[curSeq].y, vehicleWpNED.wp[curSeq].z,
+			vehicleWpNED.wp[nextSeq].x, vehicleWpNED.wp[nextSeq].y, vehicleWpNED.wp[nextSeq].z,
+			localPositionSub.x, localPositionSub.y, localPositionSub.z,
+			localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
+			&targetYaw, &targetRoll,
+			&targetX, &targetY, &targetZ, &dist);
 
 	if (dist < 20) {
 		curSeq++;
@@ -356,9 +307,7 @@ void ModuleAutoController::doGuidance() {
 /* step1: do navigate current position -> home (0,0,current position z) */
 /* step2: do landing */
 void ModuleAutoController::doRTL() {
-
 	float dist;
-
 
 	msgBus.getLocalPosition(&this->localPositionSub);
 
@@ -399,7 +348,7 @@ void ModuleAutoController::doTransition() {
 
 	matrix::Vector3f speed(localPositionSub.vx, localPositionSub.vy, localPositionSub.vz);
 
-	switch (waypointNED[curSeq].param) {
+	switch (vehicleWpNED.wp[curSeq].param) {
 	case 1: {
 		//TODO sending starting transition signal
 		if (speed.norm() > 20) {

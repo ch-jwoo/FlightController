@@ -12,16 +12,23 @@
 #include "freertosVariable.h"
 #include "cmsis_os.h"
 
+#include "MsgBus/Waypoint.h"
+#include "MsgBus/Params.h"
+
 namespace FC {
 
-/* used in this class (NED xyz) */
-typedef struct {
-	float x;				/*[m]*/
-	float y;				/*[m]*/
-	float z;				/*[m]*/
+typedef struct{
+	float x;
+	float y;
+	float z;
 	AutoCommand command;
 	uint16_t param;
-}WaypointNED;
+} WaypointNED;
+
+typedef struct{
+	WaypointNED wp[20];
+	uint8_t len;
+} VehicleWpNED;
 
 enum AutoSignal{
 	AUTO_start = 0x01,
@@ -47,7 +54,7 @@ private:
 
 	/* input */
 	struct LocalPosition localPositionSub { 0 };
-	struct VehicleWP vehicleWPSub { 0 };
+//	struct VehicleWP vehicleWPSub { 0 };
 
 	/* output */
 	struct VehiclePositionSP vehiclePositionSpPub { 0 };
@@ -79,49 +86,19 @@ private:
 	/*
 	*  using for saving waypoint ned position
 	*/
-	WaypointNED waypointNED[20];
-	/* earth eccentricity */
-	constexpr static float EARTH_ECCENTRICTIY = 0.08181919f;
+	VehicleWpNED vehicleWpNED;
 
-	/* earth radius in [m] */
-	const static uint32_t EARTH_RADIUS = 6378137;
+	PARAM(MC_D);				/* D */
+	PARAM(MC_L2);				/* L2 */
 
-	float M_dp = 0.7f;
-	float tau = 1.5f;
 	uint8_t ceptAngle = 45;
 
 	/* onestep function */
 	void oneStep();
 
+
 	/* simple calculation function */
-	void waypointToLocalNed();
-
-	/*
-	*  LLA axis -(geoToECEF)-> ecef axis --> local ned axis
-	*  param[in]      lat            latitude
-	*  param[in]      lon            longitude
-	*  param[in]      alt            altitude
-	*  param[in]      refLat         reference latitude
-	*  param[in]      refLon         reference longitude
-	*  param[in]      refAlt         reference altitude
-	*  param[out]      localNedX      local ned x
-	*  param[out]      localNedY      local ned y
-	*  param[out]      localNedZ      local ned z
-	*/
-	void llaToLocalNed(double lat, double lon, float alt,
-		double refLat, double refLon, float refAlt,
-		float *localNedX, float *localNedY, float *localNedZ);
-
-	/*
-	*  geo axis -> ecef axis
-	*  param[in]      lat         latitude
-	*  param[in]      lon         longitude
-	*  param[in]      alt         altitude
-	*  param[out]      ecefX      ecef-x
-	*  param[out]      ecefY      ecef-y
-	*  param[out]      ecefZ      ecef-z
-	*/
-	void geoToECEF(double lat, double lon, float alt, double *ecefX, double *ecefY, double *ecefZ);
+	void waypointLla2LocalNed();
 
 	/*
 	*  generate set point for previous vehicle waypoint to next waypoint

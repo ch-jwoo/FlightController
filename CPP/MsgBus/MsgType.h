@@ -21,17 +21,6 @@ enum class FlightMode{
 	AutoTransition
 };
 
-/* command for auto mode */
-enum class AutoCommand {
-	Guidance,      /* waypoint flight */
-	RTL,            /* return to launch */
-
-	Land,         /* auto land */
-	Takeoff,         /* auto takeoff */
-	Hovering,      /* hovering in place */
-	Transition      /* tilting */
-};
-
 
 /*
  *  Peripheral data
@@ -209,19 +198,19 @@ struct MotorPWM{
 
 
 /* waypoint */
-struct Waypoint{
-	double lat;
-	double lon;
-	float alt;
-	AutoCommand command;
-	uint16_t param;
-};
-
-struct VehicleWP{
-	uint64_t timestamp;
-	Waypoint wp[20];
-	uint8_t len;
-};
+//struct Waypoint{
+//	double lat;
+//	double lon;
+//	float alt;
+//	AutoCommand command;
+//	uint16_t param;
+//};
+//
+//struct VehicleWP{
+//	uint64_t timestamp;
+//	Waypoint wp[20];
+//	uint8_t len;
+//};
 
 }
 

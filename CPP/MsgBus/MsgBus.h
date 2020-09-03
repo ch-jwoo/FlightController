@@ -64,7 +64,7 @@ public:
 
     SIMPLE_FUNC_IMPL(MotorPWM, MotorPWM, motorPWM)
 
-    SIMPLE_FUNC_IMPL(VehicleWP, VehicleWP, vehicleWP)
+//    SIMPLE_FUNC_IMPL(VehicleWP, VehicleWP, vehicleWP)
 
 private:
     /* Peripheral Interface */
@@ -99,7 +99,7 @@ private:
     struct MotorPWM motorPWM;
 
     /* waypoints */
-    struct VehicleWP vehicleWP;
+//    struct VehicleWP vehicleWP;
 };
 
 extern MsgBus msgBus;

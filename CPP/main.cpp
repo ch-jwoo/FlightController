@@ -41,6 +41,7 @@
 #include "Peripherals/Sensors/MS4525DO.h"
 #include "Peripherals/Sensors/VoltageChecker.h"
 
+#include "MsgBus/Params.h"
 
 #include "printf.h"
 
@@ -392,6 +393,8 @@ void AUTO_StartTask(void *argument){
 void cppMain(){
     setvbuf(stdout, NULL, _IONBF, 0);
     printf_("test\r\n");
+
+    paramInit();
 
     /* micro second timer start */
 	HAL_TIM_Base_Start_IT(&htim2);
