@@ -32,72 +32,105 @@ void ModuleINS::main(){
 	moduleINS.initialize();
 	osDelay(2000);
 	while(1){
-		tick += 5;
+		tick += 10;
 		osDelayUntil(tick);
 
 		moduleINS.onestep();
 		ModulePositionController::setSignal(PC_fromEKF);
 	}
 }
-
 void ModuleINS::onestep(){
-	ExtU input;
-	if(msgBus.getNedAccel(&nedAccelSub)){
-		input.AhrsFlag = true;
-		input.ax = nedAccelSub.xyz[0];
-		input.ay = nedAccelSub.xyz[1];
-		input.az = nedAccelSub.xyz[2] + FC_GRAVITY_ACCEERATION;		/* subtract gravity */
-	}
-	else input.AhrsFlag = false;
+   ExtU input = {0,};
 
-	if(msgBus.getGPS(&gpsSub)){
-		input.GpsFlag = false;
-		if(calGpsHomeFlag && gpsSub.fixType != 0){
-			calAvgLLA(gpsSub.lat, gpsSub.lon, gpsSub.alt);
-		}
-		else if(!calGpsHomeFlag){
-			/* input set */
-		}
-	}
-	else input.GpsFlag = false;
+   if(msgBus.getNedAccel(&nedAccelSub)){
+      input.AhrsFlag = true;
+      input.ax = nedAccelSub.xyz[0];
+      input.ay = nedAccelSub.xyz[1];
+      input.az = nedAccelSub.xyz[2] + FC_GRAVITY_ACCEERATION;      /* subtract gravity */
+   }
+   else input.AhrsFlag = false;
 
-	if(msgBus.getBarometer(&baroSub)){
-		input.BaroFlag = true;
-		input.baroZ = baroSub.altitude;
-	}
-	else input.BaroFlag = false;
+   if(msgBus.getGPS(&gpsSub)){
+	   /* not fixed */
+      if(gpsSub.fixType == false){
+         input.GpsFlag = false;
+      }
 
-	if(msgBus.getLidar(&lidar) && lidar.valid){
-		input.LidarFlag = true;
-		input.Lidar_height = lidar.altitude;
-	}
-	else input.LidarFlag = false;
+      /* calculate home LLA */
+      else if(calGpsHomeFlag == true){
+         input.GpsFlag = false;
+         calAvgLLA(gpsSub.lat, gpsSub.lon, gpsSub.alt);
+      }
 
-	setExternalInputs(&input);
-	step();
-	ExtY output = getExternalOutputs();
+      /* there is home LLA */
+      else{
+         input.GpsFlag = true;
+         input.lat=gpsSub.lat;
+         input.lon=gpsSub.lon;
+         input.alt=gpsSub.alt;
+         input.vx=gpsSub.velN;
+         input.vy=gpsSub.velE;
+         input.GPS_switch=true;
+      }
+   }
+   else input.GpsFlag = false;
+
+   input.HOME_lla[0]=refLat;
+   input.HOME_lla[1]=refLon;
+   input.HOME_lla[2]=refAlt;
+
+   if(msgBus.getBarometer(&baroSub)){
+      input.BaroFlag = true;
+      input.baroZ = baroSub.altitude;
+   }
+   else input.BaroFlag = false;
+
+   if(msgBus.getLidar(&lidar) && lidar.valid){
+      input.LidarFlag = true;
+      input.Lidar_height = lidar.altitude;
+   }
+   else input.LidarFlag = false;
+
+   setExternalInputs(&input);
+   step();
+   ExtY output = getExternalOutputs();
+
+   /* local position (local NED) */
+   localPositionPub.timestamp = microsecond();
+   localPositionPub.ax = (float)output.estiAX;
+   localPositionPub.ay = (float)output.estiAY;
+   localPositionPub.az = (float)output.estiAZ;
+
+   localPositionPub.vx = (float)output.estiVX;
+   localPositionPub.vy = (float)output.estiVY;
+   localPositionPub.vz = (float)output.estiVZ;
+
+   localPositionPub.x = (float)output.estiX;
+   localPositionPub.y = (float)output.estiY;
+   localPositionPub.z = (float)output.estiZ;
+//   localPositionPub.gpsrawx=(float)output.GPSrawX;
+//   localPositionPub.gpsrawy=(float)output.GPSrawY;
+
+   /* global position (LLA) */
+   globalPositionPub.lat=output.Estim_LatLon[0];
+   globalPositionPub.lon=output.Estim_LatLon[1];
+   globalPositionPub.alt=(float)output.Estim_Alt;
+
+   globalPositionPub.refAlt=refAlt;
+   globalPositionPub.timestamp = microsecond();
 
 
-	localPositionPub.timestamp = microsecond();
-	localPositionPub.ax = (float)output.estiAX;
-	localPositionPub.ay = (float)output.estiAY;
-	localPositionPub.az = (float)output.estiAZ;
+   /* heading */
+   msgBus.getAttitude(&attitudeSub);
+   localPositionPub.yaw = attitudeSub.yaw;
+   globalPositionPub.yaw=attitudeSub.yaw;
 
-	localPositionPub.vx = (float)output.estiVX;
-	localPositionPub.vy = (float)output.estiVY;
-	localPositionPub.vz = (float)output.estiVZ;
+   msgBus.setLocalPosition(localPositionPub);
+   msgBus.setGlobalPosition(globalPositionPub);
 
-	localPositionPub.x = (float)output.estiX;
-	localPositionPub.y = (float)output.estiY;
-	localPositionPub.z = (float)output.estiZ;
-
-	msgBus.getAttitude(&attitudeSub);
-	localPositionPub.yaw = attitudeSub.yaw;
-
-	msgBus.setLocalPosition(localPositionPub);
-
-	freqCount();
+   freqCount();
 }
+
 
 void ModuleINS::setAvgLLA(){
 	calGpsHomeFlag = true;

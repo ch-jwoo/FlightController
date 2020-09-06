@@ -49,6 +49,7 @@ private:
 	struct Lidar lidar;
 
 	struct LocalPosition localPositionPub;
+	struct GlobalPosition globalPositionPub;
 
 	double refLat;
 	double refLon;

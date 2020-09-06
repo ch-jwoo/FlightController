@@ -6,7 +6,11 @@
  */
 
 #include <Interface/InterfaceAccel.h>
-
+#include "Module/Estimator/ModuleAHRS.h"
+#include <Utils/Constants.h>
+#include "Usec.h"
+#include "printf.h"
+#include <cmath>
 namespace FC{
 
 InterfaceAccel interfaceAccel;
@@ -14,6 +18,7 @@ InterfaceAccel interfaceAccel;
 InterfaceAccel::InterfaceAccel()
 : bodyAccel{0,}, biasX(0), biasY(0), biasZ(0)
 , averX(0), averY(0), averZ(0)
+//, scale(1.0), scaleFactor(1.005)
 , calBiasFlag(false), averageIndex(0)
 {}
 
@@ -34,9 +39,27 @@ void InterfaceAccel::setAccel(float x, float y, float z){
 	this->bodyAccel.xyz[0] = x - biasX;
 	this->bodyAccel.xyz[1] = y - biasY;
 	this->bodyAccel.xyz[2] = z - biasZ;
+
+//	float rawScale = std::sqrt(bodyAccel.xyz[0]*bodyAccel.xyz[0] + bodyAccel.xyz[1]*bodyAccel.xyz[1] + bodyAccel.xyz[2]*bodyAccel.xyz[2]);
+//	float filterScale = scale*rawScale;
+//
+//	if(FC_GRAVITY_ACCEERATION < filterScale){
+//		scale /= scaleFactor;
+//	}
+//	else if(FC_GRAVITY_ACCEERATION > filterScale){
+//		scale *= scaleFactor;
+//	}
+
+
+//	printf_("%f\t%f\t%f\r\n", scale, rawScale, filterScale);
+
+
+//	this->bodyAccel.xyz[0] *= scale;
+//	this->bodyAccel.xyz[1] *= scale;
+//	this->bodyAccel.xyz[2] *= scale;
+
 	msgBus.setBodyAccel(this->bodyAccel);
 	ModuleAHRS::setSignal(AHRS_fromAccel);
-
 	/* Freq class variable */
 	freqCount();
 }

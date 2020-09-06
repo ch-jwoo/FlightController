@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionEstimator'.
 //
-// Model version                  : 1.23
+// Model version                  : 1.31
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Sun Aug 23 17:00:49 2020
+// C/C++ source code generated on : Sun Sep  6 15:32:23 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -242,7 +242,7 @@ extern "C" {
 void positionEstimatorModelClass::Correct2_Init(DW_Correct2 *localDW, P_Correct2
   *localP)
 {
-  // SystemInitialize for Outport: '<S5>/yBlockOrdering'
+  // SystemInitialize for Outport: '<S6>/yBlockOrdering'
   localDW->blockOrdering = localP->yBlockOrdering_Y0;
 }
 
@@ -267,29 +267,29 @@ void positionEstimatorModelClass::Correct2(boolean_T rtu_Enable, real_T
   real_T imvec_1;
 
   // Outputs for Enabled SubSystem: '<S1>/Correct2' incorporates:
-  //   EnablePort: '<S5>/Enable'
+  //   EnablePort: '<S6>/Enable'
 
   if (rtu_Enable) {
-    // DataStoreRead: '<S5>/Data Store ReadX'
+    // DataStoreRead: '<S6>/Data Store ReadX'
     localDW->DataStoreReadX[0] = rtd_x[0];
     localDW->DataStoreReadX[1] = rtd_x[1];
     localDW->DataStoreReadX[2] = rtd_x[2];
 
-    // MATLAB Function: '<S5>/Correct'
+    // MATLAB Function: '<S6>/Correct'
     localDW->blockOrdering = rtu_uBlockOrdering;
     blockOrdering = localDW->blockOrdering;
     localDW->blockOrdering = blockOrdering;
     for (i = 0; i < 9; i++) {
-      // DataStoreRead: '<S5>/Data Store ReadP'
+      // DataStoreRead: '<S6>/Data Store ReadP'
       localDW->DataStoreReadP[i] = rtd_P_i[i];
 
-      // MATLAB Function: '<S5>/Correct'
+      // MATLAB Function: '<S6>/Correct'
       localDW->P_c[i] = localDW->DataStoreReadP[i];
       epsilon = localDW->P_c[i];
       localDW->P_c[i] = epsilon;
     }
 
-    // MATLAB Function: '<S5>/Correct'
+    // MATLAB Function: '<S6>/Correct'
     for (i = 0; i < 3; i++) {
       imvec[0] = localDW->DataStoreReadX[0];
       epsilon = 1.4901161193847656E-8 * std::abs(localDW->DataStoreReadX[i]);
@@ -339,11 +339,11 @@ void positionEstimatorModelClass::Correct2(boolean_T rtu_Enable, real_T
     for (i = 0; i < 9; i++) {
       localDW->P_c[i] = tmp[i];
 
-      // DataStoreWrite: '<S5>/Data Store WriteP'
+      // DataStoreWrite: '<S6>/Data Store WriteP'
       rtd_P_i[i] = localDW->P_c[i];
     }
 
-    // DataStoreWrite: '<S5>/Data Store WriteX'
+    // DataStoreWrite: '<S6>/Data Store WriteX'
     rtd_x[0] = localDW->xNew[0];
     rtd_x[1] = localDW->xNew[1];
     rtd_x[2] = localDW->xNew[2];
@@ -426,7 +426,7 @@ real_T rt_atan2d_snf(real_T u0, real_T u1)
   return y;
 }
 
-// Function for MATLAB Function: '<S16>/Correct'
+// Function for MATLAB Function: '<S17>/Correct'
 void positionEstimatorModelClass::EKFCorrector_correctStateAndCov(real_T x[6],
   real_T P_0[36], const real_T y[4], const real_T Pxy[24], const real_T Pyy[16],
   const real_T dHdx[24])
@@ -609,6 +609,7 @@ void positionEstimatorModelClass::step()
   real_T Pyy[4];
   real_T dHdx[12];
   real_T gain[12];
+  real_T z[2];
   real_T imvec[6];
   real_T epsilon;
   int32_T r1;
@@ -623,368 +624,370 @@ void positionEstimatorModelClass::step()
   real_T tmp[24];
   real_T dHdx_3[16];
   real_T gain_0[36];
+  real_T tmp_0[36];
   real_T imvec_1[9];
   real_T a[9];
   real_T b_a[9];
-  real_T a_0[36];
-  real_T b_a_0[36];
-  real_T u;
-  static const real_T a_1[9] = { 1.0, 0.0, 0.0, 0.02, 1.0, 0.0, 0.0002, 0.02,
+  real_T imvec_2;
+  static const int8_T a_0[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1 };
+
+  static const real_T a_1[9] = { 1.0, 0.0, 0.0, 0.01, 1.0, 0.0, 5.0E-5, 0.01,
     1.0 };
 
-  static const real_T b[9] = { 1.0, 0.02, 0.0002, 0.0, 1.0, 0.02, 0.0, 0.0, 1.0
+  static const real_T b[9] = { 1.0, 0.01, 5.0E-5, 0.0, 1.0, 0.01, 0.0, 0.0, 1.0
   };
 
-  static const real_T b_a_1[3] = { 0.0001, 0.01, 1.0 };
+  static const real_T b_a_0[3] = { 2.5E-5, 0.005, 1.0 };
 
   static const real_T a_2[36] = { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0,
-    0.0, 0.0, 0.0, 0.005, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.005, 0.0, 1.0, 0.0,
-    0.0, 1.25E-5, 0.0, 0.005, 0.0, 1.0, 0.0, 0.0, 1.25E-5, 0.0, 0.005, 0.0, 1.0
-  };
+    0.0, 0.0, 0.0, 0.01, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 1.0, 0.0, 0.0,
+    5.0E-5, 0.0, 0.01, 0.0, 1.0, 0.0, 0.0, 5.0E-5, 0.0, 0.01, 0.0, 1.0 };
 
-  static const real_T b_a_2[6] = { 6.25E-6, 6.25E-6, 0.0025, 0.0025, 1.0, 1.0 };
+  static const real_T b_0[36] = { 1.0, 0.0, 0.01, 0.0, 5.0E-5, 0.0, 0.0, 1.0,
+    0.0, 0.01, 0.0, 5.0E-5, 0.0, 0.0, 1.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 1.0,
+    0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
 
-  static const real_T b_0[36] = { 1.0, 0.0, 0.005, 0.0, 1.25E-5, 0.0, 0.0, 1.0,
-    0.0, 0.005, 0.0, 1.25E-5, 0.0, 0.0, 1.0, 0.0, 0.005, 0.0, 0.0, 0.0, 0.0, 1.0,
-    0.0, 0.005, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
-
-  // Abs: '<S36>/Abs' incorporates:
+  // Abs: '<S60>/Abs' incorporates:
   //   Inport: '<Root>/HOME_lla'
 
   rtDW.Abs = std::abs(rtU.HOME_lla[0]);
 
-  // RelationalOperator: '<S37>/Compare' incorporates:
-  //   Constant: '<S37>/Constant'
+  // RelationalOperator: '<S61>/Compare' incorporates:
+  //   Constant: '<S61>/Constant'
 
   rtDW.Compare = (rtDW.Abs > rtP.CompareToConstant_const);
 
-  // Switch: '<S36>/Switch' incorporates:
+  // Switch: '<S60>/Switch' incorporates:
   //   Inport: '<Root>/HOME_lla'
 
   if (rtDW.Compare) {
-    // Bias: '<S36>/Bias' incorporates:
+    // Bias: '<S60>/Bias' incorporates:
     //   Inport: '<Root>/HOME_lla'
 
     rtDW.Bias_m = rtU.HOME_lla[0] + rtP.Bias_Bias_al;
 
-    // Math: '<S36>/Math Function1' incorporates:
-    //   Constant: '<S36>/Constant2'
+    // Math: '<S60>/Math Function1' incorporates:
+    //   Constant: '<S60>/Constant2'
 
-    rtDW.MathFunction1_i = rt_modd_snf(rtDW.Bias_m, rtP.Constant2_Value_j);
+    rtDW.MathFunction1_i = rt_modd_snf(rtDW.Bias_m, rtP.Constant2_Value_jr);
 
-    // Bias: '<S36>/Bias1'
-    rtDW.Bias1_k = rtDW.MathFunction1_i + rtP.Bias1_Bias_k;
+    // Bias: '<S60>/Bias1'
+    rtDW.Bias1_k = rtDW.MathFunction1_i + rtP.Bias1_Bias_k2;
     rtDW.Switch = rtDW.Bias1_k;
   } else {
     rtDW.Switch = rtU.HOME_lla[0];
   }
 
-  // End of Switch: '<S36>/Switch'
+  // End of Switch: '<S60>/Switch'
 
-  // Abs: '<S33>/Abs1'
+  // Abs: '<S57>/Abs1'
   rtDW.Abs1 = std::abs(rtDW.Switch);
 
-  // RelationalOperator: '<S35>/Compare' incorporates:
-  //   Constant: '<S35>/Constant'
+  // RelationalOperator: '<S59>/Compare' incorporates:
+  //   Constant: '<S59>/Constant'
 
   rtDW.Compare_c = (rtDW.Abs1 > rtP.CompareToConstant_const_d);
 
-  // Switch: '<S33>/Switch' incorporates:
-  //   Constant: '<S24>/Constant'
-  //   Constant: '<S24>/Constant1'
-  //   Switch: '<S24>/Switch1'
+  // Switch: '<S57>/Switch' incorporates:
+  //   Constant: '<S48>/Constant'
+  //   Constant: '<S48>/Constant1'
+  //   Switch: '<S48>/Switch1'
 
   if (rtDW.Compare_c) {
-    // Bias: '<S33>/Bias'
+    // Bias: '<S57>/Bias'
     rtDW.Bias_d = rtDW.Abs1 + rtP.Bias_Bias_e;
 
-    // Gain: '<S33>/Gain'
+    // Gain: '<S57>/Gain'
     rtDW.Gain = rtP.Gain_Gain_n * rtDW.Bias_d;
 
-    // Bias: '<S33>/Bias1'
+    // Bias: '<S57>/Bias1'
     rtDW.Bias1_o = rtDW.Gain + rtP.Bias1_Bias_c;
 
-    // Signum: '<S33>/Sign1'
-    u = rtDW.Switch;
-    if (u < 0.0) {
+    // Signum: '<S57>/Sign1'
+    a22 = rtDW.Switch;
+    if (a22 < 0.0) {
       rtDW.Sign1 = -1.0;
-    } else if (u > 0.0) {
+    } else if (a22 > 0.0) {
       rtDW.Sign1 = 1.0;
-    } else if (u == 0.0) {
+    } else if (a22 == 0.0) {
       rtDW.Sign1 = 0.0;
     } else {
       rtDW.Sign1 = (rtNaN);
     }
 
-    // End of Signum: '<S33>/Sign1'
+    // End of Signum: '<S57>/Sign1'
 
-    // Product: '<S33>/Divide1'
+    // Product: '<S57>/Divide1'
     rtDW.Divide1 = rtDW.Sign1 * rtDW.Bias1_o;
     rtDW.Switch_b = rtDW.Divide1;
     rtDW.Switch1 = rtP.Constant_Value_m;
   } else {
     rtDW.Switch_b = rtDW.Switch;
-    rtDW.Switch1 = rtP.Constant1_Value_f;
+    rtDW.Switch1 = rtP.Constant1_Value_fz;
   }
 
-  // End of Switch: '<S33>/Switch'
+  // End of Switch: '<S57>/Switch'
 
-  // Sum: '<S24>/Sum' incorporates:
+  // Sum: '<S48>/Sum' incorporates:
   //   Inport: '<Root>/HOME_lla'
 
   rtDW.Sum = rtDW.Switch1 + rtU.HOME_lla[1];
 
-  // Abs: '<S34>/Abs'
+  // Abs: '<S58>/Abs'
   rtDW.Abs_i = std::abs(rtDW.Sum);
 
-  // RelationalOperator: '<S38>/Compare' incorporates:
-  //   Constant: '<S38>/Constant'
+  // RelationalOperator: '<S62>/Compare' incorporates:
+  //   Constant: '<S62>/Constant'
 
   rtDW.Compare_d = (rtDW.Abs_i > rtP.CompareToConstant_const_j);
 
-  // Switch: '<S34>/Switch'
+  // Switch: '<S58>/Switch'
   if (rtDW.Compare_d) {
-    // Bias: '<S34>/Bias'
-    rtDW.Bias = rtDW.Sum + rtP.Bias_Bias_d;
+    // Bias: '<S58>/Bias'
+    rtDW.Bias = rtDW.Sum + rtP.Bias_Bias_dq;
 
-    // Math: '<S34>/Math Function1' incorporates:
-    //   Constant: '<S34>/Constant2'
+    // Math: '<S58>/Math Function1' incorporates:
+    //   Constant: '<S58>/Constant2'
 
-    rtDW.MathFunction1 = rt_modd_snf(rtDW.Bias, rtP.Constant2_Value_k);
+    rtDW.MathFunction1 = rt_modd_snf(rtDW.Bias, rtP.Constant2_Value_kz);
 
-    // Bias: '<S34>/Bias1'
+    // Bias: '<S58>/Bias1'
     rtDW.Bias1 = rtDW.MathFunction1 + rtP.Bias1_Bias_cz;
     rtDW.Switch_h = rtDW.Bias1;
   } else {
     rtDW.Switch_h = rtDW.Sum;
   }
 
-  // End of Switch: '<S34>/Switch'
+  // End of Switch: '<S58>/Switch'
 
-  // Sum: '<S22>/Sum1' incorporates:
+  // Sum: '<S46>/Sum1' incorporates:
   //   Inport: '<Root>/lat'
   //   Inport: '<Root>/lon'
 
   rtDW.Sum1[0] = rtU.lat - rtDW.Switch_b;
   rtDW.Sum1[1] = rtU.lon - rtDW.Switch_h;
 
-  // Abs: '<S30>/Abs'
+  // Abs: '<S54>/Abs'
   rtDW.Abs_b = std::abs(rtDW.Sum1[0]);
 
-  // RelationalOperator: '<S31>/Compare' incorporates:
-  //   Constant: '<S31>/Constant'
+  // RelationalOperator: '<S55>/Compare' incorporates:
+  //   Constant: '<S55>/Constant'
 
   rtDW.Compare_ds = (rtDW.Abs_b > rtP.CompareToConstant_const_n);
 
-  // Switch: '<S30>/Switch'
+  // Switch: '<S54>/Switch'
   if (rtDW.Compare_ds) {
-    // Bias: '<S30>/Bias'
+    // Bias: '<S54>/Bias'
     rtDW.Bias_e = rtDW.Sum1[0] + rtP.Bias_Bias_b;
 
-    // Math: '<S30>/Math Function1' incorporates:
-    //   Constant: '<S30>/Constant2'
+    // Math: '<S54>/Math Function1' incorporates:
+    //   Constant: '<S54>/Constant2'
 
-    rtDW.MathFunction1_o = rt_modd_snf(rtDW.Bias_e, rtP.Constant2_Value);
+    rtDW.MathFunction1_o = rt_modd_snf(rtDW.Bias_e, rtP.Constant2_Value_p);
 
-    // Bias: '<S30>/Bias1'
+    // Bias: '<S54>/Bias1'
     rtDW.Bias1_oh = rtDW.MathFunction1_o + rtP.Bias1_Bias_p;
     rtDW.Switch_f = rtDW.Bias1_oh;
   } else {
     rtDW.Switch_f = rtDW.Sum1[0];
   }
 
-  // End of Switch: '<S30>/Switch'
+  // End of Switch: '<S54>/Switch'
 
-  // Abs: '<S27>/Abs1'
+  // Abs: '<S51>/Abs1'
   rtDW.Abs1_j = std::abs(rtDW.Switch_f);
 
-  // RelationalOperator: '<S29>/Compare' incorporates:
-  //   Constant: '<S29>/Constant'
+  // RelationalOperator: '<S53>/Compare' incorporates:
+  //   Constant: '<S53>/Constant'
 
   rtDW.Compare_m = (rtDW.Abs1_j > rtP.CompareToConstant_const_e);
 
-  // Switch: '<S27>/Switch' incorporates:
-  //   Constant: '<S23>/Constant'
-  //   Constant: '<S23>/Constant1'
-  //   Switch: '<S23>/Switch1'
+  // Switch: '<S51>/Switch' incorporates:
+  //   Constant: '<S47>/Constant'
+  //   Constant: '<S47>/Constant1'
+  //   Switch: '<S47>/Switch1'
 
   if (rtDW.Compare_m) {
-    // Bias: '<S27>/Bias'
-    rtDW.Bias_mj = rtDW.Abs1_j + rtP.Bias_Bias;
+    // Bias: '<S51>/Bias'
+    rtDW.Bias_mj = rtDW.Abs1_j + rtP.Bias_Bias_d;
 
-    // Gain: '<S27>/Gain'
-    rtDW.Gain_c = rtP.Gain_Gain * rtDW.Bias_mj;
+    // Gain: '<S51>/Gain'
+    rtDW.Gain_c = rtP.Gain_Gain_k * rtDW.Bias_mj;
 
-    // Bias: '<S27>/Bias1'
-    rtDW.Bias1_n = rtDW.Gain_c + rtP.Bias1_Bias;
+    // Bias: '<S51>/Bias1'
+    rtDW.Bias1_n = rtDW.Gain_c + rtP.Bias1_Bias_h;
 
-    // Signum: '<S27>/Sign1'
-    u = rtDW.Switch_f;
-    if (u < 0.0) {
+    // Signum: '<S51>/Sign1'
+    a22 = rtDW.Switch_f;
+    if (a22 < 0.0) {
       rtDW.Sign1_g = -1.0;
-    } else if (u > 0.0) {
+    } else if (a22 > 0.0) {
       rtDW.Sign1_g = 1.0;
-    } else if (u == 0.0) {
+    } else if (a22 == 0.0) {
       rtDW.Sign1_g = 0.0;
     } else {
       rtDW.Sign1_g = (rtNaN);
     }
 
-    // End of Signum: '<S27>/Sign1'
+    // End of Signum: '<S51>/Sign1'
 
-    // Product: '<S27>/Divide1'
+    // Product: '<S51>/Divide1'
     rtDW.Divide1_h = rtDW.Sign1_g * rtDW.Bias1_n;
     rtDW.Switch_j = rtDW.Divide1_h;
-    rtDW.Switch1_b = rtP.Constant_Value;
+    rtDW.Switch1_b = rtP.Constant_Value_lu;
   } else {
     rtDW.Switch_j = rtDW.Switch_f;
-    rtDW.Switch1_b = rtP.Constant1_Value;
+    rtDW.Switch1_b = rtP.Constant1_Value_k;
   }
 
-  // End of Switch: '<S27>/Switch'
+  // End of Switch: '<S51>/Switch'
 
-  // Sum: '<S23>/Sum'
+  // Sum: '<S47>/Sum'
   rtDW.Sum_j = rtDW.Switch1_b + rtDW.Sum1[1];
 
-  // Abs: '<S28>/Abs'
+  // Abs: '<S52>/Abs'
   rtDW.Abs_b0 = std::abs(rtDW.Sum_j);
 
-  // RelationalOperator: '<S32>/Compare' incorporates:
-  //   Constant: '<S32>/Constant'
+  // RelationalOperator: '<S56>/Compare' incorporates:
+  //   Constant: '<S56>/Constant'
 
   rtDW.Compare_k = (rtDW.Abs_b0 > rtP.CompareToConstant_const_ei);
 
-  // Switch: '<S28>/Switch'
+  // Switch: '<S52>/Switch'
   if (rtDW.Compare_k) {
-    // Bias: '<S28>/Bias'
+    // Bias: '<S52>/Bias'
     rtDW.Bias_j = rtDW.Sum_j + rtP.Bias_Bias_a;
 
-    // Math: '<S28>/Math Function1' incorporates:
-    //   Constant: '<S28>/Constant2'
+    // Math: '<S52>/Math Function1' incorporates:
+    //   Constant: '<S52>/Constant2'
 
     rtDW.MathFunction1_h = rt_modd_snf(rtDW.Bias_j, rtP.Constant2_Value_g);
 
-    // Bias: '<S28>/Bias1'
+    // Bias: '<S52>/Bias1'
     rtDW.Bias1_p = rtDW.MathFunction1_h + rtP.Bias1_Bias_l;
     rtDW.Switch_m = rtDW.Bias1_p;
   } else {
     rtDW.Switch_m = rtDW.Sum_j;
   }
 
-  // End of Switch: '<S28>/Switch'
+  // End of Switch: '<S52>/Switch'
 
-  // UnitConversion: '<S26>/Unit Conversion'
+  // UnitConversion: '<S50>/Unit Conversion'
   // Unit Conversion - from: deg to: rad
   // Expression: output = (0.0174533*input) + (0)
   rtDW.UnitConversion[0] = 0.017453292519943295 * rtDW.Switch_j;
   rtDW.UnitConversion[1] = 0.017453292519943295 * rtDW.Switch_m;
 
-  // Sum: '<S43>/Sum' incorporates:
-  //   Constant: '<S43>/Constant'
-  //   Constant: '<S43>/f'
+  // Sum: '<S67>/Sum' incorporates:
+  //   Constant: '<S67>/Constant'
+  //   Constant: '<S67>/f'
 
   rtDW.Sum_a = rtP.f_Value - rtP.Constant_Value_c;
 
-  // Product: '<S44>/Product1'
+  // Product: '<S68>/Product1'
   rtDW.Product1 = rtDW.Sum_a * rtDW.Sum_a;
 
-  // Sum: '<S44>/Sum1' incorporates:
-  //   Constant: '<S44>/Constant'
+  // Sum: '<S68>/Sum1' incorporates:
+  //   Constant: '<S68>/Constant'
 
   rtDW.Sum1_e = rtP.Constant_Value_a - rtDW.Product1;
 
-  // Sqrt: '<S44>/sqrt'
+  // Sqrt: '<S68>/sqrt'
   rtDW.sqrt_c = std::sqrt(rtDW.Sum1_e);
 
-  // UnitConversion: '<S41>/Unit Conversion'
+  // UnitConversion: '<S65>/Unit Conversion'
   // Unit Conversion - from: deg to: rad
   // Expression: output = (0.0174533*input) + (0)
   rtDW.UnitConversion_m = 0.017453292519943295 * rtDW.Switch_b;
 
-  // Trigonometry: '<S42>/Trigonometric Function1'
+  // Trigonometry: '<S66>/Trigonometric Function1'
   rtDW.TrigonometricFunction1 = std::sin(rtDW.UnitConversion_m);
 
-  // Product: '<S42>/Product1'
+  // Product: '<S66>/Product1'
   rtDW.Product1_n = rtDW.sqrt_c * rtDW.sqrt_c * rtDW.TrigonometricFunction1 *
     rtDW.TrigonometricFunction1;
 
-  // Sum: '<S42>/Sum1' incorporates:
-  //   Constant: '<S42>/Constant'
+  // Sum: '<S66>/Sum1' incorporates:
+  //   Constant: '<S66>/Constant'
 
   rtDW.Sum1_c = rtP.Constant_Value_f - rtDW.Product1_n;
 
-  // Sqrt: '<S40>/sqrt'
+  // Sqrt: '<S64>/sqrt'
   rtDW.sqrt_d = std::sqrt(rtDW.Sum1_c);
 
-  // Product: '<S40>/Product1' incorporates:
-  //   Constant: '<S40>/Constant1'
+  // Product: '<S64>/Product1' incorporates:
+  //   Constant: '<S64>/Constant1'
 
   rtDW.Rn = rtP.Constant1_Value_d / rtDW.sqrt_d;
 
-  // Product: '<S40>/Product2'
+  // Product: '<S64>/Product2'
   rtDW.Product2 = rtDW.sqrt_c * rtDW.sqrt_c;
 
-  // Sum: '<S40>/Sum1' incorporates:
-  //   Constant: '<S40>/Constant'
+  // Sum: '<S64>/Sum1' incorporates:
+  //   Constant: '<S64>/Constant'
 
   rtDW.Sum1_g = rtP.Constant_Value_ch - rtDW.Product2;
 
-  // Product: '<S40>/Product3'
+  // Product: '<S64>/Product3'
   rtDW.Rm = rtDW.Rn * rtDW.Sum1_g / rtDW.Sum1_c;
 
-  // Trigonometry: '<S40>/Trigonometric Function1' incorporates:
-  //   Constant: '<S40>/Constant2'
+  // Trigonometry: '<S64>/Trigonometric Function1' incorporates:
+  //   Constant: '<S64>/Constant2'
 
   rtDW.TrigonometricFunction1_l = rt_atan2d_snf(rtP.Constant2_Value_h, rtDW.Rm);
 
-  // Product: '<S25>/dNorth'
+  // Product: '<S49>/dNorth'
   rtDW.dNorth = rtDW.UnitConversion[0] / rtDW.TrigonometricFunction1_l;
 
-  // UnitConversion: '<S39>/Unit Conversion' incorporates:
-  //   Constant: '<S3>/flat-x_from_N'
+  // UnitConversion: '<S63>/Unit Conversion' incorporates:
+  //   Constant: '<S4>/flat-x_from_N'
 
   // Unit Conversion - from: deg to: rad
   // Expression: output = (0.0174533*input) + (0)
   rtDW.UnitConversion_p = 0.017453292519943295 * rtP.flatx_from_N_Value;
 
-  // Trigonometry: '<S25>/SinCos'
+  // Trigonometry: '<S49>/SinCos'
   a22 = rtDW.UnitConversion_p;
   epsilon = std::sin(a22);
   a22 = std::cos(a22);
   rtDW.SinCos_o1 = epsilon;
   rtDW.SinCos_o2 = a22;
 
-  // Product: '<S25>/x*cos'
+  // Product: '<S49>/x*cos'
   rtDW.xcos = rtDW.dNorth * rtDW.SinCos_o2;
 
-  // Trigonometry: '<S40>/Trigonometric Function'
+  // Trigonometry: '<S64>/Trigonometric Function'
   rtDW.TrigonometricFunction = std::cos(rtDW.UnitConversion_m);
 
-  // Product: '<S40>/Product4'
+  // Product: '<S64>/Product4'
   rtDW.Product4 = rtDW.Rn * rtDW.TrigonometricFunction;
 
-  // Trigonometry: '<S40>/Trigonometric Function2' incorporates:
-  //   Constant: '<S40>/Constant3'
+  // Trigonometry: '<S64>/Trigonometric Function2' incorporates:
+  //   Constant: '<S64>/Constant3'
 
   rtDW.TrigonometricFunction2 = rt_atan2d_snf(rtP.Constant3_Value, rtDW.Product4);
 
-  // Product: '<S25>/dEast'
+  // Product: '<S49>/dEast'
   rtDW.dEast = 1.0 / rtDW.TrigonometricFunction2 * rtDW.UnitConversion[1];
 
-  // Product: '<S25>/y*sin'
+  // Product: '<S49>/y*sin'
   rtDW.ysin = rtDW.dEast * rtDW.SinCos_o1;
 
-  // Sum: '<S25>/Sum2'
-  rtDW.Px = rtDW.xcos + rtDW.ysin;
+  // Outport: '<Root>/GPSrawX' incorporates:
+  //   Sum: '<S49>/Sum2'
 
-  // Product: '<S25>/x*sin'
+  rtY.GPSrawX = rtDW.xcos + rtDW.ysin;
+
+  // Product: '<S49>/x*sin'
   rtDW.xsin = rtDW.dNorth * rtDW.SinCos_o1;
 
-  // Product: '<S25>/y*cos'
+  // Product: '<S49>/y*cos'
   rtDW.ycos = rtDW.dEast * rtDW.SinCos_o2;
 
-  // Sum: '<S25>/Sum3'
-  rtDW.Py = rtDW.ycos - rtDW.xsin;
+  // Outport: '<Root>/GPSrawY' incorporates:
+  //   Sum: '<S49>/Sum3'
+
+  rtY.GPSrawY = rtDW.ycos - rtDW.xsin;
 
   // DataTypeConversion: '<S2>/DataTypeConversion_Enable1' incorporates:
   //   Inport: '<Root>/AhrsFlag'
@@ -992,41 +995,50 @@ void positionEstimatorModelClass::step()
   rtDW.DataTypeConversion_Enable1 = (rtU.AhrsFlag != 0.0);
 
   // Outputs for Enabled SubSystem: '<S2>/Correct1' incorporates:
-  //   EnablePort: '<S15>/Enable'
+  //   EnablePort: '<S16>/Enable'
 
   if (rtDW.DataTypeConversion_Enable1) {
-    // DataStoreRead: '<S15>/Data Store ReadX'
+    // DataStoreRead: '<S16>/Data Store ReadX'
     for (i = 0; i < 6; i++) {
       rtDW.DataStoreReadX_p[i] = rtDW.x_p[i];
     }
 
-    // End of DataStoreRead: '<S15>/Data Store ReadX'
+    // End of DataStoreRead: '<S16>/Data Store ReadX'
 
-    // SignalConversion generated from: '<S19>/ SFunction ' incorporates:
+    // SignalConversion generated from: '<S20>/ SFunction ' incorporates:
     //   Inport: '<Root>/ax'
     //   Inport: '<Root>/ay'
-    //   MATLAB Function: '<S15>/Correct'
+    //   MATLAB Function: '<S16>/Correct'
 
     rtDW.TmpSignalConversionAtSFunctio_i[0] = rtU.ax;
     rtDW.TmpSignalConversionAtSFunctio_i[1] = rtU.ay;
 
-    // MATLAB Function: '<S15>/Correct' incorporates:
+    // MATLAB Function: '<S16>/Correct' incorporates:
     //   Constant: '<S2>/BlockOrdering'
 
     rtDW.blockOrdering_f = rtP.BlockOrdering_Value;
     blockOrdering = rtDW.blockOrdering_f;
     rtDW.blockOrdering_f = blockOrdering;
     for (i = 0; i < 36; i++) {
-      // DataStoreRead: '<S15>/Data Store ReadP'
+      // DataStoreRead: '<S16>/Data Store ReadP'
       rtDW.P_k[i] = rtDW.P_n_c[i];
 
-      // MATLAB Function: '<S15>/Correct'
-      u = rtDW.P_k[i];
-      rtDW.P_k[i] = u;
+      // MATLAB Function: '<S16>/Correct'
+      a22 = rtDW.P_k[i];
+      rtDW.P_k[i] = a22;
     }
 
-    // MATLAB Function: '<S15>/Correct' incorporates:
+    // MATLAB Function: '<S16>/Correct' incorporates:
     //   Constant: '<S2>/R1'
+
+    for (i = 0; i < 2; i++) {
+      z[i] = 0.0;
+      for (k = 0; k < 6; k++) {
+        a22 = z[i];
+        a22 += static_cast<real_T>(a_0[(k << 1) + i]) * rtDW.DataStoreReadX_p[k];
+        z[i] = a22;
+      }
+    }
 
     for (r1 = 0; r1 < 6; r1++) {
       for (i = 0; i < 6; i++) {
@@ -1039,38 +1051,44 @@ void positionEstimatorModelClass::step()
       }
 
       imvec[r1] = rtDW.DataStoreReadX_p[r1] + epsilon;
-      dHdx[r1 << 1] = (imvec[4] - rtDW.DataStoreReadX_p[4]) / epsilon;
-      dHdx[(r1 << 1) + 1] = (imvec[5] - rtDW.DataStoreReadX_p[5]) / epsilon;
+      for (i = 0; i < 2; i++) {
+        imvec_2 = 0.0;
+        for (k = 0; k < 6; k++) {
+          imvec_2 += static_cast<real_T>(a_0[(k << 1) + i]) * imvec[k];
+        }
+
+        dHdx[i + (r1 << 1)] = (imvec_2 - z[i]) / epsilon;
+      }
     }
 
-    for (r1 = 0; r1 < 6; r1++) {
-      for (i = 0; i < 2; i++) {
-        Pxy[r1 + 6 * i] = 0.0;
-        for (k = 0; k < 6; k++) {
-          u = Pxy[6 * i + r1];
-          u += rtDW.P_k[6 * k + r1] * dHdx[(k << 1) + i];
-          Pxy[r1 + 6 * i] = u;
+    for (i = 0; i < 6; i++) {
+      for (k = 0; k < 2; k++) {
+        Pxy[i + 6 * k] = 0.0;
+        for (r1 = 0; r1 < 6; r1++) {
+          a22 = Pxy[6 * k + i];
+          a22 += rtDW.P_k[6 * r1 + i] * dHdx[(r1 << 1) + k];
+          Pxy[i + 6 * k] = a22;
         }
       }
     }
 
-    for (r1 = 0; r1 < 2; r1++) {
-      for (i = 0; i < 6; i++) {
-        gain[r1 + (i << 1)] = 0.0;
-        for (k = 0; k < 6; k++) {
-          u = gain[(i << 1) + r1];
-          u += dHdx[(k << 1) + r1] * rtDW.P_k[6 * i + k];
-          gain[r1 + (i << 1)] = u;
+    for (i = 0; i < 2; i++) {
+      for (k = 0; k < 6; k++) {
+        gain[i + (k << 1)] = 0.0;
+        for (r1 = 0; r1 < 6; r1++) {
+          a22 = gain[(k << 1) + i];
+          a22 += dHdx[(r1 << 1) + i] * rtDW.P_k[6 * k + r1];
+          gain[i + (k << 1)] = a22;
         }
       }
 
-      for (i = 0; i < 2; i++) {
-        u = 0.0;
-        for (k = 0; k < 6; k++) {
-          u += gain[(k << 1) + r1] * dHdx[(k << 1) + i];
+      for (k = 0; k < 2; k++) {
+        imvec_2 = 0.0;
+        for (r1 = 0; r1 < 6; r1++) {
+          imvec_2 += gain[(r1 << 1) + i] * dHdx[(r1 << 1) + k];
         }
 
-        Pyy[r1 + (i << 1)] = rtP.R1_Value[(i << 1) + r1] + u;
+        Pyy[i + (k << 1)] = rtP.R1_Value[(k << 1) + i] + imvec_2;
       }
     }
 
@@ -1090,45 +1108,53 @@ void positionEstimatorModelClass::step()
       gain[k + 6 * r1] -= gain[6 * i + k] * epsilon;
     }
 
-    a22 = rtDW.TmpSignalConversionAtSFunctio_i[0] - rtDW.DataStoreReadX_p[4];
-    epsilon = rtDW.TmpSignalConversionAtSFunctio_i[1] - rtDW.DataStoreReadX_p[5];
-    for (r1 = 0; r1 < 6; r1++) {
-      u = gain[r1] * a22;
-      u += gain[r1 + 6] * epsilon;
-      rtDW.xNew_n[r1] = rtDW.DataStoreReadX_p[r1] + u;
-      for (i = 0; i < 6; i++) {
-        gain_0[r1 + 6 * i] = 0.0;
-        u = gain_0[6 * i + r1];
-        u += dHdx[i << 1] * gain[r1];
-        gain_0[r1 + 6 * i] = u;
-        u = gain_0[6 * i + r1];
-        u += dHdx[(i << 1) + 1] * gain[r1 + 6];
-        gain_0[r1 + 6 * i] = u;
+    for (i = 0; i < 2; i++) {
+      imvec_2 = 0.0;
+      for (k = 0; k < 6; k++) {
+        imvec_2 += static_cast<real_T>(a_0[(k << 1) + i]) *
+          rtDW.DataStoreReadX_p[k];
       }
 
-      for (i = 0; i < 6; i++) {
-        u = 0.0;
-        for (k = 0; k < 6; k++) {
-          u += gain_0[6 * k + r1] * rtDW.P_k[6 * i + k];
+      z[i] = rtDW.TmpSignalConversionAtSFunctio_i[i] - imvec_2;
+    }
+
+    for (i = 0; i < 6; i++) {
+      imvec_2 = gain[i] * z[0];
+      imvec_2 += gain[i + 6] * z[1];
+      rtDW.xNew_n[i] = rtDW.DataStoreReadX_p[i] + imvec_2;
+      for (k = 0; k < 6; k++) {
+        gain_0[i + 6 * k] = 0.0;
+        a22 = gain_0[6 * k + i];
+        a22 += dHdx[k << 1] * gain[i];
+        gain_0[i + 6 * k] = a22;
+        a22 = gain_0[6 * k + i];
+        a22 += dHdx[(k << 1) + 1] * gain[i + 6];
+        gain_0[i + 6 * k] = a22;
+      }
+
+      for (k = 0; k < 6; k++) {
+        imvec_2 = 0.0;
+        for (r1 = 0; r1 < 6; r1++) {
+          imvec_2 += gain_0[6 * r1 + i] * rtDW.P_k[6 * k + r1];
         }
 
-        a_0[r1 + 6 * i] = rtDW.P_k[6 * i + r1] - u;
+        tmp_0[i + 6 * k] = rtDW.P_k[6 * k + i] - imvec_2;
       }
     }
 
     for (i = 0; i < 36; i++) {
-      rtDW.P_k[i] = a_0[i];
+      rtDW.P_k[i] = tmp_0[i];
 
-      // DataStoreWrite: '<S15>/Data Store WriteP'
+      // DataStoreWrite: '<S16>/Data Store WriteP'
       rtDW.P_n_c[i] = rtDW.P_k[i];
     }
 
-    // DataStoreWrite: '<S15>/Data Store WriteX'
+    // DataStoreWrite: '<S16>/Data Store WriteX'
     for (i = 0; i < 6; i++) {
       rtDW.x_p[i] = rtDW.xNew_n[i];
     }
 
-    // End of DataStoreWrite: '<S15>/Data Store WriteX'
+    // End of DataStoreWrite: '<S16>/Data Store WriteX'
   }
 
   // End of Outputs for SubSystem: '<S2>/Correct1'
@@ -1140,40 +1166,42 @@ void positionEstimatorModelClass::step()
   rtDW.LogicalOperator = ((rtU.GPS_switch != 0.0) && (rtU.GpsFlag != 0.0));
 
   // Outputs for Enabled SubSystem: '<S2>/Correct2' incorporates:
-  //   EnablePort: '<S16>/Enable'
+  //   EnablePort: '<S17>/Enable'
 
   if (rtDW.LogicalOperator) {
-    // DataStoreRead: '<S16>/Data Store ReadX'
+    // DataStoreRead: '<S17>/Data Store ReadX'
     for (i = 0; i < 6; i++) {
       rtDW.DataStoreReadX_j[i] = rtDW.x_p[i];
     }
 
-    // End of DataStoreRead: '<S16>/Data Store ReadX'
+    // End of DataStoreRead: '<S17>/Data Store ReadX'
 
-    // SignalConversion generated from: '<S20>/ SFunction ' incorporates:
+    // SignalConversion generated from: '<S21>/ SFunction ' incorporates:
     //   Inport: '<Root>/vx'
     //   Inport: '<Root>/vy'
-    //   MATLAB Function: '<S16>/Correct'
+    //   MATLAB Function: '<S17>/Correct'
+    //   Outport: '<Root>/GPSrawX'
+    //   Outport: '<Root>/GPSrawY'
 
-    rtDW.TmpSignalConversionAtSFunctionI[0] = rtDW.Px;
-    rtDW.TmpSignalConversionAtSFunctionI[1] = rtDW.Py;
+    rtDW.TmpSignalConversionAtSFunctionI[0] = rtY.GPSrawX;
+    rtDW.TmpSignalConversionAtSFunctionI[1] = rtY.GPSrawY;
     rtDW.TmpSignalConversionAtSFunctionI[2] = rtU.vx;
     rtDW.TmpSignalConversionAtSFunctionI[3] = rtU.vy;
 
-    // MATLAB Function: '<S16>/Correct'
+    // MATLAB Function: '<S17>/Correct'
     rtDW.blockOrdering = rtDW.blockOrdering_f;
     blockOrdering = rtDW.blockOrdering;
     rtDW.blockOrdering = blockOrdering;
     for (i = 0; i < 36; i++) {
-      // DataStoreRead: '<S16>/Data Store ReadP'
+      // DataStoreRead: '<S17>/Data Store ReadP'
       rtDW.P_f[i] = rtDW.P_n_c[i];
 
-      // MATLAB Function: '<S16>/Correct'
-      u = rtDW.P_f[i];
-      rtDW.P_f[i] = u;
+      // MATLAB Function: '<S17>/Correct'
+      a22 = rtDW.P_f[i];
+      rtDW.P_f[i] = a22;
     }
 
-    // MATLAB Function: '<S16>/Correct' incorporates:
+    // MATLAB Function: '<S17>/Correct' incorporates:
     //   Constant: '<S2>/R2'
 
     for (r1 = 0; r1 < 6; r1++) {
@@ -1197,39 +1225,38 @@ void positionEstimatorModelClass::step()
       imvec[i] = rtDW.DataStoreReadX_j[i];
     }
 
-    for (r1 = 0; r1 < 4; r1++) {
-      for (i = 0; i < 6; i++) {
-        dHdx_2[r1 + (i << 2)] = 0.0;
-        for (k = 0; k < 6; k++) {
-          u = dHdx_2[(i << 2) + r1];
-          u += dHdx_0[(k << 2) + r1] * rtDW.P_f[6 * i + k];
-          dHdx_2[r1 + (i << 2)] = u;
+    for (i = 0; i < 4; i++) {
+      for (k = 0; k < 6; k++) {
+        dHdx_2[i + (k << 2)] = 0.0;
+        for (r1 = 0; r1 < 6; r1++) {
+          a22 = dHdx_2[(k << 2) + i];
+          a22 += dHdx_0[(r1 << 2) + i] * rtDW.P_f[6 * k + r1];
+          dHdx_2[i + (k << 2)] = a22;
         }
       }
 
-      Pyy[r1] = rtDW.TmpSignalConversionAtSFunctionI[r1] -
-        rtDW.DataStoreReadX_j[r1];
+      Pyy[i] = rtDW.TmpSignalConversionAtSFunctionI[i] - rtDW.DataStoreReadX_j[i];
     }
 
-    for (r1 = 0; r1 < 6; r1++) {
-      for (i = 0; i < 4; i++) {
-        tmp[r1 + 6 * i] = 0.0;
-        for (k = 0; k < 6; k++) {
-          u = tmp[6 * i + r1];
-          u += rtDW.P_f[6 * k + r1] * dHdx_0[(k << 2) + i];
-          tmp[r1 + 6 * i] = u;
+    for (i = 0; i < 6; i++) {
+      for (k = 0; k < 4; k++) {
+        tmp[i + 6 * k] = 0.0;
+        for (r1 = 0; r1 < 6; r1++) {
+          imvec_2 = tmp[6 * k + i];
+          imvec_2 += rtDW.P_f[6 * r1 + i] * dHdx_0[(r1 << 2) + k];
+          tmp[i + 6 * k] = imvec_2;
         }
       }
     }
 
-    for (r1 = 0; r1 < 4; r1++) {
-      for (i = 0; i < 4; i++) {
-        u = 0.0;
-        for (k = 0; k < 6; k++) {
-          u += dHdx_2[(k << 2) + r1] * dHdx_0[(k << 2) + i];
+    for (i = 0; i < 4; i++) {
+      for (k = 0; k < 4; k++) {
+        imvec_2 = 0.0;
+        for (r1 = 0; r1 < 6; r1++) {
+          imvec_2 += dHdx_2[(r1 << 2) + i] * dHdx_0[(r1 << 2) + k];
         }
 
-        dHdx_3[r1 + (i << 2)] = rtP.R2_Value[(i << 2) + r1] + u;
+        dHdx_3[i + (k << 2)] = rtP.R2_Value[(k << 2) + i] + imvec_2;
       }
     }
 
@@ -1238,39 +1265,39 @@ void positionEstimatorModelClass::step()
       rtDW.xNew_g[i] = imvec[i];
     }
 
-    // DataStoreWrite: '<S16>/Data Store WriteP'
+    // DataStoreWrite: '<S17>/Data Store WriteP'
     for (i = 0; i < 36; i++) {
       rtDW.P_n_c[i] = rtDW.P_f[i];
     }
 
-    // End of DataStoreWrite: '<S16>/Data Store WriteP'
+    // End of DataStoreWrite: '<S17>/Data Store WriteP'
 
-    // DataStoreWrite: '<S16>/Data Store WriteX'
+    // DataStoreWrite: '<S17>/Data Store WriteX'
     for (i = 0; i < 6; i++) {
       rtDW.x_p[i] = rtDW.xNew_g[i];
     }
 
-    // End of DataStoreWrite: '<S16>/Data Store WriteX'
+    // End of DataStoreWrite: '<S17>/Data Store WriteX'
   }
 
   // End of Outputs for SubSystem: '<S2>/Correct2'
 
   // Outputs for Atomic SubSystem: '<S2>/Output'
-  // DataStoreRead: '<S17>/Data Store Read'
+  // DataStoreRead: '<S18>/Data Store Read'
   for (i = 0; i < 6; i++) {
     rtDW.DataStoreRead[i] = rtDW.x_p[i];
   }
 
-  // End of DataStoreRead: '<S17>/Data Store Read'
+  // End of DataStoreRead: '<S18>/Data Store Read'
 
-  // DataStoreRead: '<S17>/Data Store Read1'
+  // DataStoreRead: '<S18>/Data Store Read1'
   for (i = 0; i < 36; i++) {
     rtDW.DataStoreRead1[i] = rtDW.P_n_c[i];
   }
 
-  // End of DataStoreRead: '<S17>/Data Store Read1'
+  // End of DataStoreRead: '<S18>/Data Store Read1'
 
-  // Inport: '<S17>/uBlockOrdering'
+  // Inport: '<S18>/uBlockOrdering'
   rtDW.uBlockOrdering = rtDW.blockOrdering;
 
   // End of Outputs for SubSystem: '<S2>/Output'
@@ -1291,13 +1318,13 @@ void positionEstimatorModelClass::step()
 
   rtDW.NED_convert = rtP.NED_convert_Gain * rtU.baroZ;
 
-  // Sum: '<S22>/Sum' incorporates:
+  // Sum: '<S46>/Sum' incorporates:
   //   Inport: '<Root>/HOME_lla'
   //   Inport: '<Root>/alt'
 
   rtDW.alt = rtU.alt + rtU.HOME_lla[2];
 
-  // UnaryMinus: '<S22>/Ze2height'
+  // UnaryMinus: '<S46>/Ze2height'
   rtDW.Pz = -rtDW.alt;
 
   // DataTypeConversion: '<S1>/DataTypeConversion_Enable1' incorporates:
@@ -1306,30 +1333,30 @@ void positionEstimatorModelClass::step()
   rtDW.DataTypeConversion_Enable1_a = (rtU.AhrsFlag != 0.0);
 
   // Outputs for Enabled SubSystem: '<S1>/Correct1' incorporates:
-  //   EnablePort: '<S4>/Enable'
+  //   EnablePort: '<S5>/Enable'
 
   if (rtDW.DataTypeConversion_Enable1_a) {
-    // DataStoreRead: '<S4>/Data Store ReadX'
+    // DataStoreRead: '<S5>/Data Store ReadX'
     rtDW.DataStoreReadX_o[0] = rtDW.x[0];
     rtDW.DataStoreReadX_o[1] = rtDW.x[1];
     rtDW.DataStoreReadX_o[2] = rtDW.x[2];
 
-    // MATLAB Function: '<S4>/Correct' incorporates:
+    // MATLAB Function: '<S5>/Correct' incorporates:
     //   Constant: '<S1>/BlockOrdering'
 
     rtDW.blockOrdering_k = rtP.BlockOrdering_Value_b;
     blockOrdering = rtDW.blockOrdering_k;
     rtDW.blockOrdering_k = blockOrdering;
     for (i = 0; i < 9; i++) {
-      // DataStoreRead: '<S4>/Data Store ReadP'
+      // DataStoreRead: '<S5>/Data Store ReadP'
       rtDW.P_g[i] = rtDW.P_i_m[i];
 
-      // MATLAB Function: '<S4>/Correct'
-      u = rtDW.P_g[i];
-      rtDW.P_g[i] = u;
+      // MATLAB Function: '<S5>/Correct'
+      a22 = rtDW.P_g[i];
+      rtDW.P_g[i] = a22;
     }
 
-    // MATLAB Function: '<S4>/Correct' incorporates:
+    // MATLAB Function: '<S5>/Correct' incorporates:
     //   Constant: '<S1>/R1'
     //   Inport: '<Root>/az'
 
@@ -1344,49 +1371,49 @@ void positionEstimatorModelClass::step()
       dHdx_1[r1] = (imvec_0[2] - rtDW.DataStoreReadX_o[2]) / epsilon;
     }
 
-    u = 0.0;
-    for (r1 = 0; r1 < 3; r1++) {
-      a22 = rtDW.P_g[3 * r1] * dHdx_1[0];
-      a22 += rtDW.P_g[3 * r1 + 1] * dHdx_1[1];
-      a22 += rtDW.P_g[3 * r1 + 2] * dHdx_1[2];
-      u += a22 * dHdx_1[r1];
+    a22 = 0.0;
+    for (i = 0; i < 3; i++) {
+      epsilon = rtDW.P_g[3 * i] * dHdx_1[0];
+      epsilon += rtDW.P_g[3 * i + 1] * dHdx_1[1];
+      epsilon += rtDW.P_g[3 * i + 2] * dHdx_1[2];
+      a22 += epsilon * dHdx_1[i];
     }
 
-    epsilon = u + rtP.R1_Value_j;
+    epsilon = a22 + rtP.R1_Value_j;
     a22 = rtU.az - rtDW.DataStoreReadX_o[2];
     for (i = 0; i < 3; i++) {
-      u = rtDW.P_g[i] * dHdx_1[0];
-      u += rtDW.P_g[i + 3] * dHdx_1[1];
-      u += rtDW.P_g[i + 6] * dHdx_1[2];
-      u /= epsilon;
-      rtDW.xNew_o[i] = u * a22 + rtDW.DataStoreReadX_o[i];
-      imvec_0[i] = u;
+      imvec_2 = rtDW.P_g[i] * dHdx_1[0];
+      imvec_2 += rtDW.P_g[i + 3] * dHdx_1[1];
+      imvec_2 += rtDW.P_g[i + 6] * dHdx_1[2];
+      imvec_2 /= epsilon;
+      rtDW.xNew_o[i] = imvec_2 * a22 + rtDW.DataStoreReadX_o[i];
+      imvec_0[i] = imvec_2;
     }
 
-    for (r1 = 0; r1 < 3; r1++) {
-      u = dHdx_1[r1];
-      imvec_1[3 * r1] = imvec_0[0] * u;
-      imvec_1[3 * r1 + 1] = imvec_0[1] * u;
-      imvec_1[3 * r1 + 2] = imvec_0[2] * u;
+    for (i = 0; i < 3; i++) {
+      a22 = dHdx_1[i];
+      imvec_1[3 * i] = imvec_0[0] * a22;
+      imvec_1[3 * i + 1] = imvec_0[1] * a22;
+      imvec_1[3 * i + 2] = imvec_0[2] * a22;
     }
 
-    for (r1 = 0; r1 < 3; r1++) {
-      for (i = 0; i < 3; i++) {
-        u = rtDW.P_g[3 * r1] * imvec_1[i];
-        u += rtDW.P_g[3 * r1 + 1] * imvec_1[i + 3];
-        u += rtDW.P_g[3 * r1 + 2] * imvec_1[i + 6];
-        a[i + 3 * r1] = rtDW.P_g[3 * r1 + i] - u;
+    for (i = 0; i < 3; i++) {
+      for (k = 0; k < 3; k++) {
+        imvec_2 = rtDW.P_g[3 * i] * imvec_1[k];
+        imvec_2 += rtDW.P_g[3 * i + 1] * imvec_1[k + 3];
+        imvec_2 += rtDW.P_g[3 * i + 2] * imvec_1[k + 6];
+        a[k + 3 * i] = rtDW.P_g[3 * i + k] - imvec_2;
       }
     }
 
     for (i = 0; i < 9; i++) {
       rtDW.P_g[i] = a[i];
 
-      // DataStoreWrite: '<S4>/Data Store WriteP'
+      // DataStoreWrite: '<S5>/Data Store WriteP'
       rtDW.P_i_m[i] = rtDW.P_g[i];
     }
 
-    // DataStoreWrite: '<S4>/Data Store WriteX'
+    // DataStoreWrite: '<S5>/Data Store WriteX'
     rtDW.x[0] = rtDW.xNew_o[0];
     rtDW.x[1] = rtDW.xNew_o[1];
     rtDW.x[2] = rtDW.xNew_o[2];
@@ -1407,30 +1434,30 @@ void positionEstimatorModelClass::step()
   rtDW.DataTypeConversion_Enable3 = (rtU.BaroFlag != 0.0);
 
   // Outputs for Enabled SubSystem: '<S1>/Correct3' incorporates:
-  //   EnablePort: '<S6>/Enable'
+  //   EnablePort: '<S7>/Enable'
 
   if (rtDW.DataTypeConversion_Enable3) {
-    // DataStoreRead: '<S6>/Data Store ReadX'
+    // DataStoreRead: '<S7>/Data Store ReadX'
     rtDW.DataStoreReadX_i[0] = rtDW.x[0];
     rtDW.DataStoreReadX_i[1] = rtDW.x[1];
     rtDW.DataStoreReadX_i[2] = rtDW.x[2];
 
-    // DataStoreRead: '<S6>/Data Store ReadP'
+    // DataStoreRead: '<S7>/Data Store ReadP'
     for (i = 0; i < 9; i++) {
       rtDW.P_a[i] = rtDW.P_i_m[i];
     }
 
-    // End of DataStoreRead: '<S6>/Data Store ReadP'
+    // End of DataStoreRead: '<S7>/Data Store ReadP'
 
-    // MATLAB Function: '<S6>/Correct' incorporates:
+    // MATLAB Function: '<S7>/Correct' incorporates:
     //   Constant: '<S1>/R3'
 
     rtDW.blockOrdering_p = rtDW.Correct2_a.blockOrdering;
     blockOrdering = rtDW.blockOrdering_p;
     rtDW.blockOrdering_p = blockOrdering;
-    for (r1 = 0; r1 < 9; r1++) {
-      u = rtDW.P_a[r1];
-      rtDW.P_a[r1] = u;
+    for (i = 0; i < 9; i++) {
+      a22 = rtDW.P_a[i];
+      rtDW.P_a[i] = a22;
     }
 
     for (r1 = 0; r1 < 3; r1++) {
@@ -1444,51 +1471,51 @@ void positionEstimatorModelClass::step()
       dHdx_1[r1] = (imvec_0[0] - rtDW.DataStoreReadX_i[0]) / epsilon;
     }
 
-    u = 0.0;
-    for (r1 = 0; r1 < 3; r1++) {
-      a22 = rtDW.P_a[3 * r1] * dHdx_1[0];
-      a22 += rtDW.P_a[3 * r1 + 1] * dHdx_1[1];
-      a22 += rtDW.P_a[3 * r1 + 2] * dHdx_1[2];
-      u += a22 * dHdx_1[r1];
+    a22 = 0.0;
+    for (i = 0; i < 3; i++) {
+      epsilon = rtDW.P_a[3 * i] * dHdx_1[0];
+      epsilon += rtDW.P_a[3 * i + 1] * dHdx_1[1];
+      epsilon += rtDW.P_a[3 * i + 2] * dHdx_1[2];
+      a22 += epsilon * dHdx_1[i];
     }
 
-    epsilon = u + rtP.R3_Value;
+    epsilon = a22 + rtP.R3_Value;
     a22 = rtDW.NED_convert - rtDW.DataStoreReadX_i[0];
     for (i = 0; i < 3; i++) {
-      u = rtDW.P_a[i] * dHdx_1[0];
-      u += rtDW.P_a[i + 3] * dHdx_1[1];
-      u += rtDW.P_a[i + 6] * dHdx_1[2];
-      u /= epsilon;
-      rtDW.xNew_p[i] = u * a22 + rtDW.DataStoreReadX_i[i];
-      imvec_0[i] = u;
+      imvec_2 = rtDW.P_a[i] * dHdx_1[0];
+      imvec_2 += rtDW.P_a[i + 3] * dHdx_1[1];
+      imvec_2 += rtDW.P_a[i + 6] * dHdx_1[2];
+      imvec_2 /= epsilon;
+      rtDW.xNew_p[i] = imvec_2 * a22 + rtDW.DataStoreReadX_i[i];
+      imvec_0[i] = imvec_2;
     }
 
-    for (r1 = 0; r1 < 3; r1++) {
-      u = dHdx_1[r1];
-      imvec_1[3 * r1] = imvec_0[0] * u;
-      imvec_1[3 * r1 + 1] = imvec_0[1] * u;
-      imvec_1[3 * r1 + 2] = imvec_0[2] * u;
+    for (i = 0; i < 3; i++) {
+      a22 = dHdx_1[i];
+      imvec_1[3 * i] = imvec_0[0] * a22;
+      imvec_1[3 * i + 1] = imvec_0[1] * a22;
+      imvec_1[3 * i + 2] = imvec_0[2] * a22;
     }
 
-    for (r1 = 0; r1 < 3; r1++) {
-      for (i = 0; i < 3; i++) {
-        u = rtDW.P_a[3 * r1] * imvec_1[i];
-        u += rtDW.P_a[3 * r1 + 1] * imvec_1[i + 3];
-        u += rtDW.P_a[3 * r1 + 2] * imvec_1[i + 6];
-        a[i + 3 * r1] = rtDW.P_a[3 * r1 + i] - u;
+    for (i = 0; i < 3; i++) {
+      for (k = 0; k < 3; k++) {
+        imvec_2 = rtDW.P_a[3 * i] * imvec_1[k];
+        imvec_2 += rtDW.P_a[3 * i + 1] * imvec_1[k + 3];
+        imvec_2 += rtDW.P_a[3 * i + 2] * imvec_1[k + 6];
+        a[k + 3 * i] = rtDW.P_a[3 * i + k] - imvec_2;
       }
     }
 
     for (i = 0; i < 9; i++) {
       rtDW.P_a[i] = a[i];
 
-      // DataStoreWrite: '<S6>/Data Store WriteP'
+      // DataStoreWrite: '<S7>/Data Store WriteP'
       rtDW.P_i_m[i] = rtDW.P_a[i];
     }
 
-    // End of MATLAB Function: '<S6>/Correct'
+    // End of MATLAB Function: '<S7>/Correct'
 
-    // DataStoreWrite: '<S6>/Data Store WriteX'
+    // DataStoreWrite: '<S7>/Data Store WriteX'
     rtDW.x[0] = rtDW.xNew_p[0];
     rtDW.x[1] = rtDW.xNew_p[1];
     rtDW.x[2] = rtDW.xNew_p[2];
@@ -1509,19 +1536,19 @@ void positionEstimatorModelClass::step()
   // End of Outputs for SubSystem: '<S1>/Correct4'
 
   // Outputs for Atomic SubSystem: '<S1>/Output'
-  // DataStoreRead: '<S8>/Data Store Read'
+  // DataStoreRead: '<S9>/Data Store Read'
   rtDW.DataStoreRead_f[0] = rtDW.x[0];
   rtDW.DataStoreRead_f[1] = rtDW.x[1];
   rtDW.DataStoreRead_f[2] = rtDW.x[2];
 
-  // DataStoreRead: '<S8>/Data Store Read1'
+  // DataStoreRead: '<S9>/Data Store Read1'
   for (i = 0; i < 9; i++) {
     rtDW.DataStoreRead1_h[i] = rtDW.P_i_m[i];
   }
 
-  // End of DataStoreRead: '<S8>/Data Store Read1'
+  // End of DataStoreRead: '<S9>/Data Store Read1'
 
-  // Inport: '<S8>/uBlockOrdering'
+  // Inport: '<S9>/uBlockOrdering'
   rtDW.uBlockOrdering_b = rtDW.Correct4.blockOrdering;
 
   // End of Outputs for SubSystem: '<S1>/Output'
@@ -1547,63 +1574,412 @@ void positionEstimatorModelClass::step()
   // Outport: '<Root>/estiAZ'
   rtY.estiAZ = rtDW.DataStoreRead_f[2];
 
+  // UnitConversion: '<S41>/Unit Conversion' incorporates:
+  //   Constant: '<S3>/Constant'
+
+  // Unit Conversion - from: deg to: rad
+  // Expression: output = (0.0174533*input) + (0)
+  rtDW.UnitConversion_me = 0.017453292519943295 * rtP.Constant_Value_ay;
+
+  // Trigonometry: '<S26>/SinCos'
+  a22 = rtDW.UnitConversion_me;
+  epsilon = std::sin(a22);
+  a22 = std::cos(a22);
+  rtDW.SinCos_o1_f = epsilon;
+  rtDW.SinCos_o2_e = a22;
+
+  // Product: '<S26>/x*cos'
+  rtDW.xcos_p = rtDW.DataStoreRead[0] * rtDW.SinCos_o2_e;
+
+  // Product: '<S26>/y*sin'
+  rtDW.ysin_m = rtDW.DataStoreRead[1] * rtDW.SinCos_o1_f;
+
+  // Sum: '<S26>/Sum'
+  rtDW.Sum_g = rtDW.xcos_p - rtDW.ysin_m;
+
+  // Sum: '<S44>/Sum' incorporates:
+  //   Constant: '<S44>/Constant'
+  //   Constant: '<S44>/f'
+
+  rtDW.Sum_ah = rtP.f_Value_f - rtP.Constant_Value_d;
+
+  // Product: '<S45>/Product1'
+  rtDW.Product1_f = rtDW.Sum_ah * rtDW.Sum_ah;
+
+  // Sum: '<S45>/Sum1' incorporates:
+  //   Constant: '<S45>/Constant'
+
+  rtDW.Sum1_p = rtP.Constant_Value_j - rtDW.Product1_f;
+
+  // Sqrt: '<S45>/sqrt'
+  rtDW.sqrt_p = std::sqrt(rtDW.Sum1_p);
+
+  // Abs: '<S37>/Abs' incorporates:
+  //   Inport: '<Root>/HOME_lla'
+
+  rtDW.Abs_o = std::abs(rtU.HOME_lla[0]);
+
+  // RelationalOperator: '<S38>/Compare' incorporates:
+  //   Constant: '<S38>/Constant'
+
+  rtDW.Compare_cm = (rtDW.Abs_o > rtP.CompareToConstant_const_f);
+
+  // Switch: '<S37>/Switch' incorporates:
+  //   Inport: '<Root>/HOME_lla'
+
+  if (rtDW.Compare_cm) {
+    // Bias: '<S37>/Bias' incorporates:
+    //   Inport: '<Root>/HOME_lla'
+
+    rtDW.Bias_g = rtU.HOME_lla[0] + rtP.Bias_Bias_l;
+
+    // Math: '<S37>/Math Function1' incorporates:
+    //   Constant: '<S37>/Constant2'
+
+    rtDW.MathFunction1_b = rt_modd_snf(rtDW.Bias_g, rtP.Constant2_Value_c);
+
+    // Bias: '<S37>/Bias1'
+    rtDW.Bias1_f = rtDW.MathFunction1_b + rtP.Bias1_Bias_o;
+    rtDW.Switch_e = rtDW.Bias1_f;
+  } else {
+    rtDW.Switch_e = rtU.HOME_lla[0];
+  }
+
+  // End of Switch: '<S37>/Switch'
+
+  // Abs: '<S34>/Abs1'
+  rtDW.Abs1_c = std::abs(rtDW.Switch_e);
+
+  // RelationalOperator: '<S36>/Compare' incorporates:
+  //   Constant: '<S36>/Constant'
+
+  rtDW.Compare_a = (rtDW.Abs1_c > rtP.CompareToConstant_const_i);
+
+  // Switch: '<S34>/Switch' incorporates:
+  //   Constant: '<S25>/Constant'
+  //   Constant: '<S25>/Constant1'
+  //   Switch: '<S25>/Switch1'
+
+  if (rtDW.Compare_a) {
+    // Bias: '<S34>/Bias'
+    rtDW.Bias_et = rtDW.Abs1_c + rtP.Bias_Bias_o;
+
+    // Gain: '<S34>/Gain'
+    rtDW.Gain_f = rtP.Gain_Gain_o * rtDW.Bias_et;
+
+    // Bias: '<S34>/Bias1'
+    rtDW.Bias1_d = rtDW.Gain_f + rtP.Bias1_Bias_d;
+
+    // Signum: '<S34>/Sign1'
+    a22 = rtDW.Switch_e;
+    if (a22 < 0.0) {
+      rtDW.Sign1_j = -1.0;
+    } else if (a22 > 0.0) {
+      rtDW.Sign1_j = 1.0;
+    } else if (a22 == 0.0) {
+      rtDW.Sign1_j = 0.0;
+    } else {
+      rtDW.Sign1_j = (rtNaN);
+    }
+
+    // End of Signum: '<S34>/Sign1'
+
+    // Product: '<S34>/Divide1'
+    rtDW.Divide1_o = rtDW.Sign1_j * rtDW.Bias1_d;
+    rtDW.Switch_i = rtDW.Divide1_o;
+    rtDW.Switch1_l = rtP.Constant_Value_l;
+  } else {
+    rtDW.Switch_i = rtDW.Switch_e;
+    rtDW.Switch1_l = rtP.Constant1_Value_f;
+  }
+
+  // End of Switch: '<S34>/Switch'
+
+  // UnitConversion: '<S42>/Unit Conversion'
+  // Unit Conversion - from: deg to: rad
+  // Expression: output = (0.0174533*input) + (0)
+  rtDW.UnitConversion_a = 0.017453292519943295 * rtDW.Switch_i;
+
+  // Trigonometry: '<S43>/Trigonometric Function1'
+  rtDW.TrigonometricFunction1_b = std::sin(rtDW.UnitConversion_a);
+
+  // Product: '<S43>/Product1'
+  rtDW.Product1_k = rtDW.sqrt_p * rtDW.sqrt_p * rtDW.TrigonometricFunction1_b *
+    rtDW.TrigonometricFunction1_b;
+
+  // Sum: '<S43>/Sum1' incorporates:
+  //   Constant: '<S43>/Constant'
+
+  rtDW.Sum1_l = rtP.Constant_Value_g - rtDW.Product1_k;
+
+  // Sqrt: '<S40>/sqrt'
+  rtDW.sqrt_f = std::sqrt(rtDW.Sum1_l);
+
+  // Product: '<S40>/Product1' incorporates:
+  //   Constant: '<S40>/Constant1'
+
+  rtDW.Rn_n = rtP.Constant1_Value_l / rtDW.sqrt_f;
+
+  // Product: '<S40>/Product2'
+  rtDW.Product2_c = rtDW.sqrt_p * rtDW.sqrt_p;
+
+  // Sum: '<S40>/Sum1' incorporates:
+  //   Constant: '<S40>/Constant'
+
+  rtDW.Sum1_l4 = rtP.Constant_Value_g2 - rtDW.Product2_c;
+
+  // Product: '<S40>/Product3'
+  rtDW.Rm_o = rtDW.Rn_n * rtDW.Sum1_l4 / rtDW.Sum1_l;
+
+  // Trigonometry: '<S40>/Trigonometric Function1' incorporates:
+  //   Constant: '<S40>/Constant2'
+
+  rtDW.TrigonometricFunction1_p = rt_atan2d_snf(rtP.Constant2_Value_l, rtDW.Rm_o);
+
+  // Product: '<S26>/rad lat'
+  rtDW.radlat = rtDW.Sum_g * rtDW.TrigonometricFunction1_p;
+
+  // Trigonometry: '<S40>/Trigonometric Function'
+  rtDW.TrigonometricFunction_f = std::cos(rtDW.UnitConversion_a);
+
+  // Product: '<S40>/Product4'
+  rtDW.Product4_n = rtDW.Rn_n * rtDW.TrigonometricFunction_f;
+
+  // Trigonometry: '<S40>/Trigonometric Function2' incorporates:
+  //   Constant: '<S40>/Constant3'
+
+  rtDW.TrigonometricFunction2_d = rt_atan2d_snf(rtP.Constant3_Value_l,
+    rtDW.Product4_n);
+
+  // Product: '<S26>/x*sin'
+  rtDW.xsin_n = rtDW.DataStoreRead[0] * rtDW.SinCos_o1_f;
+
+  // Product: '<S26>/y*cos'
+  rtDW.ycos_k = rtDW.DataStoreRead[1] * rtDW.SinCos_o2_e;
+
+  // Sum: '<S26>/Sum1'
+  rtDW.Sum1_a = rtDW.xsin_n + rtDW.ycos_k;
+
+  // Product: '<S26>/rad long '
+  rtDW.radlong = rtDW.TrigonometricFunction2_d * rtDW.Sum1_a;
+
+  // UnitConversion: '<S27>/Unit Conversion'
+  // Unit Conversion - from: rad to: deg
+  // Expression: output = (57.2958*input) + (0)
+  rtDW.UnitConversion_h[0] = 57.295779513082323 * rtDW.radlat;
+  rtDW.UnitConversion_h[1] = 57.295779513082323 * rtDW.radlong;
+
+  // Sum: '<S25>/Sum' incorporates:
+  //   Inport: '<Root>/HOME_lla'
+
+  rtDW.Sum_c = rtDW.Switch1_l + rtU.HOME_lla[1];
+
+  // Abs: '<S35>/Abs'
+  rtDW.Abs_c = std::abs(rtDW.Sum_c);
+
+  // RelationalOperator: '<S39>/Compare' incorporates:
+  //   Constant: '<S39>/Constant'
+
+  rtDW.Compare_a0 = (rtDW.Abs_c > rtP.CompareToConstant_const_l);
+
+  // Switch: '<S35>/Switch'
+  if (rtDW.Compare_a0) {
+    // Bias: '<S35>/Bias'
+    rtDW.Bias_i = rtDW.Sum_c + rtP.Bias_Bias_p;
+
+    // Math: '<S35>/Math Function1' incorporates:
+    //   Constant: '<S35>/Constant2'
+
+    rtDW.MathFunction1_p = rt_modd_snf(rtDW.Bias_i, rtP.Constant2_Value_k);
+
+    // Bias: '<S35>/Bias1'
+    rtDW.Bias1_ny = rtDW.MathFunction1_p + rtP.Bias1_Bias_m;
+    rtDW.Switch_ed = rtDW.Bias1_ny;
+  } else {
+    rtDW.Switch_ed = rtDW.Sum_c;
+  }
+
+  // End of Switch: '<S35>/Switch'
+
+  // Sum: '<S23>/Sum'
+  rtDW.Sum_o[0] = rtDW.UnitConversion_h[0] + rtDW.Switch_i;
+  rtDW.Sum_o[1] = rtDW.UnitConversion_h[1] + rtDW.Switch_ed;
+
+  // Abs: '<S31>/Abs'
+  rtDW.Abs_d = std::abs(rtDW.Sum_o[0]);
+
+  // RelationalOperator: '<S32>/Compare' incorporates:
+  //   Constant: '<S32>/Constant'
+
+  rtDW.Compare_ko = (rtDW.Abs_d > rtP.CompareToConstant_const_em);
+
+  // Switch: '<S31>/Switch'
+  if (rtDW.Compare_ko) {
+    // Bias: '<S31>/Bias'
+    rtDW.Bias_f = rtDW.Sum_o[0] + rtP.Bias_Bias_n;
+
+    // Math: '<S31>/Math Function1' incorporates:
+    //   Constant: '<S31>/Constant2'
+
+    rtDW.MathFunction1_l = rt_modd_snf(rtDW.Bias_f, rtP.Constant2_Value);
+
+    // Bias: '<S31>/Bias1'
+    rtDW.Bias1_a = rtDW.MathFunction1_l + rtP.Bias1_Bias_k;
+    rtDW.Switch_js = rtDW.Bias1_a;
+  } else {
+    rtDW.Switch_js = rtDW.Sum_o[0];
+  }
+
+  // End of Switch: '<S31>/Switch'
+
+  // Abs: '<S28>/Abs1'
+  rtDW.Abs1_n = std::abs(rtDW.Switch_js);
+
+  // RelationalOperator: '<S30>/Compare' incorporates:
+  //   Constant: '<S30>/Constant'
+
+  rtDW.Compare_j = (rtDW.Abs1_n > rtP.CompareToConstant_const_j3);
+
+  // Switch: '<S28>/Switch' incorporates:
+  //   Constant: '<S24>/Constant'
+  //   Constant: '<S24>/Constant1'
+  //   Switch: '<S24>/Switch1'
+
+  if (rtDW.Compare_j) {
+    // Bias: '<S28>/Bias'
+    rtDW.Bias_fd = rtDW.Abs1_n + rtP.Bias_Bias;
+
+    // Gain: '<S28>/Gain'
+    rtDW.Gain_m = rtP.Gain_Gain * rtDW.Bias_fd;
+
+    // Bias: '<S28>/Bias1'
+    rtDW.Bias1_i = rtDW.Gain_m + rtP.Bias1_Bias;
+
+    // Signum: '<S28>/Sign1'
+    a22 = rtDW.Switch_js;
+    if (a22 < 0.0) {
+      rtDW.Sign1_d = -1.0;
+    } else if (a22 > 0.0) {
+      rtDW.Sign1_d = 1.0;
+    } else if (a22 == 0.0) {
+      rtDW.Sign1_d = 0.0;
+    } else {
+      rtDW.Sign1_d = (rtNaN);
+    }
+
+    // End of Signum: '<S28>/Sign1'
+
+    // Product: '<S28>/Divide1'
+    rtDW.Divide1_og = rtDW.Sign1_d * rtDW.Bias1_i;
+    rtDW.Switch_l = rtDW.Divide1_og;
+    rtDW.Switch1_m = rtP.Constant_Value;
+  } else {
+    rtDW.Switch_l = rtDW.Switch_js;
+    rtDW.Switch1_m = rtP.Constant1_Value;
+  }
+
+  // End of Switch: '<S28>/Switch'
+
+  // Sum: '<S24>/Sum'
+  rtDW.Sum_ad = rtDW.Switch1_m + rtDW.Sum_o[1];
+
+  // Abs: '<S29>/Abs'
+  rtDW.Abs_b4 = std::abs(rtDW.Sum_ad);
+
+  // RelationalOperator: '<S33>/Compare' incorporates:
+  //   Constant: '<S33>/Constant'
+
+  rtDW.Compare_e = (rtDW.Abs_b4 > rtP.CompareToConstant_const_ik);
+
+  // Switch: '<S29>/Switch'
+  if (rtDW.Compare_e) {
+    // Bias: '<S29>/Bias'
+    rtDW.Bias_c = rtDW.Sum_ad + rtP.Bias_Bias_k;
+
+    // Math: '<S29>/Math Function1' incorporates:
+    //   Constant: '<S29>/Constant2'
+
+    rtDW.MathFunction1_ha = rt_modd_snf(rtDW.Bias_c, rtP.Constant2_Value_j);
+
+    // Bias: '<S29>/Bias1'
+    rtDW.Bias1_g = rtDW.MathFunction1_ha + rtP.Bias1_Bias_i;
+    rtDW.Switch_g = rtDW.Bias1_g;
+  } else {
+    rtDW.Switch_g = rtDW.Sum_ad;
+  }
+
+  // End of Switch: '<S29>/Switch'
+
+  // Outport: '<Root>/Estim_LatLon'
+  rtY.Estim_LatLon[0] = rtDW.Switch_l;
+  rtY.Estim_LatLon[1] = rtDW.Switch_g;
+
+  // UnaryMinus: '<S23>/Ze2height'
+  rtDW.alt_o = -rtDW.DataStoreRead_f[0];
+
+  // Outport: '<Root>/Estim_Alt' incorporates:
+  //   Inport: '<Root>/HOME_lla'
+  //   Sum: '<S23>/Sum1'
+
+  rtY.Estim_Alt = rtDW.alt_o - rtU.HOME_lla[2];
+
   // Outputs for Atomic SubSystem: '<S1>/Predict'
-  // DataStoreRead: '<S9>/Data Store ReadX'
+  // DataStoreRead: '<S10>/Data Store ReadX'
   rtDW.DataStoreReadX_g[0] = rtDW.x[0];
   rtDW.DataStoreReadX_g[1] = rtDW.x[1];
   rtDW.DataStoreReadX_g[2] = rtDW.x[2];
   for (i = 0; i < 9; i++) {
-    // DataStoreRead: '<S9>/Data Store ReadP'
+    // DataStoreRead: '<S10>/Data Store ReadP'
     rtDW.P_i[i] = rtDW.P_i_m[i];
 
-    // MATLAB Function: '<S9>/Predict'
-    u = rtDW.P_i[i];
-    rtDW.P_i[i] = u;
+    // MATLAB Function: '<S10>/Predict'
+    a22 = rtDW.P_i[i];
+    rtDW.P_i[i] = a22;
   }
 
-  // MATLAB Function: '<S9>/Predict' incorporates:
+  // MATLAB Function: '<S10>/Predict' incorporates:
   //   Constant: '<S1>/Q'
 
-  for (r1 = 0; r1 < 3; r1++) {
-    u = 0.0;
-    for (i = 0; i < 3; i++) {
-      u += a_1[3 * i + r1] * rtDW.DataStoreReadX_g[i];
-      imvec_1[r1 + 3 * i] = 0.0;
-      a22 = imvec_1[3 * i + r1];
-      a22 += rtDW.P_i[3 * i] * a_1[r1];
-      imvec_1[r1 + 3 * i] = a22;
-      a22 = imvec_1[3 * i + r1];
-      a22 += rtDW.P_i[3 * i + 1] * a_1[r1 + 3];
-      imvec_1[r1 + 3 * i] = a22;
-      a22 = imvec_1[3 * i + r1];
-      a22 += rtDW.P_i[3 * i + 2] * a_1[r1 + 6];
-      imvec_1[r1 + 3 * i] = a22;
+  for (i = 0; i < 3; i++) {
+    imvec_2 = 0.0;
+    for (k = 0; k < 3; k++) {
+      imvec_2 += a_1[3 * k + i] * rtDW.DataStoreReadX_g[k];
+      imvec_1[i + 3 * k] = 0.0;
+      a22 = imvec_1[3 * k + i];
+      a22 += rtDW.P_i[3 * k] * a_1[i];
+      imvec_1[i + 3 * k] = a22;
+      a22 = imvec_1[3 * k + i];
+      a22 += rtDW.P_i[3 * k + 1] * a_1[i + 3];
+      imvec_1[i + 3 * k] = a22;
+      a22 = imvec_1[3 * k + i];
+      a22 += rtDW.P_i[3 * k + 2] * a_1[i + 6];
+      imvec_1[i + 3 * k] = a22;
     }
 
-    rtDW.xNew_k[r1] = u;
-    for (i = 0; i < 3; i++) {
-      a[r1 + 3 * i] = 0.0;
-      a22 = a[3 * i + r1];
-      a22 += b[3 * i] * imvec_1[r1];
-      a[r1 + 3 * i] = a22;
-      a22 = a[3 * i + r1];
-      a22 += b[3 * i + 1] * imvec_1[r1 + 3];
-      a[r1 + 3 * i] = a22;
-      a22 = a[3 * i + r1];
-      a22 += b[3 * i + 2] * imvec_1[r1 + 6];
-      a[r1 + 3 * i] = a22;
-      b_a[i + 3 * r1] = b_a_1[i] * rtP.Q_Value * b_a_1[r1];
+    rtDW.xNew_k[i] = imvec_2;
+    for (k = 0; k < 3; k++) {
+      a[i + 3 * k] = 0.0;
+      a22 = a[3 * k + i];
+      a22 += b[3 * k] * imvec_1[i];
+      a[i + 3 * k] = a22;
+      a22 = a[3 * k + i];
+      a22 += b[3 * k + 1] * imvec_1[i + 3];
+      a[i + 3 * k] = a22;
+      a22 = a[3 * k + i];
+      a22 += b[3 * k + 2] * imvec_1[i + 6];
+      a[i + 3 * k] = a22;
+      b_a[k + 3 * i] = b_a_0[k] * rtP.Q_Value * b_a_0[i];
     }
   }
 
   for (i = 0; i < 9; i++) {
     rtDW.P_i[i] = a[i] + b_a[i];
 
-    // DataStoreWrite: '<S9>/Data Store WriteP'
+    // DataStoreWrite: '<S10>/Data Store WriteP'
     rtDW.P_i_m[i] = rtDW.P_i[i];
   }
 
-  // DataStoreWrite: '<S9>/Data Store WriteX'
+  // DataStoreWrite: '<S10>/Data Store WriteX'
   rtDW.x[0] = rtDW.xNew_k[0];
   rtDW.x[1] = rtDW.xNew_k[1];
   rtDW.x[2] = rtDW.xNew_k[2];
@@ -1611,62 +1987,61 @@ void positionEstimatorModelClass::step()
   // End of Outputs for SubSystem: '<S1>/Predict'
 
   // Outputs for Atomic SubSystem: '<S2>/Predict'
-  // DataStoreRead: '<S18>/Data Store ReadX'
+  // DataStoreRead: '<S19>/Data Store ReadX'
   for (i = 0; i < 6; i++) {
     rtDW.DataStoreReadX[i] = rtDW.x_p[i];
   }
 
-  // End of DataStoreRead: '<S18>/Data Store ReadX'
+  // End of DataStoreRead: '<S19>/Data Store ReadX'
   for (i = 0; i < 36; i++) {
-    // DataStoreRead: '<S18>/Data Store ReadP'
+    // DataStoreRead: '<S19>/Data Store ReadP'
     rtDW.P_n[i] = rtDW.P_n_c[i];
 
-    // MATLAB Function: '<S18>/Predict'
-    u = rtDW.P_n[i];
-    rtDW.P_n[i] = u;
+    // MATLAB Function: '<S19>/Predict'
+    a22 = rtDW.P_n[i];
+    rtDW.P_n[i] = a22;
   }
 
-  // MATLAB Function: '<S18>/Predict' incorporates:
+  // MATLAB Function: '<S19>/Predict' incorporates:
   //   Constant: '<S2>/Q'
 
-  for (r1 = 0; r1 < 6; r1++) {
-    u = 0.0;
-    for (i = 0; i < 6; i++) {
-      u += a_2[6 * i + r1] * rtDW.DataStoreReadX[i];
-      gain_0[r1 + 6 * i] = 0.0;
-      for (k = 0; k < 6; k++) {
-        a22 = gain_0[6 * i + r1];
-        a22 += a_2[6 * k + r1] * rtDW.P_n[6 * i + k];
-        gain_0[r1 + 6 * i] = a22;
+  for (i = 0; i < 6; i++) {
+    rtDW.xNew[i] = 0.0;
+    for (k = 0; k < 6; k++) {
+      rtDW.xNew[i] += a_2[6 * k + i] * rtDW.DataStoreReadX[k];
+      gain_0[i + 6 * k] = 0.0;
+      for (r1 = 0; r1 < 6; r1++) {
+        a22 = gain_0[6 * k + i];
+        a22 += a_2[6 * r1 + i] * rtDW.P_n[6 * k + r1];
+        gain_0[i + 6 * k] = a22;
       }
-    }
-
-    rtDW.xNew[r1] = u;
-    for (i = 0; i < 6; i++) {
-      a_0[r1 + 6 * i] = 0.0;
-      for (k = 0; k < 6; k++) {
-        a22 = a_0[6 * i + r1];
-        a22 += gain_0[6 * k + r1] * b_0[6 * i + k];
-        a_0[r1 + 6 * i] = a22;
-      }
-
-      b_a_0[i + 6 * r1] = b_a_2[i] * rtP.Q_Value_c * b_a_2[r1];
     }
   }
 
-  for (i = 0; i < 36; i++) {
-    rtDW.P_n[i] = a_0[i] + b_a_0[i];
+  for (i = 0; i < 6; i++) {
+    for (k = 0; k < 6; k++) {
+      imvec_2 = 0.0;
+      for (r1 = 0; r1 < 6; r1++) {
+        imvec_2 += gain_0[6 * r1 + k] * b_0[6 * i + r1];
+      }
 
-    // DataStoreWrite: '<S18>/Data Store WriteP'
+      rtDW.P_n[k + 6 * i] = rtP.Q_Value_c[6 * i + k] + imvec_2;
+    }
+  }
+
+  // DataStoreWrite: '<S19>/Data Store WriteP'
+  for (i = 0; i < 36; i++) {
     rtDW.P_n_c[i] = rtDW.P_n[i];
   }
 
-  // DataStoreWrite: '<S18>/Data Store WriteX'
+  // End of DataStoreWrite: '<S19>/Data Store WriteP'
+
+  // DataStoreWrite: '<S19>/Data Store WriteX'
   for (i = 0; i < 6; i++) {
     rtDW.x_p[i] = rtDW.xNew[i];
   }
 
-  // End of DataStoreWrite: '<S18>/Data Store WriteX'
+  // End of DataStoreWrite: '<S19>/Data Store WriteX'
   // End of Outputs for SubSystem: '<S2>/Predict'
 }
 
@@ -1708,19 +2083,19 @@ void positionEstimatorModelClass::initialize()
     // End of Start for DataStoreMemory: '<S2>/DataStoreMemory - x'
 
     // SystemInitialize for Enabled SubSystem: '<S2>/Correct1'
-    // SystemInitialize for Outport: '<S15>/yBlockOrdering'
+    // SystemInitialize for Outport: '<S16>/yBlockOrdering'
     rtDW.blockOrdering_f = rtP.yBlockOrdering_Y0_a;
 
     // End of SystemInitialize for SubSystem: '<S2>/Correct1'
 
     // SystemInitialize for Enabled SubSystem: '<S2>/Correct2'
-    // SystemInitialize for Outport: '<S16>/yBlockOrdering'
+    // SystemInitialize for Outport: '<S17>/yBlockOrdering'
     rtDW.blockOrdering = rtP.yBlockOrdering_Y0_g;
 
     // End of SystemInitialize for SubSystem: '<S2>/Correct2'
 
     // SystemInitialize for Enabled SubSystem: '<S1>/Correct1'
-    // SystemInitialize for Outport: '<S4>/yBlockOrdering'
+    // SystemInitialize for Outport: '<S5>/yBlockOrdering'
     rtDW.blockOrdering_k = rtP.yBlockOrdering_Y0;
 
     // End of SystemInitialize for SubSystem: '<S1>/Correct1'
@@ -1731,7 +2106,7 @@ void positionEstimatorModelClass::initialize()
     // End of SystemInitialize for SubSystem: '<S1>/Correct2'
 
     // SystemInitialize for Enabled SubSystem: '<S1>/Correct3'
-    // SystemInitialize for Outport: '<S6>/yBlockOrdering'
+    // SystemInitialize for Outport: '<S7>/yBlockOrdering'
     rtDW.blockOrdering_p = rtP.yBlockOrdering_Y0_b;
 
     // End of SystemInitialize for SubSystem: '<S1>/Correct3'

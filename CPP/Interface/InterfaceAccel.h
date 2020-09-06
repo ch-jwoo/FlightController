@@ -2,11 +2,6 @@
 #define __SENSORACCEL__H
 
 #include <MsgBus/MsgBus.h>
-#include <MsgBus/MsgType.h>
-#include <Utils/Constants.h>
-#include "main.h"
-#include "Usec.h"
-#include "Module/Estimator/ModuleAHRS.h"
 #include "Utils/Freq.h"
 
 namespace FC{
@@ -39,6 +34,9 @@ private:
     float averX;
     float averY;
     float averZ;
+
+//    float scale;
+//    float scaleFactor;
 
     bool calBiasFlag;
     uint8_t averageIndex;

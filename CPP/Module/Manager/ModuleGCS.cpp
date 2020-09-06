@@ -62,32 +62,6 @@ void ModuleGCS::periodicSendTask(void *instance){
 	}
 }
 
-//void ModuleGCS::heartbeatTask(void *instance){
-//	ModuleGCS *moduleGCS = (ModuleGCS*)instance;
-//	while(1){
-//		moduleGCS->sendHeartbeat();
-////		printf_("hb\r\n");
-//		osDelay(1000);
-//	}
-//}
-//
-//void ModuleGCS::attitudeTask(void *instance){
-//	ModuleGCS *moduleGCS = (ModuleGCS*)instance;
-//
-//	while(1){
-//		moduleGCS->sendAttitude();
-//		osDelay(50);
-//	}
-//}
-//
-//void ModuleGCS::globalPositionNedTask(void *instance){
-//	ModuleGCS *moduleGCS = (ModuleGCS*)instance;
-//	while(1){
-//		moduleGCS->sendGlobalPositionNED();
-//		osDelay(50);
-//	}
-//}
-
 void ModuleGCS::sendHeartbeat(uint8_t *txBuffer, mavlink_message_t *sendMsg){
 	uint16_t len;
 
@@ -277,40 +251,7 @@ void ModuleGCS::handle_mission_item_int(){
 //		mission_seq = 0;
 //		mission_count = 0;
 	}
-	/* request next waypoint */
-//	if(mission_seq != mission_count){
-//		for(uint8_t i=0; i<=mission_seq; i++){
-//			if(!(rcvFlag && (1<<i))){
-//				mavlink_msg_mission_request_int_pack(sysId, compId, &sendMsg, target_system, target_component, mission_seq+1, MAV_MISSION_TYPE_MISSION);
-//				uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
-//				ptelem->send(txBuffer, len);
-//			}
-//		}
-//	}
-//	/* mission receive complete */
-//	else{
-//		mavlink_msg_mission_ack_pack(sysId, compId, &sendMsg, target_system, target_component, MAV_MISSION_ACCEPTED, MAV_MISSION_TYPE_MISSION);
-//		uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
-//		ptelem->send(txBuffer, len);
-//		mission_seq = 0;
-//		mission_count = 0;
-//	}
 
-
-
-
-//	if(mission_seq != mission_count-1){
-//		mission_seq++;
-//		mavlink_msg_mission_request_int_pack(sysId, compId, &sendMsg, target_system, target_component, mission_seq, MAV_MISSION_TYPE_MISSION);
-//		uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
-//		ptelem->send(txBuffer, len);
-//	}
-//	else if(mission_seq == mission_count-1){
-//		mavlink_msg_mission_ack_pack(sysId, compId, &sendMsg, target_system, target_component, MAV_MISSION_ACCEPTED, MAV_MISSION_TYPE_MISSION);
-//		uint16_t len = mavlink_msg_to_send_buffer(txBuffer, &sendMsg);
-//		ptelem->send(txBuffer, len);
-//		mission_seq=0;
-//	}
 }
 void ModuleGCS::handle_mission_clear_all(){
 	mavlink_msg_mission_ack_pack(sysId, compId, &sendMsg, target_system, target_component, MAV_MISSION_ACCEPTED, MAV_MISSION_TYPE_MISSION);

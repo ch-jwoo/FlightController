@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionControl'.
 //
-// Model version                  : 1.10
+// Model version                  : 1.16
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Sun Aug 23 20:26:15 2020
+// C/C++ source code generated on : Fri Sep  4 20:36:03 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -20,68 +20,65 @@
 #include <MatlabPositionControl/positionControl_private.h>
 
 // Exported block parameters
-real_T Yaw_angleToRate_P = 0.04;       // Variable: Yaw_angleToRate_P
-                                          //  Referenced by: '<S1>/Gain'
-
-real_T ZvelMax = 1.0;                  // Variable: ZvelMax
-                                          //  Referenced by: '<S287>/Saturation'
-
-real_T hoverThr = 1500.0;              // Variable: hoverThr
+real_T hoverThr = 1600.0;              // Variable: hoverThr
                                           //  Referenced by: '<S1>/Constant'
 
-real_T pos_x_D = 0.1;                  // Variable: pos_x_D
+real_T pos_x_D = 0.0;                  // Variable: pos_x_D
                                           //  Referenced by: '<S34>/Derivative Gain'
 
 real_T pos_x_I = 0.0;                  // Variable: pos_x_I
                                           //  Referenced by: '<S37>/Integral Gain'
 
-real_T pos_x_P = 0.7;                  // Variable: pos_x_P
+real_T pos_x_P = 0.5;                  // Variable: pos_x_P
                                           //  Referenced by: '<S45>/Proportional Gain'
 
-real_T pos_x_vel_D = 0.11;             // Variable: pos_x_vel_D
+real_T pos_x_vel_D = 0.005;            // Variable: pos_x_vel_D
                                           //  Referenced by: '<S82>/Derivative Gain'
 
 real_T pos_x_vel_I = 0.0;              // Variable: pos_x_vel_I
                                           //  Referenced by: '<S85>/Integral Gain'
 
-real_T pos_x_vel_P = 0.17;             // Variable: pos_x_vel_P
+real_T pos_x_vel_P = 0.3;              // Variable: pos_x_vel_P
                                           //  Referenced by: '<S93>/Proportional Gain'
 
-real_T pos_y_D = 1.0;                  // Variable: pos_y_D
-                                          //  Referenced by: '<S178>/Derivative Gain'
+real_T pos_y_D = 0.0;                  // Variable: pos_y_D
+                                          //  Referenced by: '<S180>/Derivative Gain'
 
 real_T pos_y_I = 0.0;                  // Variable: pos_y_I
-                                          //  Referenced by: '<S181>/Integral Gain'
+                                          //  Referenced by: '<S183>/Integral Gain'
 
-real_T pos_y_P = 0.88;                 // Variable: pos_y_P
-                                          //  Referenced by: '<S189>/Proportional Gain'
+real_T pos_y_P = 0.5;                  // Variable: pos_y_P
+                                          //  Referenced by: '<S191>/Proportional Gain'
 
-real_T pos_y_vel_D = 0.11;             // Variable: pos_y_vel_D
-                                          //  Referenced by: '<S226>/Derivative Gain'
+real_T pos_y_vel_D = 0.005;            // Variable: pos_y_vel_D
+                                          //  Referenced by: '<S228>/Derivative Gain'
 
-real_T pos_y_vel_I = 0.3;              // Variable: pos_y_vel_I
-                                          //  Referenced by: '<S229>/Integral Gain'
+real_T pos_y_vel_I = 0.0;              // Variable: pos_y_vel_I
+                                          //  Referenced by: '<S231>/Integral Gain'
 
-real_T pos_y_vel_P = 0.17;             // Variable: pos_y_vel_P
-                                          //  Referenced by: '<S237>/Proportional Gain'
+real_T pos_y_vel_P = 0.3;              // Variable: pos_y_vel_P
+                                          //  Referenced by: '<S239>/Proportional Gain'
 
 real_T pos_z_D = 0.0;                  // Variable: pos_z_D
-                                          //  Referenced by: '<S274>/Derivative Gain'
+                                          //  Referenced by: '<S276>/Derivative Gain'
 
 real_T pos_z_I = 0.0;                  // Variable: pos_z_I
-                                          //  Referenced by: '<S277>/Integral Gain'
+                                          //  Referenced by: '<S279>/Integral Gain'
 
-real_T pos_z_P = 0.5;                  // Variable: pos_z_P
-                                          //  Referenced by: '<S285>/Proportional Gain'
+real_T pos_z_P = 0.8;                  // Variable: pos_z_P
+                                          //  Referenced by: '<S287>/Proportional Gain'
 
-real_T pos_z_vel_D = 0.001;            // Variable: pos_z_vel_D
+real_T pos_z_vel_D = 0.01;             // Variable: pos_z_vel_D
                                           //  Referenced by: '<S130>/Derivative Gain'
 
-real_T pos_z_vel_I = 0.0;              // Variable: pos_z_vel_I
-                                          //  Referenced by: '<S133>/Integral Gain'
+real_T pos_z_vel_I = 0.1;              // Variable: pos_z_vel_I
+                                          //  Referenced by: '<S135>/Integral Gain'
 
-real_T pos_z_vel_P = 0.5;              // Variable: pos_z_vel_P
-                                          //  Referenced by: '<S141>/Proportional Gain'
+real_T pos_z_vel_P = 0.2;              // Variable: pos_z_vel_P
+                                          //  Referenced by: '<S143>/Proportional Gain'
+
+real32_T Yaw_angleToRate_P = 0.3F;     // Variable: Yaw_angleToRate_P
+                                          //  Referenced by: '<S1>/Gain'
 
 
 // Model step function
@@ -154,9 +151,9 @@ void positionControlModelClass::step()
     positionControl_B.Integrator) + positionControl_B.FilterCoefficient;
 
   // Saturate: '<S47>/Saturation'
+  cosOut = -positionControl_P.vel_Horizon_Max;
   sinOut = positionControl_B.Sum;
-  cosOut = positionControl_P.PIDController_LowerSaturationLi;
-  u2 = positionControl_P.PIDController_UpperSaturationLi;
+  u2 = positionControl_P.vel_Horizon_Max;
   if (sinOut > u2) {
     positionControl_B.Saturation = u2;
   } else if (sinOut < cosOut) {
@@ -174,34 +171,34 @@ void positionControlModelClass::step()
   positionControl_B.y_error = positionControl_U.set_y -
     positionControl_U.estim_y;
 
-  // Gain: '<S189>/Proportional Gain'
+  // Gain: '<S191>/Proportional Gain'
   positionControl_B.ProportionalGain_p = pos_y_P * positionControl_B.y_error;
 
-  // DiscreteIntegrator: '<S184>/Integrator'
+  // DiscreteIntegrator: '<S186>/Integrator'
   positionControl_B.Integrator_f = positionControl_DW.Integrator_DSTATE_k;
 
-  // Gain: '<S178>/Derivative Gain'
+  // Gain: '<S180>/Derivative Gain'
   positionControl_B.DerivativeGain_n = pos_y_D * positionControl_B.y_error;
 
-  // DiscreteIntegrator: '<S179>/Filter'
+  // DiscreteIntegrator: '<S181>/Filter'
   positionControl_B.Filter_p = positionControl_DW.Filter_DSTATE_m;
 
-  // Sum: '<S179>/SumD'
+  // Sum: '<S181>/SumD'
   positionControl_B.SumD_k = positionControl_B.DerivativeGain_n -
     positionControl_B.Filter_p;
 
-  // Gain: '<S187>/Filter Coefficient'
+  // Gain: '<S189>/Filter Coefficient'
   positionControl_B.FilterCoefficient_n = positionControl_P.PIDController4_N *
     positionControl_B.SumD_k;
 
-  // Sum: '<S193>/Sum'
+  // Sum: '<S195>/Sum'
   positionControl_B.Sum_k = (positionControl_B.ProportionalGain_p +
     positionControl_B.Integrator_f) + positionControl_B.FilterCoefficient_n;
 
-  // Saturate: '<S191>/Saturation'
+  // Saturate: '<S193>/Saturation'
+  cosOut = -positionControl_P.vel_Horizon_Max;
   sinOut = positionControl_B.Sum_k;
-  cosOut = positionControl_P.PIDController4_LowerSaturationL;
-  u2 = positionControl_P.PIDController4_UpperSaturationL;
+  u2 = positionControl_P.vel_Horizon_Max;
   if (sinOut > u2) {
     positionControl_B.Saturation_o = u2;
   } else if (sinOut < cosOut) {
@@ -210,16 +207,16 @@ void positionControlModelClass::step()
     positionControl_B.Saturation_o = sinOut;
   }
 
-  // End of Saturate: '<S191>/Saturation'
+  // End of Saturate: '<S193>/Saturation'
 
   // Sum: '<S1>/Add1' incorporates:
   //   Inport: '<Root>/estim_dx'
   //   Inport: '<Root>/estim_dy'
 
-  positionControl_B.Add1[0] = positionControl_U.estim_dx -
-    positionControl_B.Saturation;
-  positionControl_B.Add1[1] = positionControl_U.estim_dy -
-    positionControl_B.Saturation_o;
+  positionControl_B.Add1[0] = positionControl_B.Saturation -
+    positionControl_U.estim_dx;
+  positionControl_B.Add1[1] = positionControl_B.Saturation_o -
+    positionControl_U.estim_dy;
 
   // Product: '<S1>/Matrix Multiply'
   cosOut = positionControl_B.MatrixConcatenate[0];
@@ -235,33 +232,33 @@ void positionControlModelClass::step()
   sinOut += tmp * tmp_1;
   positionControl_B.vel_error[1] = sinOut;
 
-  // Gain: '<S237>/Proportional Gain'
+  // Gain: '<S239>/Proportional Gain'
   positionControl_B.ProportionalGain_m = pos_y_vel_P *
     positionControl_B.vel_error[1];
 
-  // DiscreteIntegrator: '<S232>/Integrator'
+  // DiscreteIntegrator: '<S234>/Integrator'
   positionControl_B.Integrator_h = positionControl_DW.Integrator_DSTATE_f;
 
-  // Gain: '<S226>/Derivative Gain'
+  // Gain: '<S228>/Derivative Gain'
   positionControl_B.DerivativeGain_c = pos_y_vel_D *
     positionControl_B.vel_error[1];
 
-  // DiscreteIntegrator: '<S227>/Filter'
+  // DiscreteIntegrator: '<S229>/Filter'
   positionControl_B.Filter_g = positionControl_DW.Filter_DSTATE_j;
 
-  // Sum: '<S227>/SumD'
+  // Sum: '<S229>/SumD'
   positionControl_B.SumD_f = positionControl_B.DerivativeGain_c -
     positionControl_B.Filter_g;
 
-  // Gain: '<S235>/Filter Coefficient'
+  // Gain: '<S237>/Filter Coefficient'
   positionControl_B.FilterCoefficient_e = positionControl_P.PIDController5_N *
     positionControl_B.SumD_f;
 
-  // Sum: '<S241>/Sum'
+  // Sum: '<S243>/Sum'
   positionControl_B.Sum_m = (positionControl_B.ProportionalGain_m +
     positionControl_B.Integrator_h) + positionControl_B.FilterCoefficient_e;
 
-  // Saturate: '<S239>/Saturation'
+  // Saturate: '<S241>/Saturation'
   sinOut = positionControl_B.Sum_m;
   cosOut = positionControl_P.PIDController5_LowerSaturationL;
   u2 = positionControl_P.PIDController5_UpperSaturationL;
@@ -273,16 +270,13 @@ void positionControlModelClass::step()
     positionControl_B.Saturation_l = sinOut;
   }
 
-  // End of Saturate: '<S239>/Saturation'
-
-  // Gain: '<S1>/Gain1'
-  positionControl_B.Gain1 = positionControl_P.Gain1_Gain *
-    positionControl_B.Saturation_l;
+  // End of Saturate: '<S241>/Saturation'
 
   // Outport: '<Root>/des_roll' incorporates:
   //   DataTypeConversion: '<S1>/Data Type Conversion3'
 
-  positionControl_Y.des_roll = static_cast<real32_T>(positionControl_B.Gain1);
+  positionControl_Y.des_roll = static_cast<real32_T>
+    (positionControl_B.Saturation_l);
 
   // Gain: '<S93>/Proportional Gain'
   positionControl_B.ProportionalGain_h = pos_x_vel_P *
@@ -324,25 +318,26 @@ void positionControlModelClass::step()
 
   // End of Saturate: '<S95>/Saturation'
 
+  // Gain: '<S1>/Gain1'
+  positionControl_B.Gain1 = positionControl_P.Gain1_Gain *
+    positionControl_B.Saturation_j;
+
   // Outport: '<Root>/des_pitch' incorporates:
   //   DataTypeConversion: '<S1>/Data Type Conversion2'
 
-  positionControl_Y.des_pitch = static_cast<real32_T>
-    (positionControl_B.Saturation_j);
+  positionControl_Y.des_pitch = static_cast<real32_T>(positionControl_B.Gain1);
 
   // Sum: '<S1>/Sum' incorporates:
+  //   Inport: '<Root>/estim_yaw'
   //   Inport: '<Root>/set_yaw'
 
   positionControl_B.Sum_my = positionControl_U.set_yaw -
-    positionControl_B.DataTypeConversion;
-
-  // Gain: '<S1>/Gain'
-  positionControl_B.Gain = Yaw_angleToRate_P * positionControl_B.Sum_my;
+    positionControl_U.estim_yaw;
 
   // Outport: '<Root>/des_yaw_rate' incorporates:
-  //   DataTypeConversion: '<S1>/Data Type Conversion1'
+  //   Gain: '<S1>/Gain'
 
-  positionControl_Y.des_yaw_rate = static_cast<real32_T>(positionControl_B.Gain);
+  positionControl_Y.des_yaw_rate = Yaw_angleToRate_P * positionControl_B.Sum_my;
 
   // Sum: '<S1>/Add2' incorporates:
   //   Inport: '<Root>/estim_z'
@@ -355,34 +350,34 @@ void positionControlModelClass::step()
   positionControl_B.Gain2 = positionControl_P.Gain2_Gain *
     positionControl_B.alt_error;
 
-  // Gain: '<S285>/Proportional Gain'
+  // Gain: '<S287>/Proportional Gain'
   positionControl_B.ProportionalGain_j = pos_z_P * positionControl_B.Gain2;
 
-  // DiscreteIntegrator: '<S280>/Integrator'
+  // DiscreteIntegrator: '<S282>/Integrator'
   positionControl_B.Integrator_ca = positionControl_DW.Integrator_DSTATE_p;
 
-  // Gain: '<S274>/Derivative Gain'
+  // Gain: '<S276>/Derivative Gain'
   positionControl_B.DerivativeGain_f = pos_z_D * positionControl_B.Gain2;
 
-  // DiscreteIntegrator: '<S275>/Filter'
+  // DiscreteIntegrator: '<S277>/Filter'
   positionControl_B.Filter_gq = positionControl_DW.Filter_DSTATE_mo;
 
-  // Sum: '<S275>/SumD'
+  // Sum: '<S277>/SumD'
   positionControl_B.SumD_d = positionControl_B.DerivativeGain_f -
     positionControl_B.Filter_gq;
 
-  // Gain: '<S283>/Filter Coefficient'
+  // Gain: '<S285>/Filter Coefficient'
   positionControl_B.FilterCoefficient_j = positionControl_P.ZPostoVel_N *
     positionControl_B.SumD_d;
 
-  // Sum: '<S289>/Sum'
+  // Sum: '<S291>/Sum'
   positionControl_B.Sum_d = (positionControl_B.ProportionalGain_j +
     positionControl_B.Integrator_ca) + positionControl_B.FilterCoefficient_j;
 
-  // Saturate: '<S287>/Saturation'
-  cosOut = -ZvelMax;
+  // Saturate: '<S289>/Saturation'
+  cosOut = -positionControl_P.vel_descentMax;
   sinOut = positionControl_B.Sum_d;
-  u2 = ZvelMax;
+  u2 = positionControl_P.vel_climbMax;
   if (sinOut > u2) {
     positionControl_B.Saturation_jh = u2;
   } else if (sinOut < cosOut) {
@@ -391,40 +386,46 @@ void positionControlModelClass::step()
     positionControl_B.Saturation_jh = sinOut;
   }
 
-  // End of Saturate: '<S287>/Saturation'
+  // End of Saturate: '<S289>/Saturation'
 
-  // Gain: '<S1>/Gain3'
-  positionControl_B.Gain3 = 0.0;
+  // Gain: '<S1>/Gain3' incorporates:
+  //   Inport: '<Root>/estim_dz'
+
+  positionControl_B.Gain3 = positionControl_P.Gain3_Gain *
+    positionControl_U.estim_dz;
 
   // Sum: '<S1>/Add3'
   positionControl_B.Add3 = positionControl_B.Saturation_jh -
     positionControl_B.Gain3;
 
-  // Gain: '<S141>/Proportional Gain'
+  // Gain: '<S143>/Proportional Gain'
   positionControl_B.ProportionalGain_k = pos_z_vel_P * positionControl_B.Add3;
 
-  // DiscreteIntegrator: '<S136>/Integrator'
+  // DiscreteIntegrator: '<S138>/Integrator'
   positionControl_B.Integrator_p = positionControl_DW.Integrator_DSTATE_b;
 
   // Gain: '<S130>/Derivative Gain'
   positionControl_B.DerivativeGain_pu = pos_z_vel_D * positionControl_B.Add3;
 
-  // DiscreteIntegrator: '<S131>/Filter'
-  positionControl_B.Filter_m = positionControl_DW.Filter_DSTATE_e;
+  // SampleTimeMath: '<S133>/Tsamp'
+  //
+  //  About '<S133>/Tsamp':
+  //   y = u * K where K = 1 / ( w * Ts )
 
-  // Sum: '<S131>/SumD'
-  positionControl_B.SumD_b = positionControl_B.DerivativeGain_pu -
-    positionControl_B.Filter_m;
+  positionControl_B.Tsamp = positionControl_B.DerivativeGain_pu *
+    positionControl_P.Tsamp_WtEt;
 
-  // Gain: '<S139>/Filter Coefficient'
-  positionControl_B.FilterCoefficient_a = positionControl_P.PIDController3_N *
-    positionControl_B.SumD_b;
+  // Delay: '<S131>/UD'
+  positionControl_B.UD = positionControl_DW.UD_DSTATE;
 
-  // Sum: '<S145>/Sum'
+  // Sum: '<S131>/Diff'
+  positionControl_B.Diff = positionControl_B.Tsamp - positionControl_B.UD;
+
+  // Sum: '<S147>/Sum'
   positionControl_B.Sum_c = (positionControl_B.ProportionalGain_k +
-    positionControl_B.Integrator_p) + positionControl_B.FilterCoefficient_a;
+    positionControl_B.Integrator_p) + positionControl_B.Diff;
 
-  // Saturate: '<S143>/Saturation'
+  // Saturate: '<S145>/Saturation'
   sinOut = positionControl_B.Sum_c;
   cosOut = positionControl_P.PIDController3_LowerSaturationL;
   u2 = positionControl_P.PIDController3_UpperSaturationL;
@@ -436,7 +437,7 @@ void positionControlModelClass::step()
     positionControl_B.Saturation_li = sinOut;
   }
 
-  // End of Saturate: '<S143>/Saturation'
+  // End of Saturate: '<S145>/Saturation'
 
   // Sum: '<S1>/Sum1' incorporates:
   //   Constant: '<S1>/Constant'
@@ -444,10 +445,25 @@ void positionControlModelClass::step()
   cosOut = (hoverThr - 1000.0) / 1000.0;
   positionControl_B.Sum1 = positionControl_B.Saturation_li + cosOut;
 
+  // Saturate: '<S1>/Saturation'
+  sinOut = positionControl_B.Sum1;
+  cosOut = positionControl_P.Saturation_LowerSat;
+  u2 = positionControl_P.Saturation_UpperSat;
+  if (sinOut > u2) {
+    positionControl_B.Saturation_jb = u2;
+  } else if (sinOut < cosOut) {
+    positionControl_B.Saturation_jb = cosOut;
+  } else {
+    positionControl_B.Saturation_jb = sinOut;
+  }
+
+  // End of Saturate: '<S1>/Saturation'
+
   // Outport: '<Root>/des_Thrust' incorporates:
   //   DataTypeConversion: '<S1>/Data Type Conversion4'
 
-  positionControl_Y.des_Thrust = static_cast<real32_T>(positionControl_B.Sum1);
+  positionControl_Y.des_Thrust = static_cast<real32_T>
+    (positionControl_B.Saturation_jb);
 
   // Gain: '<S37>/Integral Gain'
   positionControl_B.IntegralGain = pos_x_I * positionControl_B.x_error;
@@ -467,21 +483,21 @@ void positionControlModelClass::step()
   positionControl_B.SumI4 = positionControl_B.Kb +
     positionControl_B.IntegralGain_k;
 
-  // Gain: '<S181>/Integral Gain'
+  // Gain: '<S183>/Integral Gain'
   positionControl_B.IntegralGain_o = pos_y_I * positionControl_B.y_error;
 
-  // Sum: '<S225>/SumI2'
+  // Sum: '<S227>/SumI2'
   positionControl_B.SumI2_n = positionControl_B.Saturation_l -
     positionControl_B.Sum_m;
 
-  // Gain: '<S225>/Kb'
+  // Gain: '<S227>/Kb'
   positionControl_B.Kb_e = positionControl_P.PIDController5_Kb *
     positionControl_B.SumI2_n;
 
-  // Gain: '<S229>/Integral Gain'
+  // Gain: '<S231>/Integral Gain'
   positionControl_B.IntegralGain_b = pos_y_vel_I * positionControl_B.vel_error[1];
 
-  // Sum: '<S225>/SumI4'
+  // Sum: '<S227>/SumI4'
   positionControl_B.SumI4_c = positionControl_B.Kb_e +
     positionControl_B.IntegralGain_b;
 
@@ -527,7 +543,7 @@ void positionControlModelClass::step()
     (static_cast<uint8_T>(-cosOut)))) : static_cast<int32_T>(static_cast<int8_T>
     (static_cast<uint8_T>(cosOut))));
 
-  // Gain: '<S133>/Integral Gain'
+  // Gain: '<S135>/Integral Gain'
   positionControl_B.IntegralGain_l = pos_z_vel_I * positionControl_B.Add3;
 
   // Signum: '<S129>/SignPreIntegrator'
@@ -568,8 +584,89 @@ void positionControlModelClass::step()
 
   // End of Switch: '<S129>/Switch'
 
-  // Gain: '<S277>/Integral Gain'
+  // Gain: '<S275>/ZeroGain'
+  positionControl_B.ZeroGain_a = positionControl_P.ZeroGain_Gain_b *
+    positionControl_B.Sum_d;
+
+  // DeadZone: '<S275>/DeadZone'
+  if (positionControl_B.Sum_d > positionControl_P.vel_climbMax) {
+    positionControl_B.DeadZone_b = positionControl_B.Sum_d -
+      positionControl_P.vel_climbMax;
+  } else {
+    cosOut = -positionControl_P.vel_descentMax;
+    if (positionControl_B.Sum_d >= cosOut) {
+      positionControl_B.DeadZone_b = 0.0;
+    } else {
+      cosOut = -positionControl_P.vel_descentMax;
+      positionControl_B.DeadZone_b = positionControl_B.Sum_d - cosOut;
+    }
+  }
+
+  // End of DeadZone: '<S275>/DeadZone'
+
+  // RelationalOperator: '<S275>/NotEqual'
+  positionControl_B.NotEqual_i = (positionControl_B.ZeroGain_a !=
+    positionControl_B.DeadZone_b);
+
+  // Signum: '<S275>/SignPreSat'
+  cosOut = positionControl_B.DeadZone_b;
+  if (cosOut < 0.0) {
+    positionControl_B.SignPreSat_i = -1.0;
+  } else if (cosOut > 0.0) {
+    positionControl_B.SignPreSat_i = 1.0;
+  } else {
+    positionControl_B.SignPreSat_i = cosOut;
+  }
+
+  // End of Signum: '<S275>/SignPreSat'
+
+  // DataTypeConversion: '<S275>/DataTypeConv1'
+  cosOut = std::fmod(std::floor(positionControl_B.SignPreSat_i), 256.0);
+  positionControl_B.DataTypeConv1_e = static_cast<int8_T>(cosOut < 0.0 ?
+    static_cast<int32_T>(static_cast<int8_T>(-static_cast<int8_T>
+    (static_cast<uint8_T>(-cosOut)))) : static_cast<int32_T>(static_cast<int8_T>
+    (static_cast<uint8_T>(cosOut))));
+
+  // Gain: '<S279>/Integral Gain'
   positionControl_B.IntegralGain_g = pos_z_I * positionControl_B.Gain2;
+
+  // Signum: '<S275>/SignPreIntegrator'
+  cosOut = positionControl_B.IntegralGain_g;
+  if (cosOut < 0.0) {
+    positionControl_B.SignPreIntegrator_h = -1.0;
+  } else if (cosOut > 0.0) {
+    positionControl_B.SignPreIntegrator_h = 1.0;
+  } else {
+    positionControl_B.SignPreIntegrator_h = cosOut;
+  }
+
+  // End of Signum: '<S275>/SignPreIntegrator'
+
+  // DataTypeConversion: '<S275>/DataTypeConv2'
+  cosOut = std::fmod(std::floor(positionControl_B.SignPreIntegrator_h), 256.0);
+  positionControl_B.DataTypeConv2_m = static_cast<int8_T>(cosOut < 0.0 ?
+    static_cast<int32_T>(static_cast<int8_T>(-static_cast<int8_T>
+    (static_cast<uint8_T>(-cosOut)))) : static_cast<int32_T>(static_cast<int8_T>
+    (static_cast<uint8_T>(cosOut))));
+
+  // RelationalOperator: '<S275>/Equal1'
+  positionControl_B.Equal1_l = (positionControl_B.DataTypeConv1_e ==
+    positionControl_B.DataTypeConv2_m);
+
+  // Logic: '<S275>/AND3'
+  positionControl_B.AND3_m = (positionControl_B.NotEqual_i &&
+    positionControl_B.Equal1_l);
+
+  // Switch: '<S275>/Switch' incorporates:
+  //   Constant: '<S275>/Constant1'
+
+  if (positionControl_B.AND3_m) {
+    positionControl_B.Switch_h = positionControl_P.Constant1_Value_k;
+  } else {
+    positionControl_B.Switch_h = positionControl_B.IntegralGain_g;
+  }
+
+  // End of Switch: '<S275>/Switch'
 
   // Update for DiscreteIntegrator: '<S40>/Integrator'
   positionControl_DW.Integrator_DSTATE += positionControl_P.Integrator_gainval *
@@ -579,19 +676,19 @@ void positionControlModelClass::step()
   positionControl_DW.Filter_DSTATE += positionControl_P.Filter_gainval *
     positionControl_B.FilterCoefficient;
 
-  // Update for DiscreteIntegrator: '<S184>/Integrator'
+  // Update for DiscreteIntegrator: '<S186>/Integrator'
   positionControl_DW.Integrator_DSTATE_k +=
     positionControl_P.Integrator_gainval_l * positionControl_B.IntegralGain_o;
 
-  // Update for DiscreteIntegrator: '<S179>/Filter'
+  // Update for DiscreteIntegrator: '<S181>/Filter'
   positionControl_DW.Filter_DSTATE_m += positionControl_P.Filter_gainval_l *
     positionControl_B.FilterCoefficient_n;
 
-  // Update for DiscreteIntegrator: '<S232>/Integrator'
+  // Update for DiscreteIntegrator: '<S234>/Integrator'
   positionControl_DW.Integrator_DSTATE_f +=
     positionControl_P.Integrator_gainval_k * positionControl_B.SumI4_c;
 
-  // Update for DiscreteIntegrator: '<S227>/Filter'
+  // Update for DiscreteIntegrator: '<S229>/Filter'
   positionControl_DW.Filter_DSTATE_j += positionControl_P.Filter_gainval_i *
     positionControl_B.FilterCoefficient_e;
 
@@ -603,21 +700,20 @@ void positionControlModelClass::step()
   positionControl_DW.Filter_DSTATE_d += positionControl_P.Filter_gainval_l5 *
     positionControl_B.FilterCoefficient_f;
 
-  // Update for DiscreteIntegrator: '<S280>/Integrator'
+  // Update for DiscreteIntegrator: '<S282>/Integrator'
   positionControl_DW.Integrator_DSTATE_p +=
-    positionControl_P.Integrator_gainval_j * positionControl_B.IntegralGain_g;
+    positionControl_P.Integrator_gainval_j * positionControl_B.Switch_h;
 
-  // Update for DiscreteIntegrator: '<S275>/Filter'
+  // Update for DiscreteIntegrator: '<S277>/Filter'
   positionControl_DW.Filter_DSTATE_mo += positionControl_P.Filter_gainval_c *
     positionControl_B.FilterCoefficient_j;
 
-  // Update for DiscreteIntegrator: '<S136>/Integrator'
+  // Update for DiscreteIntegrator: '<S138>/Integrator'
   positionControl_DW.Integrator_DSTATE_b +=
     positionControl_P.Integrator_gainval_a * positionControl_B.Switch;
 
-  // Update for DiscreteIntegrator: '<S131>/Filter'
-  positionControl_DW.Filter_DSTATE_e += positionControl_P.Filter_gainval_g *
-    positionControl_B.FilterCoefficient_a;
+  // Update for Delay: '<S131>/UD'
+  positionControl_DW.UD_DSTATE = positionControl_B.Tsamp;
 }
 
 // Model initialize function
@@ -631,19 +727,19 @@ void positionControlModelClass::initialize()
   positionControl_DW.Filter_DSTATE =
     positionControl_P.PIDController_InitialConditionF;
 
-  // InitializeConditions for DiscreteIntegrator: '<S184>/Integrator'
+  // InitializeConditions for DiscreteIntegrator: '<S186>/Integrator'
   positionControl_DW.Integrator_DSTATE_k =
     positionControl_P.PIDController4_InitialConditi_i;
 
-  // InitializeConditions for DiscreteIntegrator: '<S179>/Filter'
+  // InitializeConditions for DiscreteIntegrator: '<S181>/Filter'
   positionControl_DW.Filter_DSTATE_m =
     positionControl_P.PIDController4_InitialCondition;
 
-  // InitializeConditions for DiscreteIntegrator: '<S232>/Integrator'
+  // InitializeConditions for DiscreteIntegrator: '<S234>/Integrator'
   positionControl_DW.Integrator_DSTATE_f =
     positionControl_P.PIDController5_InitialConditi_c;
 
-  // InitializeConditions for DiscreteIntegrator: '<S227>/Filter'
+  // InitializeConditions for DiscreteIntegrator: '<S229>/Filter'
   positionControl_DW.Filter_DSTATE_j =
     positionControl_P.PIDController5_InitialCondition;
 
@@ -655,21 +751,21 @@ void positionControlModelClass::initialize()
   positionControl_DW.Filter_DSTATE_d =
     positionControl_P.PIDController1_InitialCondition;
 
-  // InitializeConditions for DiscreteIntegrator: '<S280>/Integrator'
+  // InitializeConditions for DiscreteIntegrator: '<S282>/Integrator'
   positionControl_DW.Integrator_DSTATE_p =
     positionControl_P.ZPostoVel_InitialConditionForIn;
 
-  // InitializeConditions for DiscreteIntegrator: '<S275>/Filter'
+  // InitializeConditions for DiscreteIntegrator: '<S277>/Filter'
   positionControl_DW.Filter_DSTATE_mo =
     positionControl_P.ZPostoVel_InitialConditionForFi;
 
-  // InitializeConditions for DiscreteIntegrator: '<S136>/Integrator'
+  // InitializeConditions for DiscreteIntegrator: '<S138>/Integrator'
   positionControl_DW.Integrator_DSTATE_b =
-    positionControl_P.PIDController3_InitialConditi_d;
-
-  // InitializeConditions for DiscreteIntegrator: '<S131>/Filter'
-  positionControl_DW.Filter_DSTATE_e =
     positionControl_P.PIDController3_InitialCondition;
+
+  // InitializeConditions for Delay: '<S131>/UD'
+  positionControl_DW.UD_DSTATE =
+    positionControl_P.PIDController3_DifferentiatorIC;
 }
 
 // Model terminate function
