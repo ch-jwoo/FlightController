@@ -359,21 +359,22 @@ typedef struct {
 	TM_GPS_Custom_t* CustomStatements[GPS_CUSTOM_NUMBER]; /*!< Array of pointers for custom GPS NMEA statements, selected by user.
 	                                                              You can use @ref GPS_CUSTOM_NUMBER number of custom statements */
 	uint8_t CustomStatementsCount;                        /*!< Number of custom GPS statements selected by user */
-//	uint8_t dmaBuf[GPS_DMA_BUF_SIZE];
 } TM_GPS_t;
 
 /* Backward compatibility */
 typedef TM_GPS_t TM_GPS_Data_t;
 
+extern TM_GPS_t tmGps;
 /* for dma */
-#define GPS_DMA_BUF_SIZE 300
-typedef struct{
-	TM_GPS_Data_t gpsData;
-	UART_HandleTypeDef* huart;
-	uint8_t GPS_DmaBuf[GPS_DMA_BUF_SIZE];
-} TM_GPS_UART_t;
-
-TM_GPS_UART_t gpsUart;
+//#define GPS_DMA_BUF_SIZE 300
+//typedef struct{
+//	TM_GPS_Data_t gpsData;
+//	UART_HandleTypeDef* huart;
+//	uint8_t GPS_DmaBuf[GPS_DMA_BUF_SIZE];
+//} TM_GPS_UART_t;
+//
+//TM_GPS_UART_t gpsUart;
+//extern TM_GPS_Data_t tmGpsData;
 
 /**
  * @brief  GPS Distance and bearing struct
@@ -419,6 +420,8 @@ void TM_GPS_Init(UART_HandleTypeDef* huart);
  * @retval Returns value of @ref TM_GPS_Result_t structure
  */
 TM_GPS_Result_t TM_GPS_Update();
+
+void TM_GPS_CpltCallback(UART_HandleTypeDef* huart);
 
 /**
  * @brief  Converts speed in knots (from GPS) to user selectable speed

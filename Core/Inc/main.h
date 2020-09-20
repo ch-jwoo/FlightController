@@ -71,7 +71,8 @@ void PC_StartTask(void *argument);
 void Telem_IdleHandler(void);
 void GCS_StartTask(void *argument);
 void AUTO_StartTask(void *argument);
-extern int hzTest;
+void SBUS_StartTask(void *argument);
+void GPS_StartTask(void *argument);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

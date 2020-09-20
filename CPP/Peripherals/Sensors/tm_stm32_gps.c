@@ -24,7 +24,7 @@
  * |----------------------------------------------------------------------
  */
 #include "tm_stm32_gps.h"
-
+#include "cmsis_os.h"
 
 
 /* Is character a digit */
@@ -127,6 +127,16 @@ static TM_GPS_Data_t TM_GPS_INT_Data;
 static uint8_t TM_GPS_FirstTime;
 static char GPS_Statement_Name[7];
 
+/* for FC project Internal/external variables */
+#define GPS_DMA_BUF_SIZE 300
+static UART_HandleTypeDef* GPS_huart;
+static uint8_t GPS_DmaBuf[GPS_DMA_BUF_SIZE];
+static uint8_t GPS_TmpBuf[GPS_DMA_BUF_SIZE];
+TM_GPS_t tmGps;
+
+osMessageQueueId_t GPS_QueueId;
+
+
 #ifndef GPS_DISABLE_GPGSV
 uint8_t GPGSV_StatementsCount = 0;
 uint8_t GPSGV_StatementNumber = 0;
@@ -150,16 +160,17 @@ void TM_GPS_INT_CheckEmpty(TM_GPS_t* GPS_Data);
 #define TM_GPS_INT_ReturnWithStatus(GPS_Data, status)    (GPS_Data)->Status = status; return status;
 #define TM_GPS_INT_SetFlag(flag)                         (GPS_Flags |= (flag))
 
+
 /* Public */
 void TM_GPS_Init(UART_HandleTypeDef* huart) {
 	/* Initialize USART */
 	TM_GPS_FirstTime = 1;
 	
 	/* Reset everything */
-	gpsUart.gpsData.CustomStatementsCount = 0;
+	tmGps.CustomStatementsCount = 0;
 	
 	/* Clear all flags */
-	TM_GPS_INT_ClearFlags(&gpsUart.gpsData);
+	TM_GPS_INT_ClearFlags(&tmGps);
 	
 	/* Set flags used */
 #ifndef GPS_DISABLE_GPGGA
@@ -189,17 +200,40 @@ void TM_GPS_Init(UART_HandleTypeDef* huart) {
 	GPS_Flags_OK |= GPS_FLAG_SATSINVIEW;
 	GPS_Flags_OK |= GPS_FLAG_SATSDESC;
 #endif
-	gpsUart.huart = huart;
-	HAL_UART_Receive_DMA(gpsUart.huart, gpsUart.GPS_DmaBuf, GPS_DMA_BUF_SIZE);
+
+	GPS_huart = huart;
+
+	GPS_QueueId = osMessageQueueNew(1, sizeof(uint8_t), NULL);
+	HAL_UART_Receive_DMA(huart, GPS_DmaBuf, GPS_DMA_BUF_SIZE);
 }
 
 TM_GPS_Result_t TM_GPS_Update() {
-
+	uint8_t ret;
+	HAL_StatusTypeDef stat;
 	TM_GPS_Result_t result = TM_GPS_Result_OldData;
-//	HAL_UART_Transmit(&huart3, GPS_DmaBuf, GPS_DMA_BUF_SIZE, 100);
+
+	osMessageQueueReset(GPS_QueueId);
+	while(osMessageQueueGet(GPS_QueueId, (void*)&ret, NULL, 2000) != osOK){
+		printf_("gps abort\r\n");
+		while(1){
+			osKernelLock();
+			stat = HAL_UART_Abort(GPS_huart);
+			osKernelUnlock();
+			if(stat == HAL_OK) break;
+			osDelay(20);
+		}
+		while(1){
+			osKernelLock();
+			HAL_UART_Receive_DMA(GPS_huart, GPS_DmaBuf, GPS_DMA_BUF_SIZE);
+			osKernelUnlock();
+			if(stat == HAL_OK) break;
+			osDelay(20);
+		}
+	}
+
 	for(int i=0; i<GPS_DMA_BUF_SIZE; i++){
-		TM_GPS_INT_Do(&gpsUart.gpsData, (char)gpsUart.GPS_DmaBuf[i]);
-		if (gpsUart.gpsData.Status == TM_GPS_Result_NewData) {
+		TM_GPS_INT_Do(&tmGps, (char)GPS_TmpBuf[i]);
+		if (tmGps.Status == TM_GPS_Result_NewData) {
 //			return gps.Status;
 //			gps->Status = TM_GPS_Result_OldData;
 			result = TM_GPS_Result_NewData;
@@ -210,13 +244,21 @@ TM_GPS_Result_t TM_GPS_Update() {
 	if (TM_GPS_FirstTime) {
 		/* No any valid data, return First Data Waiting */
 		/* Returning only after power up and calling when no all data is received */
-		TM_GPS_INT_ReturnWithStatus(&gpsUart.gpsData, TM_GPS_Result_FirstDataWaiting);
+		result = TM_GPS_Result_FirstDataWaiting;
 	}
 	
 	/* We have old data */
-//	TM_GPS_INT_ReturnWithStatus(&gpsUart.gpsData, TM_GPS_Result_OldData);
+//	TM_GPS_INT_ReturnWithStatus(&tmGps, TM_GPS_Result_OldData);
 
 	return result;
+}
+
+void TM_GPS_CpltCallback(UART_HandleTypeDef* huart){
+	if(huart->Instance != GPS_huart->Instance) return;
+	uint8_t ret = 0;
+
+	memcpy((void*)GPS_TmpBuf, (const void*)GPS_DmaBuf, GPS_DMA_BUF_SIZE);
+	osMessageQueuePut(GPS_QueueId, (void*)&ret, 0, 0);
 }
 
 //const uint64_t YEAR2USEC = 1*365*24*60*60*1000*1000;

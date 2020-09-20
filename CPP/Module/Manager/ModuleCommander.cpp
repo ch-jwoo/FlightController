@@ -221,9 +221,6 @@ bool ModuleCommander::toArm(){
 	}
 
 	/* arm initialize */
-	interfaceAccel.setBias();
-	interfaceGyro.setBias();
-	interfaceBaro.setRefAltitude();
 	resetController(modeFlagSub.flightMode);
 	osDelay(150);					/* wait sensor calibration */
 

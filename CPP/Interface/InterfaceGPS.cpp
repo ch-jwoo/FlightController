@@ -14,7 +14,7 @@ void InterfaceGPS::setGPS(double lat, double lon, float alt,
         			   float vel, float direction, float hdop, float vdop,
 					   uint8_t numSat, uint8_t fixType, uint64_t UtcUsec)
 {
-	if(fixType == 0) return;			/* not fixed */
+	if(fixType == 0 || numSat < 4) return;			/* not fixed */
 
 	/* calculate velocity NED  */
 	float radDirection = direction*M_PI/180.0;

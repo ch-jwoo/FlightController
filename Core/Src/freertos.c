@@ -209,6 +209,30 @@ const osThreadAttr_t AUTO_Task_attributes = {
   .priority = (osPriority_t) osPriorityHigh7,
   .stack_size = 1024 * 4
 };
+/* Definitions for SBUS_Task */
+osThreadId_t SBUS_TaskHandle;
+uint32_t SBUS_TaskBuffer[ 512 ];
+osStaticThreadDef_t SBUS_TaskControlBlock;
+const osThreadAttr_t SBUS_Task_attributes = {
+  .name = "SBUS_Task",
+  .stack_mem = &SBUS_TaskBuffer[0],
+  .stack_size = sizeof(SBUS_TaskBuffer),
+  .cb_mem = &SBUS_TaskControlBlock,
+  .cb_size = sizeof(SBUS_TaskControlBlock),
+  .priority = (osPriority_t) osPriorityRealtime,
+};
+/* Definitions for GPS_Task */
+osThreadId_t GPS_TaskHandle;
+uint32_t GPS_TaskBuffer[ 512 ];
+osStaticThreadDef_t GPS_TaskControlBlock;
+const osThreadAttr_t GPS_Task_attributes = {
+  .name = "GPS_Task",
+  .stack_mem = &GPS_TaskBuffer[0],
+  .stack_size = sizeof(GPS_TaskBuffer),
+  .cb_mem = &GPS_TaskControlBlock,
+  .cb_size = sizeof(GPS_TaskControlBlock),
+  .priority = (osPriority_t) osPriorityRealtime,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -230,6 +254,8 @@ extern void INS_StartTask(void *argument);
 extern void PC_StartTask(void *argument);
 extern void GCS_StartTask(void *argument);
 extern void AUTO_StartTask(void *argument);
+extern void SBUS_StartTask(void *argument);
+extern void GPS_StartTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -304,6 +330,12 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of AUTO_Task */
   AUTO_TaskHandle = osThreadNew(AUTO_StartTask, NULL, &AUTO_Task_attributes);
+
+  /* creation of SBUS_Task */
+  SBUS_TaskHandle = osThreadNew(SBUS_StartTask, NULL, &SBUS_Task_attributes);
+
+  /* creation of GPS_Task */
+  GPS_TaskHandle = osThreadNew(GPS_StartTask, NULL, &GPS_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

@@ -27,6 +27,7 @@ public:
 			tick += 1000;
 			osDelayUntil(tick);		/* 1hz */
 
+			health.timestamp = microsecond();
 			health.accel = InterfaceAccel::checkFreq();
 			health.gyro = InterfaceGyro::checkFreq();
 			health.rc = InterfaceRC::checkFreq();

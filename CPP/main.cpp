@@ -19,11 +19,11 @@
 #include <Module/Manager/ModuleCommander.h>
 #include <Module/Estimator/ModuleAHRS.h>
 #include <Module/Etc/ModuleBuzzer.h>
+#include <Peripherals/Coms/Sbus.h>
 #include <Peripherals/Sensors/bme280.h>
 #include <Peripherals/Sensors/IST8310.h>
 #include <Peripherals/Sensors/Lidar1D.h>
 #include <Peripherals/Sensors/MPU9250.h>
-#include <Peripherals/Coms/sbus.h>
 #include <Peripherals/Sensors/tm_stm32_gps.h>
 #include <Utils/Constants.h>
 #include "Module/Manager/ModuleHealth.h"
@@ -319,9 +319,13 @@ void BME280_StartTask(void *argument){
 	 */
 	BME280 bme280(&rtosI2C2, P_OSR_04, H_OSR_00, T_OSR_01, normal, BW0_021ODR,t_00_5ms);
 	bme280.init();
+
+	bme280.update();
+	bme280.update();
 	while(1){
 		tick += 15;
 		osDelayUntil(tick);		/* 66.6hz */
+
 
 		if(bme280.update()){
 			interfaceBaro.setBaro(bme280.P, bme280.T);
@@ -380,15 +384,56 @@ void AUTO_StartTask(void *argument){
 	ModuleAutoController::main();
 //	while(1) osDelay(1000);
 }
-/*
- *  Switch
- *  Click : High
- *  GPIO_PinState result = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_7);
- */
-/*
- *  LED signal
- *  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_12, GPIO_PIN_RESET);
- */
+
+
+void GPS_StartTask(void *argument){
+	uint32_t tick;
+
+	/*
+	 *  \setting		uart8
+	 *  				baudrate		115200
+	 *  				rx_dma(circular)
+	 */
+	TM_GPS_Init(&huart8);
+
+	tick = osKernelGetTickCount();
+	while(1){
+//		tick += 200;
+//		osDelayUntil(tick);		/* 5hz */
+
+		/*
+		 *  dma gps update
+		 *  parse data (static time, 10 hz?)
+		 */
+		if(TM_GPS_Update() == TM_GPS_Result_NewData){
+			interfaceGPS.setGPS(tmGps.Latitude, tmGps.Longitude, tmGps.Altitude,
+								TM_GPS_ConvertSpeed(tmGps.Speed, TM_GPS_Speed_MeterPerSecond), tmGps.Direction, tmGps.HDOP, tmGps.VDOP,
+								tmGps.Satellites, tmGps.FixMode, 0/* UTC in microsecond */);
+//			printf_("%f %f %f %d\r\n", tmGps.Latitude, tmGps.Longitude, tmGps.Altitude, tmGps.Satellites);
+		}
+	}
+}
+
+void SBUS_StartTask(void *argument){
+	uint32_t tick;
+
+	tick = osKernelGetTickCount();
+	while(1){
+		tick += 20;
+//		osDelayUntil(tick);		/* 50hz */
+		/*
+		 *  dma sbus update
+		 */
+		if(sbus.update()){
+			interfaceRC.setRC(sbus.getChannelVal(2),	/* roll */
+						 	  sbus.getChannelVal(3),	/* pitch */
+							  sbus.getChannelVal(4), 	/* yaw */
+							  sbus.getChannelVal(1),	/* throttle */
+							  sbus.getChannelVal(11),	/* arming */
+							  sbus.getChannelVal(5)		/* mode change */);
+		}
+	}
+}
 
 void cppMain(){
     setvbuf(stdout, NULL, _IONBF, 0);
@@ -399,22 +444,7 @@ void cppMain(){
     /* micro second timer start */
 	HAL_TIM_Base_Start_IT(&htim2);
 
-	/*
-	 *  \setting		uart8
-	 *  				baudrate		115200
-	 *  				rx_dma(circular)
-	 */
-    TM_GPS_Init(&huart8);
-
-    /*
-     *  \setting		uart7
-     *  				baudrate			100000
-     *  				word length			9bits
-     *  				parity				even
-     *  				stop_bits			2
-     *  				rx_dma(circular)
-     */
-	SBUS_init(&huart7);
+	HAL_Delay(1000);
 
 	/*
 	 *  TODO if lidar not connected, the lidar altitude is 6
@@ -456,30 +486,21 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	if(huart->Instance == sbus.huart->Instance){
-		if(SBUS_uartRxCpltCallback() == SBUS_Result_NewData){
-			interfaceRC.setRC(SBUS_getChannel(2),	/* roll */
-					 SBUS_getChannel(3),	/* pitch */
-					 SBUS_getChannel(4), 	/* yaw */
-					 SBUS_getChannel(1),	/* throttle */
-					 SBUS_getChannel(11),	/* arming */
-					 SBUS_getChannel(5)		/* mode change */);
-		}
-	}
-
-	if(huart->Instance == UART8){
-		if(TM_GPS_Update() == TM_GPS_Result_NewData && gpsUart.gpsData.Fix != 0 /* gps must fixed */){
-			interfaceGPS.setGPS(gpsUart.gpsData.Latitude, gpsUart.gpsData.Longitude, gpsUart.gpsData.Altitude,
-							 TM_GPS_ConvertSpeed(gpsUart.gpsData.Speed, TM_GPS_Speed_MeterPerSecond), gpsUart.gpsData.Direction, gpsUart.gpsData.HDOP, gpsUart.gpsData.VDOP,
-							 gpsUart.gpsData.Satellites, gpsUart.gpsData.FixMode, 0/* UTC in microsecond */);
-		}
-	}
-
+	TM_GPS_CpltCallback(huart);
+	sbus.rcvCompleteCallback(huart);
 	telem.rcvCompleteCallback(huart);
 }
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
-	printf_("uart error\r\n");
+	if(huart->Instance == UART7){
+		printf_("sbus error : %x\r\n", huart->ErrorCode);
+	}
+	if(huart->Instance == UART8){
+		printf_("gps error : %x\r\n", huart->ErrorCode);
+	}
+	if(huart->Instance == USART2){
+		printf_("telem error : %x\r\n", huart->ErrorCode);
+	}
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
