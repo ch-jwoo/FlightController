@@ -71,8 +71,8 @@ public:
 
 private:
 	struct Controller controllerSub{};
-	struct Health health{};
 	struct ModeFlag modeFlagSub{};
+	struct StatusFlag statusFlagSub{};
 
 	struct ArmFlag armFlagPub{};
 	struct ModeFlag modeFlagPub{};

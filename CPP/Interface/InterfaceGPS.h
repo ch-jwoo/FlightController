@@ -12,7 +12,7 @@ namespace FC{
 class InterfaceGPS : public Freq<InterfaceGPS>{
 public:
 	void setGPS(double lat, double lon, float alt, float vel, float direction,
-			float hdop, float vdop, uint8_t numSat, uint8_t fixType,
+			float hdop, float vdop, uint8_t usedSat, uint8_t visibleSat, uint8_t fixType,
 			uint64_t UtcUsec);
 private:
     struct GPS gps;

@@ -381,8 +381,8 @@ void GCS_StartTask(void *argument){
 }
 
 void AUTO_StartTask(void *argument){
-	ModuleAutoController::main();
-//	while(1) osDelay(1000);
+//	ModuleAutoController::main();
+	while(1) osDelay(1000);
 }
 
 
@@ -408,7 +408,7 @@ void GPS_StartTask(void *argument){
 		if(TM_GPS_Update() == TM_GPS_Result_NewData){
 			interfaceGPS.setGPS(tmGps.Latitude, tmGps.Longitude, tmGps.Altitude,
 								TM_GPS_ConvertSpeed(tmGps.Speed, TM_GPS_Speed_MeterPerSecond), tmGps.Direction, tmGps.HDOP, tmGps.VDOP,
-								tmGps.Satellites, tmGps.FixMode, 0/* UTC in microsecond */);
+								tmGps.Satellites, tmGps.SatellitesInView, tmGps.FixMode, 0/* UTC in microsecond */);
 //			printf_("%f %f %f %d\r\n", tmGps.Latitude, tmGps.Longitude, tmGps.Altitude, tmGps.Satellites);
 		}
 	}

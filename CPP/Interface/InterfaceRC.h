@@ -22,8 +22,6 @@ private:
     struct ModeFlag modeFlagSub;
 
     struct Controller controllerPub;
-    uint32_t lastArmReq;
-    uint32_t lastModeReq;
 
     bool start;
 

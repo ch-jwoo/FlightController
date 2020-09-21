@@ -5,7 +5,7 @@
             bool get##fname(ret *tmp) \
             { \
 				bool res = false;\
-                if(tmp->timestamp != var.timestamp){\
+                if(tmp->timestamp != var.timestamp && tmp->timestamp != 0){\
                     res = true; \
                 }\
 				*tmp = var;\
@@ -61,6 +61,7 @@ public:
     SIMPLE_FUNC_IMPL(ModeFlag, ModeFlag, modeFlag)
 
     SIMPLE_FUNC_IMPL(Health, Health, health)
+    SIMPLE_FUNC_IMPL(StatusFlag, StatusFlag, statusFlag)
 
     SIMPLE_FUNC_IMPL(MotorPWM, MotorPWM, motorPWM)
 
@@ -94,6 +95,7 @@ private:
 
     /* frequency of sensor and module etc. */
     struct Health health;
+    struct StatusFlag statusFlag;
 
     /* actuator */
     struct MotorPWM motorPWM;

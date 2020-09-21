@@ -106,11 +106,11 @@ bool ModuleCommander::commandHandler(Command cmd){
 }
 
 bool ModuleCommander::toAttitude(){
-	//TODO change to attitude control
-	/*
-	 * check condition of attitude control
-	 */
-
+	msgBus.getStatusFlag(&statusFlagSub);
+	if(!statusFlagSub.attitudeCTL){
+		ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
+		return false;
+	}
 
 	resetController(FlightMode::AttitudeControl);
 	/* change to attitude */
@@ -125,6 +125,12 @@ bool ModuleCommander::toAttitude(){
 }
 
 bool ModuleCommander::toAltitude(){
+	msgBus.getStatusFlag(&statusFlagSub);
+	if(!statusFlagSub.altitudeCTL){
+		ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
+		return false;
+	}
+
 	msgBus.getModeFlag(&modeFlagSub);
 
 	/* if not altitude and position control, task start */
@@ -146,9 +152,16 @@ bool ModuleCommander::toAltitude(){
 	stopTheOtherTask(FlightMode::AltitudeControl);
 
 	ModuleBuzzer::sendCommand(BuzzerCommand::Success);
+	return true;
 }
 
 bool ModuleCommander::toPosition(){
+	msgBus.getStatusFlag(&statusFlagSub);
+	if(!statusFlagSub.positionCTL){
+		ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
+		return false;
+	}
+
 	msgBus.getModeFlag(&modeFlagSub);
 	//TODO check condition of position controller
 
@@ -228,7 +241,7 @@ bool ModuleCommander::toArm(){
 	armFlagPub.armMode = ArmMode::Arm;
 	msgBus.setArmFlag(armFlagPub);
 
-	ModuleBuzzer::sendCommand(BuzzerCommand::Success);
+	ModuleBuzzer::sendCommand(BuzzerCommand::Armed);
 	return true;
 }
 
@@ -250,7 +263,7 @@ bool ModuleCommander::toDisArm(){
 
 	stopTheOtherTask(modeFlagPub.flightMode);
 
-	ModuleBuzzer::sendCommand(BuzzerCommand::Success);
+	ModuleBuzzer::sendCommand(BuzzerCommand::DisArmed);
 	return true;
 }
 

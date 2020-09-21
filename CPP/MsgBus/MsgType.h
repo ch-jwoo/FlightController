@@ -42,23 +42,24 @@ struct BodyMag{
 
 struct GPS{
     uint64_t timestamp;
-    uint64_t timestampUTC;  /* timestamp of UTC in microsecond */
+    uint64_t timestampUTC;  	/* timestamp of UTC in microsecond */
 
-    double lat;             /* Latitude position from GPS, -90 to 90 degrees response. */
-    double lon;             /* Longitude position from GPS, -180 to 180 degrees response. */
-    float alt;              /* Altitude in meters above MSL (meter) */
+    double lat;             	/* Latitude position from GPS, -90 to 90 degrees response. */
+    double lon;             	/* Longitude position from GPS, -180 to 180 degrees response. */
+    float alt;              	/* Altitude in meters above MSL (meter) */
 
     float vel;
-    float velN;             /* GPS ground speed (m/s) */
-    float velE;             /* GPS North velocity (m/s) */
-    float velD;             /* GPS Down velocity (m/s) */
-    float direction;        /* direction of velocity from North (rad) */
+    float velN;             	/* GPS ground speed (m/s) */
+    float velE;             	/* GPS North velocity (m/s) */
+    float velD;             	/* GPS Down velocity (m/s) */
+    float direction;        	/* direction of velocity from North (rad) */
 
-    float hdop;             /* Horizontal dilution of precision */
-    float vdop;             /* Vertical dilution of precision */
+    float hdop;             	/* Horizontal dilution of precision */
+    float vdop;             	/* Vertical dilution of precision */
 
-    uint8_t numSatellites;  /*  Number of satellites used */
-    uint8_t fixType;        /* 1: no fix, 2: 2D fix, 3: 3D fix */
+    uint8_t usedSatellites; 	 	/*  Number of satellites used */
+    uint8_t visibleSatellites;	/* Number of satellites visible */
+    uint8_t fixType;        	/* 1: no fix, 2: 2D fix, 3: 3D fix */
 };
 
 struct LocalPosition{
@@ -181,6 +182,24 @@ struct Health{
 	uint16_t attitudeController;
 	uint16_t positionController;
 	uint16_t autoController;
+};
+
+struct StatusFlag{
+	uint64_t timestamp;
+
+	bool gyro;
+	bool accel;
+	bool mag;
+	bool barometer;
+	bool difPressure;
+	bool gps;
+	bool lidar;
+
+	bool receiver;
+
+	bool attitudeCTL;
+	bool altitudeCTL;
+	bool positionCTL;
 };
 
 /*

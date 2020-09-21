@@ -13,6 +13,7 @@
 #include <Module/Controller/ModulePositionController.h>
 #include <Module/Estimator/ModuleINS.h>
 #include "printf.h"
+#include <cstring>
 
 namespace FC {
 
@@ -22,7 +23,8 @@ public:
 		uint32_t tick;
 		tick = osKernelGetTickCount();
 
-		struct Health health;
+		struct Health health = {0};
+		struct StatusFlag statusFlag = {0};
 		while(1){
 			tick += 1000;
 			osDelayUntil(tick);		/* 1hz */
@@ -50,20 +52,28 @@ public:
 
 			msgBus.setHealth(health);
 
-//			if(health.accel > ACCEL_THRESHOLD &&
-//			   health.gyro > GYRO_THRESHOLD &&
-//			   health.rc > RC_THRESHOLD &&
-//			   health.ahrs > AHRS_THRESHOLD &&
-//			   health.attitudeController > ATTITUDE_CTL_THRESHOLD){
-//				/* arm(attitude controller) enable */
-//
-//				if(health.mag > MAG_THRESHOLD &&
-//						health.gps > GPS_THRESHOLD &&
-//						health.ins > INS_THRESHOLD){
-//					/* position controller enable */
-//
-//				}
-//			}
+			std::memset((void*)&statusFlag, 0, sizeof(statusFlag));
+			statusFlag.timestamp = millisecond();
+			if(health.gyro > GYRO_THRESHOLD) statusFlag.gyro = true;
+			if(health.accel > ACCEL_THRESHOLD) statusFlag.accel = true;
+			if(health.mag > MAG_THRESHOLD) statusFlag.mag = true;
+			if(health.baro > BARO_THRESHOLD) statusFlag.barometer = true;
+			//TODO differential pressure
+			if(health.lidar > LIDAR_THRESHOLD) statusFlag.lidar = true;
+			if(health.rc > RC_THRESHOLD) statusFlag.receiver = true;
+
+			if(health.ahrs > AHRS_THRESHOLD
+			&& statusFlag.accel && statusFlag.gyro && statusFlag.receiver){
+				statusFlag.attitudeCTL = true;
+
+				if(health.ins > INS_THRESHOLD){
+					if(statusFlag.barometer || statusFlag.lidar) statusFlag.altitudeCTL = true;
+					if(statusFlag.gps && statusFlag.mag) statusFlag.positionCTL = true;
+				}
+			}
+
+			msgBus.setStatusFlag(statusFlag);
+
 		}
 	}
 
@@ -76,12 +86,13 @@ public:
 
 	static const uint8_t ACCEL_THRESHOLD = 150;
 	static const uint8_t GYRO_THRESHOLD = 150;
-	static const uint8_t RC_THRESHOLD = 100;
+	static const uint8_t RC_THRESHOLD = 25;
 
-	static const uint8_t MAG_THRESHOLD = 50;
-	static const uint8_t GPS_THRESHOLD = 3;
+	static const uint8_t MAG_THRESHOLD = 25;
+	static const uint8_t GPS_THRESHOLD = 2;
 
-	static const uint8_t BARO_THRESHOLD = 40;
+	static const uint8_t BARO_THRESHOLD = 30;
+	static const uint8_t LIDAR_THRESHOLD = 30;
 
 	static const uint8_t AHRS_THRESHOLD = 150;
 	static const uint8_t INS_THRESHOLD = 30;

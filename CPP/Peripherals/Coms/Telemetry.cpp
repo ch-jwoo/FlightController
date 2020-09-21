@@ -28,11 +28,19 @@ void Telemetry::init(){
 }
 
 void Telemetry::send(uint8_t *pData, uint16_t Size){
+	HAL_StatusTypeDef stat;
 	uint8_t ret = 0;
+
 	osMutexAcquire(sendMutexHandle, osWaitForever);
 	HAL_UART_Transmit_DMA(huart, pData, Size);
-	osMessageQueueGet(sendQueueId, (void*)&ret, NULL, osWaitForever);
+	while(osMessageQueueGet(sendQueueId, (void*)&ret, NULL, 2000) != osOK){
+		while(HAL_UART_Abort(huart) != HAL_OK) osDelay(20);
+		__HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
+		while(HAL_UART_Transmit_DMA(huart, pData, Size) != HAL_OK) osDelay(20);
 
+		ret = 1;
+		osMessageQueuePut(rcvQueueId, (void*)&ret, 0, 0);
+	}
 	osMutexRelease(sendMutexHandle);
 }
 
@@ -43,6 +51,8 @@ uint16_t Telemetry::receive(uint8_t *pData, uint16_t Size){
 	rxSize = Size;
 	HAL_UART_Receive_DMA(huart, pData, Size);
 	osMessageQueueGet(rcvQueueId, (void*)&ret, NULL, osWaitForever);
+	if(ret == 1) return 0;	/* when uart aborted */
+
 	osMutexRelease(rcvMutexHandle);
 	return rxSize;
 }

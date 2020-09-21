@@ -45,8 +45,8 @@ void ModuleBuzzer::main() {
 
 ModuleBuzzer::ModuleBuzzer(Buzzer *buzzer)
 : pbuzzer(buzzer)
-, armedNotes{C4, G4, C5}
-, disarmedNotes{C5, G4, C4}
+, armedNotes{C5, G4, C4}
+, disarmedNotes{C4, G4, C5}
 , successedNotes{D5, D5}
 , deniedNotes{D5}
 {
@@ -122,7 +122,7 @@ void ModuleBuzzer::denied(){
 void ModuleBuzzer::success(){
 	 for (uint8_t i = 0 ; i < sizeof(successedNotes)/sizeof(Note_t) ; i++) {
 	   pbuzzer->start();
-	   pbuzzer->setNote(disarmedNotes[i]);
+	   pbuzzer->setNote(successedNotes[i]);
 	   osDelay(100);
 
 	   /* Make each note sound and cut 1 mileecond */

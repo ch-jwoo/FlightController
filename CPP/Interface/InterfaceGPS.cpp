@@ -12,9 +12,9 @@ InterfaceGPS interfaceGPS;
 
 void InterfaceGPS::setGPS(double lat, double lon, float alt,
         			   float vel, float direction, float hdop, float vdop,
-					   uint8_t numSat, uint8_t fixType, uint64_t UtcUsec)
+					   uint8_t usedSat, uint8_t visibleSat, uint8_t fixType, uint64_t UtcUsec)
 {
-	if(fixType == 0 || numSat < 4) return;			/* not fixed */
+//	if(fixType == 0 || usedSat < 4) return;			/* not fixed */
 
 	/* calculate velocity NED  */
 	float radDirection = direction*M_PI/180.0;
@@ -35,7 +35,8 @@ void InterfaceGPS::setGPS(double lat, double lon, float alt,
 	this->gps.hdop = hdop;
 	this->gps.vdop = vdop;
 
-	this->gps.numSatellites = numSat;
+	this->gps.usedSatellites = usedSat;
+	this->gps.visibleSatellites = visibleSat;
 	this->gps.fixType = fixType;
 
 	msgBus.setGPS(this->gps);

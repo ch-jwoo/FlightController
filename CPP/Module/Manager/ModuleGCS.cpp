@@ -46,15 +46,20 @@ void ModuleGCS::main(){
 }
 
 void ModuleGCS::periodicSendTask(void *instance){
-	uint32_t lastTick = 0;
+	uint32_t heartbeatTick;
 	ModuleGCS *moduleGCS = (ModuleGCS*)instance;
 	uint8_t txBuffer[MAVLINK_MAX_PACKET_LEN];
 	mavlink_message_t sendMsg;
 
+	heartbeatTick = millisecond();
+
 	while(1){
-		if(millisecond() - lastTick > 1000){
+		if(millisecond() - heartbeatTick > 1000){
 			moduleGCS->sendHeartbeat(txBuffer, &sendMsg);
-			lastTick = millisecond();
+			moduleGCS->sendGpsStatus(txBuffer, &sendMsg);
+			moduleGCS->sendSysStatus(txBuffer, &sendMsg);
+
+			heartbeatTick = millisecond();
 		}
 		moduleGCS->sendAttitude(txBuffer, &sendMsg);
 		moduleGCS->sendGlobalPosition(txBuffer, &sendMsg);
@@ -68,6 +73,76 @@ void ModuleGCS::sendHeartbeat(uint8_t *txBuffer, mavlink_message_t *sendMsg){
 	mavlink_msg_heartbeat_pack(sysId, compId, sendMsg, MAV_TYPE_HEXAROTOR, MAV_AUTOPILOT_PX4,
 			MAV_MODE_FLAG_TEST_ENABLED, MAV_STATE_STANDBY, 3);
 
+	len = mavlink_msg_to_send_buffer(txBuffer, sendMsg);
+	ptelem->send(txBuffer, len);
+}
+
+void ModuleGCS::sendGpsStatus(uint8_t *txBuffer, mavlink_message_t *sendMsg){
+	uint16_t len;
+	GPS gpsSub = {0};
+
+	/* not used */
+	uint8_t satellite_prn[20] = {0};
+	uint8_t satellite_used[20] = {0};
+	uint8_t satellite_elevation[20] = {0};
+	uint8_t satellite_azimuth[20] = {0};
+	uint8_t satellite_snr[20] = {0};
+
+	if(msgBus.getGPS(&gpsSub)){
+		mavlink_msg_gps_status_pack(sysId, compId, sendMsg,
+				gpsSub.visibleSatellites, satellite_prn, satellite_used, satellite_elevation, satellite_azimuth, satellite_snr);
+
+		len = mavlink_msg_to_send_buffer(txBuffer, sendMsg);
+		ptelem->send(txBuffer, len);
+	}
+}
+
+void ModuleGCS::sendSysStatus(uint8_t *txBuffer, mavlink_message_t *sendMsg){
+	uint16_t len;
+	StatusFlag flag = {0};
+	uint32_t onboard_control_sensors_present = MAV_SYS_STATUS_SENSOR_3D_GYRO
+											 | MAV_SYS_STATUS_SENSOR_3D_ACCEL
+											 | MAV_SYS_STATUS_SENSOR_3D_MAG
+											 | MAV_SYS_STATUS_SENSOR_ABSOLUTE_PRESSURE
+											 | MAV_SYS_STATUS_SENSOR_DIFFERENTIAL_PRESSURE
+											 | MAV_SYS_STATUS_SENSOR_GPS
+											 | MAV_SYS_STATUS_SENSOR_LASER_POSITION
+											 | MAV_SYS_STATUS_SENSOR_ATTITUDE_STABILIZATION
+											 | MAV_SYS_STATUS_SENSOR_Z_ALTITUDE_CONTROL
+											 | MAV_SYS_STATUS_SENSOR_XY_POSITION_CONTROL
+											 | MAV_SYS_STATUS_SENSOR_RC_RECEIVER;
+	uint32_t onboard_control_sensors_enabled = onboard_control_sensors_present;
+	uint32_t onboard_control_sensors_health = 0;
+
+	/* not used */
+	uint16_t load = 0;
+	uint16_t voltage_battery = 0;
+	uint16_t current_battery = 0;
+	int8_t battery_remaining = 0;
+	uint16_t drop_rate_comm = 0;
+	uint16_t errors_comm = 0;
+	uint16_t errors_count1 = 0;
+	uint16_t errors_count2 = 0;
+	uint16_t errors_count3 = 0;
+	uint16_t errors_count4 = 0;
+
+	msgBus.getStatusFlag(&flag);
+	if(flag.gyro) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_3D_GYRO;
+	if(flag.accel) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_3D_ACCEL;
+	if(flag.mag) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_3D_MAG;
+	if(flag.barometer) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_ABSOLUTE_PRESSURE;
+	if(flag.difPressure) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_DIFFERENTIAL_PRESSURE;
+	if(flag.gps) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_GPS;
+	if(flag.lidar) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_LASER_POSITION;
+	if(flag.attitudeCTL) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_ATTITUDE_STABILIZATION;
+	if(flag.altitudeCTL) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_Z_ALTITUDE_CONTROL;
+	if(flag.positionCTL) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_XY_POSITION_CONTROL;
+	if(flag.receiver) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_RC_RECEIVER;
+
+//	onboard_control_sensors_health = onboard_control_sensors_enabled;
+
+	mavlink_msg_sys_status_pack(sysId, compId, sendMsg, onboard_control_sensors_present, onboard_control_sensors_enabled, onboard_control_sensors_health
+			, load, voltage_battery, current_battery, battery_remaining, drop_rate_comm, errors_comm, errors_count1, errors_count2, errors_count3, errors_count4);
 	len = mavlink_msg_to_send_buffer(txBuffer, sendMsg);
 	ptelem->send(txBuffer, len);
 }
@@ -105,6 +180,7 @@ void ModuleGCS::sendGlobalPosition(uint8_t *txBuffer, mavlink_message_t *sendMsg
 										 (uint32_t)(globalPositionSub.lat * 10000000), (uint32_t)(globalPositionSub.lon * 10000000), (uint32_t)(globalPositionSub.alt * 1000),
 										 (uint32_t)(localPositionSub.refAlt * 1000),
 										 (uint16_t)(localPositionSub.vx * 100), (uint16_t)(localPositionSub.vy * 100), (uint16_t)(localPositionSub.vz * 100), (uint16_t)(degYaw * 100));
+
 
 	len = mavlink_msg_to_send_buffer(txBuffer, sendMsg);
 	ptelem->send(txBuffer, len);

@@ -34,7 +34,6 @@ public:
 
 	static void setAvgLLA();
 
-
 	static bool calGpsHomeFlag;
 	static uint8_t avgIndexGPS;
 	static double avgLat;
@@ -54,6 +53,7 @@ private:
 	double refLat;
 	double refLon;
 	float refAlt;
+	bool gpsHomeFlag;
 
 
 	void calAvgLLA(double lat, double lon, float alt);

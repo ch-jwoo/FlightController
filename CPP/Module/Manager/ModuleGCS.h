@@ -31,6 +31,8 @@ private:
 
 	/* Main Handle Functions */
 	void sendHeartbeat(uint8_t *txBuffer, mavlink_message_t *sendMsg);
+	void sendGpsStatus(uint8_t *txBuffer, mavlink_message_t *sendMsg);
+	void sendSysStatus(uint8_t *txBuffer, mavlink_message_t *sendMsg);
 	void sendAttitude(uint8_t *txBuffer, mavlink_message_t *sendMsg);
 	void sendGlobalPosition(uint8_t *txBuffer, mavlink_message_t *sendMsg);
 

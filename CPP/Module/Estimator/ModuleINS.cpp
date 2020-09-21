@@ -22,6 +22,7 @@ ModuleINS::ModuleINS()
 	: refLat(0)
 	, refLon(0)
 	, refAlt(0)
+	, gpsHomeFlag(false)
 {}
 
 void ModuleINS::main(){
@@ -52,7 +53,7 @@ void ModuleINS::onestep(){
 
    if(msgBus.getGPS(&gpsSub)){
 	   /* not fixed */
-      if(gpsSub.fixType == false){
+      if(gpsSub.fixType == false || gpsSub.usedSatellites < 4){
          input.GpsFlag = false;
       }
 
@@ -126,7 +127,10 @@ void ModuleINS::onestep(){
    globalPositionPub.yaw=attitudeSub.yaw;
 
    msgBus.setLocalPosition(localPositionPub);
-   msgBus.setGlobalPosition(globalPositionPub);
+
+   if(gpsHomeFlag){
+	   msgBus.setGlobalPosition(globalPositionPub);
+   }
 
    freqCount();
 }
@@ -150,6 +154,7 @@ void ModuleINS::calAvgLLA(double lat, double lon, float alt){
 
 	if(avgIndexGPS > AVERAGE_SIZE){
 		calGpsHomeFlag = false;
+		gpsHomeFlag = true;
 		refLat = avgLat;
 		refLon = avgLon;
 		refAlt = avgAlt;

@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionControl'.
 //
-// Model version                  : 1.16
+// Model version                  : 1.19
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Fri Sep  4 20:36:03 2020
+// C/C++ source code generated on : Mon Sep 21 22:15:56 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -18,7 +18,7 @@
 //
 #ifndef RTW_HEADER_rtmodel_h_
 #define RTW_HEADER_rtmodel_h_
-#include <MatlabPositionControl/positionControl.h>
+#include "positionControl.h"
 
 //
 //  ROOT_IO_FORMAT: 0 (Individual arguments)

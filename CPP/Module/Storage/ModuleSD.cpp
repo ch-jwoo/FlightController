@@ -10,6 +10,7 @@
 #include "MsgBus/Waypoint.h"
 #include "printf.h"
 #include <cstdlib>
+#include "Module/Etc/ModuleBuzzer.h"
 
 namespace FC {
 
@@ -70,7 +71,11 @@ void ModuleSD::_saveParam(){
 			_write(writeBuf, writeLen);
 		}
 		_closeFile();
+		ModuleBuzzer::sendCommand(BuzzerCommand::Success);
+		return;
 	}
+	ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
+	return;
 }
 
 void ModuleSD::_saveWP(){
@@ -86,7 +91,11 @@ void ModuleSD::_saveWP(){
 			_write(writeBuf, writeLen);
 		}
 		_closeFile();
+		ModuleBuzzer::sendCommand(BuzzerCommand::Success);
+		return;
 	}
+	ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
+	return;
 }
 
 void ModuleSD::_saveLog(){
