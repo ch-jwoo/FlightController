@@ -248,6 +248,8 @@ void Debug_StartTask(void *argument){
 		voltageChecker.start();
 		voltage = voltageChecker.voltage;
 
+		printf("%f %f %f %f %f %f \n\r",local_x,local_y,sp_roll,sp_pitch,att_yaw,sp_throtle);
+
 //		printf_("%d\t%d\t%f\t%f\t%f\r\n", ModuleINS::calGpsHomeFlag, ModuleINS::avgIndexGPS, ModuleINS::avgLat, ModuleINS::avgLon, ModuleINS::avgAlt);
 
 //		int len = sprintf((char*)telemBuffer, "ready\r\n");
@@ -292,7 +294,7 @@ void MPU9250_StartTask(void *argument){
 				raw_magX = mpu9250.mag[0];
 				raw_magY = mpu9250.mag[1];
 				raw_magZ = mpu9250.mag[2];
-				interfaceMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
+//				interfaceMag.setMag(mpu9250.mag[0], mpu9250.mag[1], mpu9250.mag[2]);
 				magTick = osKernelGetTickCount();
 			}
 		}
@@ -317,7 +319,7 @@ void BME280_StartTask(void *argument){
 	 * Filter bandwidth : 1.75 Hz
 	 * response time : 0.3s
 	 */
-	BME280 bme280(&rtosI2C2, P_OSR_04, H_OSR_00, T_OSR_01, normal, BW0_021ODR,t_00_5ms);
+	BME280 bme280(&rtosI2C2, P_OSR_04, H_OSR_00, T_OSR_01, normal, full,t_00_5ms);
 	bme280.init();
 
 	bme280.update();
@@ -343,6 +345,7 @@ void IST8310_StartTask(void *argument){
 		tick += 7;
 		osDelayUntil(tick);		/* 142hz */
 		ist8310.update();
+		interfaceMag.setMag(ist8310.raw[0],ist8310.raw[1],ist8310.raw[2]);
 	}
 }
 
