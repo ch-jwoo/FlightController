@@ -9,7 +9,7 @@
 //
 // Model version                  : 1.32
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Sep 21 20:45:04 2020
+// C/C++ source code generated on : Tue Sep 22 17:54:59 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -391,7 +391,7 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
   // Expression: p.R{3}
   //  Referenced by: '<S1>/R3'
 
-  1.0,
+  4.0,
 
   // Expression: 1
   //  Referenced by: '<S1>/MeasurementFcn3Inputs'

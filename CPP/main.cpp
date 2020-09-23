@@ -67,7 +67,8 @@ float ned_ax, ned_ay, ned_az;
 float local_x, local_y, local_z;
 float local_vx, local_vy, local_vz;
 
-float gps_lat, gps_lon, gps_alt;
+float gps_lat, gps_lon, gps_alt, local_gps_x, local_gps_y;
+float gps_velN,gps_velE;
 float body_ax, body_ay, body_az;
 float body_gx, body_gy, body_gz;
 
@@ -199,6 +200,9 @@ void Debug_StartTask(void *argument){
 			gps_lat = gps.lat;
 			gps_lon = gps.lon;
 			gps_alt = gps.alt;
+			gps_velN=gps.velN;
+			gps_velE=gps.velE;
+
 		}
 
 		if(msgBus.getLocalPosition(&localPosition)){
@@ -208,7 +212,10 @@ void Debug_StartTask(void *argument){
 			local_vx = localPosition.vx;
 			local_vy = localPosition.vy;
 			local_vz = localPosition.vz;
+			local_gps_x=localPosition.gpsrawx;
+			local_gps_y=localPosition.gpsrawy;
 		}
+
 
 		if(msgBus.getBodyMag(&bodyMag)){
 			mag_x = bodyMag.xyz[0];
@@ -248,8 +255,11 @@ void Debug_StartTask(void *argument){
 		voltageChecker.start();
 		voltage = voltageChecker.voltage;
 
-		printf("%f %f %f %f %f %f \n\r",local_x,local_y,sp_roll,sp_pitch,att_yaw,sp_throtle);
+//		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f %f \n\r",local_x,local_y,sp_roll,sp_pitch,att_yaw,sp_throtle,gps.hdop);
+//		int len= sprintf_((char*)telemBuffer,"%f %f %f %d %d \n\r",gps.lat,gps.lon,gps.hdop,gps.usedSatellites,gps.visibleSatellites);
 
+		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f  \n\r",local_x,local_y,local_vx,local_vy,gps_velN,gps_velE);
+		telem.send(telemBuffer,len);
 //		printf_("%d\t%d\t%f\t%f\t%f\r\n", ModuleINS::calGpsHomeFlag, ModuleINS::avgIndexGPS, ModuleINS::avgLat, ModuleINS::avgLon, ModuleINS::avgAlt);
 
 //		int len = sprintf((char*)telemBuffer, "ready\r\n");
@@ -384,7 +394,7 @@ void GCS_StartTask(void *argument){
 }
 
 void AUTO_StartTask(void *argument){
-//	ModuleAutoController::main();
+//	ModuleAutoController::main();       //NEVER EVER OPEN
 	while(1) osDelay(1000);
 }
 
@@ -412,7 +422,7 @@ void GPS_StartTask(void *argument){
 			interfaceGPS.setGPS(tmGps.Latitude, tmGps.Longitude, tmGps.Altitude,
 								TM_GPS_ConvertSpeed(tmGps.Speed, TM_GPS_Speed_MeterPerSecond), tmGps.Direction, tmGps.HDOP, tmGps.VDOP,
 								tmGps.Satellites, tmGps.SatellitesInView, tmGps.FixMode, 0/* UTC in microsecond */);
-//			printf_("%f %f %f %d\r\n", tmGps.Latitude, tmGps.Longitude, tmGps.Altitude, tmGps.Satellites);
+			printf_("%f %f %f %d\r\n", tmGps.Latitude, tmGps.Longitude, tmGps.Altitude, tmGps.Satellites);
 		}
 	}
 }

@@ -79,6 +79,9 @@ struct LocalPosition{
 
 	float yaw;		/* -PI ~ PI  */
 
+	float gpsrawx;
+	float gpsrawy;
+
 	double refLat;	/* deg -90.0 ~ 90.0 */
 	double refLon;	/* deg -180.0 ~ 180.0 */
 	float refAlt;	/*[m]*/

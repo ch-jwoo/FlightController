@@ -61,6 +61,7 @@ public:
 			//TODO differential pressure
 			if(health.lidar > LIDAR_THRESHOLD) statusFlag.lidar = true;
 			if(health.rc > RC_THRESHOLD) statusFlag.receiver = true;
+			if(health.gps > GPS_THRESHOLD) statusFlag.gps = true;
 
 			if(health.ahrs > AHRS_THRESHOLD
 			&& statusFlag.accel && statusFlag.gyro && statusFlag.receiver){

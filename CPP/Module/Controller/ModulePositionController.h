@@ -57,7 +57,7 @@ private:
 
 	void setFromAutoController();
 
-	static constexpr float MAX_HORISION = 2.0;
+	static constexpr float MAX_HORISION = 3.0;
 	static constexpr float MAX_VELTICAL = 1.0;
 	static constexpr float MAX_YAW = 1.570796f;			/* pi/2 */
 

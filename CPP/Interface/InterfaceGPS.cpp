@@ -41,6 +41,9 @@ void InterfaceGPS::setGPS(double lat, double lon, float alt,
 
 	msgBus.setGPS(this->gps);
 
+//	int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f\n\r",lat,lon,alt,velN,velE);
+//	telem.send(telemBuffer,len);
+
 	/* Freq class variable */
 	freqCount();
 }

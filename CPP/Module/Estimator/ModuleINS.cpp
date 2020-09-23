@@ -9,6 +9,8 @@
 #include <Utils/Constants.h>
 #include <Module/Controller/ModulePositionController.h>
 #include "Usec.h"
+#include "Peripherals/Coms/Telemetry.h"
+#include "printf.h"
 
 namespace FC {
 
@@ -22,22 +24,30 @@ ModuleINS::ModuleINS()
 	: refLat(0)
 	, refLon(0)
 	, refAlt(0)
-	, gpsHomeFlag(false)
 {}
 
 void ModuleINS::main(){
 	uint32_t tick;
 	tick = osKernelGetTickCount();
-
+	uint64_t dt;
+	int cnt=0;
 	ModuleINS moduleINS;
 	moduleINS.initialize();
 	osDelay(2000);
+	dt=microsecond();
 	while(1){
 		tick += 10;
 		osDelayUntil(tick);
 
 		moduleINS.onestep();
 		ModulePositionController::setSignal(PC_fromEKF);
+		if(microsecond()-dt>1000000){
+			int len = sprintf((char*)telemBuffer, "ins hz: %d \r\n",cnt);
+			telem.send(telemBuffer, len);
+			cnt=0;
+			dt=microsecond();
+		}
+		cnt++;;
 	}
 }
 void ModuleINS::onestep(){
@@ -53,7 +63,7 @@ void ModuleINS::onestep(){
 
    if(msgBus.getGPS(&gpsSub)){
 	   /* not fixed */
-      if(gpsSub.fixType == false || gpsSub.usedSatellites < 4){
+      if(gpsSub.fixType == false){
          input.GpsFlag = false;
       }
 
@@ -66,19 +76,23 @@ void ModuleINS::onestep(){
       /* there is home LLA */
       else{
          input.GpsFlag = true;
-         input.lat=gpsSub.lat;
-         input.lon=gpsSub.lon;
-         input.alt=gpsSub.alt;
-         input.vx=gpsSub.velN;
-         input.vy=gpsSub.velE;
          input.GPS_switch=true;
       }
    }
    else input.GpsFlag = false;
 
+
+   input.lat=gpsSub.lat;
+input.lon=gpsSub.lon;
+input.alt=gpsSub.alt;
+input.vx=gpsSub.velN;
+input.vy=gpsSub.velE;
+
+
    input.HOME_lla[0]=refLat;
    input.HOME_lla[1]=refLon;
    input.HOME_lla[2]=refAlt;
+
 
    if(msgBus.getBarometer(&baroSub)){
       input.BaroFlag = true;
@@ -91,6 +105,8 @@ void ModuleINS::onestep(){
       input.Lidar_height = lidar.altitude;
    }
    else input.LidarFlag = false;
+
+
 
    setExternalInputs(&input);
    step();
@@ -109,8 +125,8 @@ void ModuleINS::onestep(){
    localPositionPub.x = (float)output.estiX;
    localPositionPub.y = (float)output.estiY;
    localPositionPub.z = (float)output.estiZ;
-//   localPositionPub.gpsrawx=(float)output.GPSrawX;
-//   localPositionPub.gpsrawy=(float)output.GPSrawY;
+   localPositionPub.gpsrawx=(float)output.GPSrawX;
+   localPositionPub.gpsrawy=(float)output.GPSrawY;
 
    /* global position (LLA) */
    globalPositionPub.lat=output.Estim_LatLon[0];
@@ -127,10 +143,9 @@ void ModuleINS::onestep(){
    globalPositionPub.yaw=attitudeSub.yaw;
 
    msgBus.setLocalPosition(localPositionPub);
+   msgBus.setGlobalPosition(globalPositionPub);
 
-   if(gpsHomeFlag){
-	   msgBus.setGlobalPosition(globalPositionPub);
-   }
+//	printf_("%f %f error: %f %f \r\n",refLat,refLon,gpsSub.lat-refLat,gpsSub.lon-refLon);
 
    freqCount();
 }
@@ -154,7 +169,6 @@ void ModuleINS::calAvgLLA(double lat, double lon, float alt){
 
 	if(avgIndexGPS > AVERAGE_SIZE){
 		calGpsHomeFlag = false;
-		gpsHomeFlag = true;
 		refLat = avgLat;
 		refLon = avgLon;
 		refAlt = avgAlt;
