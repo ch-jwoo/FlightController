@@ -14,7 +14,7 @@
 
 namespace FC{
 
-float ModuleAHRS::beta = 0.1f;
+float ModuleAHRS::beta = 0.01f;
 
 ModuleAHRS::ModuleAHRS()
 	: bodyAccelSub{}
@@ -41,18 +41,18 @@ void ModuleAHRS::oneStep(){
 //		MadgwickAHRSupdateIMU(bodyAngularVelocitySub.xyz[0],
 //							  bodyAngularVelocitySub.xyz[1],
 //							  bodyAngularVelocitySub.xyz[2],
-//							  bodyAccelSub.xyz[0],
-//							  bodyAccelSub.xyz[1],
-//							  bodyAccelSub.xyz[2]);
+//							  -bodyAccelSub.xyz[0],
+//							  -bodyAccelSub.xyz[1],
+//							 -bodyAccelSub.xyz[2]);
 //	}
 //	/* mag data valid */
 //	else{
 //		MadgwickAHRSupdate(bodyAngularVelocitySub.xyz[0],
 //						   bodyAngularVelocitySub.xyz[1],
 //						   bodyAngularVelocitySub.xyz[2],
-//						   bodyAccelSub.xyz[0],
-//						   bodyAccelSub.xyz[1],
-//						   bodyAccelSub.xyz[2],
+//						   -bodyAccelSub.xyz[0],
+//						   -bodyAccelSub.xyz[1],
+//						   -bodyAccelSub.xyz[2],
 //						   bodyMagSub.xyz[0],
 //						   bodyMagSub.xyz[1],
 //						   bodyMagSub.xyz[2]);

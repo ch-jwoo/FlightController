@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionEstimator'.
 //
-// Model version                  : 1.32
+// Model version                  : 1.34
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Tue Sep 22 17:54:59 2020
+// C/C++ source code generated on : Mon Sep 28 23:39:25 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -106,17 +106,17 @@ extern "C" {
     real_T Sum_o[2];                   // '<S23>/Sum'
     real_T DataStoreReadX[6];          // '<S19>/Data Store ReadX'
     real_T xNew[6];                    // '<S19>/Predict'
-    real_T P_n[36];                    // '<S19>/Predict'
+    real_T P_a[36];                    // '<S19>/Predict'
     real_T DataStoreRead[6];           // '<S18>/Data Store Read'
     real_T DataStoreRead1[36];         // '<S18>/Data Store Read1'
-    real_T DataStoreReadX_j[6];        // '<S17>/Data Store ReadX'
+    real_T DataStoreReadX_a[6];        // '<S17>/Data Store ReadX'
     real_T TmpSignalConversionAtSFunctionI[4];// '<S17>/Correct'
-    real_T xNew_g[6];                  // '<S17>/Correct'
+    real_T xNew_j[6];                  // '<S17>/Correct'
     real_T P_f[36];                    // '<S17>/Correct'
-    real_T DataStoreReadX_p[6];        // '<S16>/Data Store ReadX'
-    real_T TmpSignalConversionAtSFunctio_i[2];// '<S16>/Correct'
-    real_T xNew_n[6];                  // '<S16>/Correct'
-    real_T P_k[36];                    // '<S16>/Correct'
+    real_T DataStoreReadX_e[6];        // '<S16>/Data Store ReadX'
+    real_T TmpSignalConversionAtSFunctio_c[2];// '<S16>/Correct'
+    real_T xNew_a[6];                  // '<S16>/Correct'
+    real_T P_p[36];                    // '<S16>/Correct'
     real_T DataStoreReadX_g[3];        // '<S10>/Data Store ReadX'
     real_T xNew_k[3];                  // '<S10>/Predict'
     real_T P_i[9];                     // '<S10>/Predict'
@@ -124,14 +124,14 @@ extern "C" {
     real_T DataStoreRead1_h[9];        // '<S9>/Data Store Read1'
     real_T DataStoreReadX_i[3];        // '<S7>/Data Store ReadX'
     real_T xNew_p[3];                  // '<S7>/Correct'
-    real_T P_a[9];                     // '<S7>/Correct'
+    real_T P_ak[9];                    // '<S7>/Correct'
     real_T DataStoreReadX_o[3];        // '<S5>/Data Store ReadX'
     real_T xNew_o[3];                  // '<S5>/Correct'
     real_T P_g[9];                     // '<S5>/Correct'
     real_T P_i_m[9];                   // '<S1>/DataStoreMemory - P'
     real_T x[3];                       // '<S1>/DataStoreMemory - x'
-    real_T P_n_c[36];                  // '<S2>/DataStoreMemory - P'
-    real_T x_p[6];                     // '<S2>/DataStoreMemory - x'
+    real_T P_k[36];                    // '<S2>/DataStoreMemory - P'
+    real_T x_o[6];                     // '<S2>/DataStoreMemory - x'
     real_T Abs;                        // '<S60>/Abs'
     real_T Switch;                     // '<S60>/Switch'
     real_T Abs1;                       // '<S57>/Abs1'
@@ -327,6 +327,8 @@ extern "C" {
     real_T Estim_Alt;                  // '<Root>/Estim_Alt'
     real_T GPSrawX;                    // '<Root>/GPSrawX'
     real_T GPSrawY;                    // '<Root>/GPSrawY'
+    real_T GPSrawVX;                   // '<Root>/GPSrawVX'
+    real_T GPSrawVY;                   // '<Root>/GPSrawVY'
   } ExtY;
 
   // Parameters for system: '<S1>/Correct2'
@@ -628,13 +630,13 @@ extern "C" {
     real_T Q_Value_c[36];              // Expression: p.Q
                                           //  Referenced by: '<S2>/Q'
 
-    real_T StateTransitionFcnInputs_Valu_k;// Expression: 0
+    real_T StateTransitionFcnInputs_Valu_l;// Expression: 0
                                               //  Referenced by: '<S2>/StateTransitionFcnInputs'
 
-    real_T DataStoreMemoryP_InitialValue_m[36];// Expression: p.InitialCovariance
+    real_T DataStoreMemoryP_InitialValue_h[36];// Expression: p.InitialCovariance
                                                   //  Referenced by: '<S2>/DataStoreMemory - P'
 
-    real_T DataStoreMemoryx_InitialValue_j[6];// Expression: p.InitialState
+    real_T DataStoreMemoryx_InitialValue_k[6];// Expression: p.InitialState
                                                  //  Referenced by: '<S2>/DataStoreMemory - x'
 
     boolean_T yBlockOrdering_Y0;       // Computed Parameter: yBlockOrdering_Y0
@@ -643,10 +645,10 @@ extern "C" {
     boolean_T yBlockOrdering_Y0_b;    // Computed Parameter: yBlockOrdering_Y0_b
                                          //  Referenced by: '<S7>/yBlockOrdering'
 
-    boolean_T yBlockOrdering_Y0_a;    // Computed Parameter: yBlockOrdering_Y0_a
+    boolean_T yBlockOrdering_Y0_k;    // Computed Parameter: yBlockOrdering_Y0_k
                                          //  Referenced by: '<S16>/yBlockOrdering'
 
-    boolean_T yBlockOrdering_Y0_g;    // Computed Parameter: yBlockOrdering_Y0_g
+    boolean_T yBlockOrdering_Y0_m;    // Computed Parameter: yBlockOrdering_Y0_m
                                          //  Referenced by: '<S17>/yBlockOrdering'
 
     boolean_T BlockOrdering_Value;     // Expression: true()
@@ -786,7 +788,7 @@ extern "C" {
 //
 //  '<Root>' : 'positionEstimator'
 //  '<S1>'   : 'positionEstimator/EKF_Altitude'
-//  '<S2>'   : 'positionEstimator/EKF_Position'
+//  '<S2>'   : 'positionEstimator/EKF_Position1'
 //  '<S3>'   : 'positionEstimator/Subsystem'
 //  '<S4>'   : 'positionEstimator/from_home'
 //  '<S5>'   : 'positionEstimator/EKF_Altitude/Correct1'
@@ -800,13 +802,13 @@ extern "C" {
 //  '<S13>'  : 'positionEstimator/EKF_Altitude/Correct3/Correct'
 //  '<S14>'  : 'positionEstimator/EKF_Altitude/Correct4/Correct'
 //  '<S15>'  : 'positionEstimator/EKF_Altitude/Predict/Predict'
-//  '<S16>'  : 'positionEstimator/EKF_Position/Correct1'
-//  '<S17>'  : 'positionEstimator/EKF_Position/Correct2'
-//  '<S18>'  : 'positionEstimator/EKF_Position/Output'
-//  '<S19>'  : 'positionEstimator/EKF_Position/Predict'
-//  '<S20>'  : 'positionEstimator/EKF_Position/Correct1/Correct'
-//  '<S21>'  : 'positionEstimator/EKF_Position/Correct2/Correct'
-//  '<S22>'  : 'positionEstimator/EKF_Position/Predict/Predict'
+//  '<S16>'  : 'positionEstimator/EKF_Position1/Correct1'
+//  '<S17>'  : 'positionEstimator/EKF_Position1/Correct2'
+//  '<S18>'  : 'positionEstimator/EKF_Position1/Output'
+//  '<S19>'  : 'positionEstimator/EKF_Position1/Predict'
+//  '<S20>'  : 'positionEstimator/EKF_Position1/Correct1/Correct'
+//  '<S21>'  : 'positionEstimator/EKF_Position1/Correct2/Correct'
+//  '<S22>'  : 'positionEstimator/EKF_Position1/Predict/Predict'
 //  '<S23>'  : 'positionEstimator/Subsystem/Flat Earth to LLA'
 //  '<S24>'  : 'positionEstimator/Subsystem/Flat Earth to LLA/LatLong wrap'
 //  '<S25>'  : 'positionEstimator/Subsystem/Flat Earth to LLA/LatLong wrap1'

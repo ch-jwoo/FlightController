@@ -10,8 +10,8 @@
 namespace FC{
 
 InterfaceMag interfaceMag;
-float InterfaceMag::bias[] = {3.5f, -8.0f, -35.0f};
-float InterfaceMag::scale[] = {0.977998f, 1.014840f, 1.007937f};
+float InterfaceMag::bias[] = {-2.5f, -22.50f, -42.0f};
+float InterfaceMag::scale[] = {0.915612f, 1.079602f, 1.018779f};
 
 InterfaceMag::InterfaceMag()
 : bodyMag{0, }

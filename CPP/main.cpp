@@ -129,7 +129,7 @@ void Debug_StartTask(void *argument){
 //	MS4525DO ms4525DO(&rtosI2C2);
 
 	while(1){
-		tick += 20;
+		tick += 100;
 		osDelayUntil(tick);
 		debug_loop++;
 
@@ -255,11 +255,17 @@ void Debug_StartTask(void *argument){
 		voltageChecker.start();
 		voltage = voltageChecker.voltage;
 
-//		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f %f \n\r",local_x,local_y,sp_roll,sp_pitch,att_yaw,sp_throtle,gps.hdop);
+		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f %f \n\r",local_x,local_y,sp_roll,sp_pitch,att_yaw,sp_throtle,gps.hdop);
 //		int len= sprintf_((char*)telemBuffer,"%f %f %f %d %d \n\r",gps.lat,gps.lon,gps.hdop,gps.usedSatellites,gps.visibleSatellites);
 
-		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f  \n\r",local_x,local_y,local_vx,local_vy,gps_velN,gps_velE);
+//		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f  \n\r",local_x,local_y,local_vx,local_vy, gps_velN, gps_velE);
 		telem.send(telemBuffer,len);
+////
+//		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f  \n\r",mag_scaleX,mag_scaleY,mag_scaleZ,mag_biasX,mag_biasY,mag_biasZ);
+//		telem.send(telemBuffer,len);
+
+
+
 //		printf_("%d\t%d\t%f\t%f\t%f\r\n", ModuleINS::calGpsHomeFlag, ModuleINS::avgIndexGPS, ModuleINS::avgLat, ModuleINS::avgLon, ModuleINS::avgAlt);
 
 //		int len = sprintf((char*)telemBuffer, "ready\r\n");
@@ -352,10 +358,11 @@ void IST8310_StartTask(void *argument){
 	IST8310 ist8310(&rtosI2C2);
 	ist8310.init();
 	while(1){
-		tick += 7;
+		tick += 10;
 		osDelayUntil(tick);		/* 142hz */
 		ist8310.update();
 		interfaceMag.setMag(ist8310.raw[0],ist8310.raw[1],ist8310.raw[2]);
+
 	}
 }
 
@@ -394,8 +401,8 @@ void GCS_StartTask(void *argument){
 }
 
 void AUTO_StartTask(void *argument){
-//	ModuleAutoController::main();       //NEVER EVER OPEN
-	while(1) osDelay(1000);
+	ModuleAutoController::main();       //NEVER EVER OPEN
+//	while(1) osDelay(1000);
 }
 
 

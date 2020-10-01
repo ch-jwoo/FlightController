@@ -66,39 +66,39 @@ void geo2ECEF(double lat, double lon, float alt, double *ecefX, double *ecefY, d
 *  step3: calculating local ned position
 */
 void lla2LocalNed(double lat, double lon, float alt,
-		double refLat, double refLon, float refAlt,
-		float *localNedX, float *localNedY, float *localNedZ){
+      double refLat, double refLon, float refAlt,
+      float *localNedX, float *localNedY, float *localNedZ){
 
-	/* reference ecef axis */
-	double refEcefX, refEcefY, refEcefZ;
-	geo2ECEF(refLat, refLon, refAlt, &refEcefX, &refEcefY, &refEcefZ);
+   /* reference ecef axis */
+   double refEcefX, refEcefY, refEcefZ;
+   geo2ECEF(refLat, refLon, refAlt, &refEcefX, &refEcefY, &refEcefZ);
 
-	/* target ecef axis */
-	double ecefX, ecefY, ecefZ;
-	geo2ECEF(lat, lon, alt, &ecefX, &ecefY, &ecefZ);
+   /* target ecef axis */
+   double ecefX, ecefY, ecefZ;
+   geo2ECEF(lat, lon, alt, &ecefX, &ecefY, &ecefZ);
 
-	/*
-	*  z axis rotate 'longitude'
-	*  y axis rotate '-latitude-90'
-	*/
-	double dcm[9] = { -sin(refLat) * cos(refLon), -sin(refLat) * sin(refLon),  cos(refLat),
-				   -sin(refLon)             ,  cos(refLon)             ,  0,
-				   -cos(refLat) * cos(refLon), -cos(refLat) * sin(refLon), -sin(refLat) };
+   /*
+   *  z axis rotate 'longitude'
+   *  y axis rotate '-latitude-90'
+   */
+   double dcm[9] = { -sin(refLat) * cos(refLon), -sin(refLat) * sin(refLon),  cos(refLat),
+               -sin(refLon)             ,  cos(refLon)             ,  0,
+               -cos(refLat) * cos(refLon), -cos(refLat) * sin(refLon), -sin(refLat) };
 
-	matrix::Matrix<double, 3, 3> dcmMatrix(dcm);
-
-	/*ECEF - RefECEF*/
-	double temp[3] = { ecefX - refEcefX,
-					ecefY - refEcefY,
-					ecefZ - refEcefZ };
-
-	matrix::Matrix<double, 3, 1> tempMatrix(temp);
-	matrix::Matrix<double, 3, 1> nedMatrix = dcmMatrix * tempMatrix;
-
-	/*local ned position*/
-	*localNedX = nedMatrix(1, 1);
-	*localNedY = nedMatrix(2, 1);
-	*localNedZ = nedMatrix(3, 1);
+   matrix::Matrix<double, 3, 3> dcmMatrix(dcm);
+//
+   /*ECEF - RefECEF*/
+   double temp[3] = { ecefX - refEcefX,
+               ecefY - refEcefY,
+               ecefZ - refEcefZ };
+//
+   matrix::Matrix<double, 3, 1> tempMatrix(temp);
+   matrix::Matrix<double, 3, 1> nedMatrix = dcmMatrix * tempMatrix;
+//
+//   /*local ned position*/
+   *localNedX = nedMatrix(0,0);
+   *localNedY = nedMatrix(1,0);
+   *localNedZ = nedMatrix(2,0);
 }
 
 }

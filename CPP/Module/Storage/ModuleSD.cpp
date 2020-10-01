@@ -200,10 +200,13 @@ void ModuleSD::_loadWP(){
 
 void ModuleSD::_saveTest(){
 	static struct Attitude attitude;
+	static struct LocalPosition localNed;
+	static struct GlobalPosition globalLLA;
 	static struct NedAccel nedAccel;
 	static struct GPS gps;
 	static struct Barometer baro;
 	static struct BodyAngularVelocity gyro;
+	static struct VehiclePositionSP positionSP;
 
 	/* sdopen */
 	if(_openFile("0:/log.txt", FA_OPEN_APPEND | FA_WRITE)){
@@ -221,10 +224,10 @@ void ModuleSD::_saveTest(){
 			_write((void const*)writeBuf, writeLen);
 		 }
 
-		 if(msgBus.getBodyAngularVelocity(&gyro)){
-			writeLen = sprintf_((char*)writeBuf,"gyro %u %f\n",(unsigned int)gyro.timestamp, (gyro.xyz[2]));
-			_write(writeBuf, writeLen);
-		 }
+//		 if(msgBus.getBodyAngularVelocity(&gyro)){
+//			writeLen = sprintf_((char*)writeBuf,"gyro %u %f\n",(unsigned int)gyro.timestamp, (gyro.xyz[2]));
+//			_write(writeBuf, writeLen);
+//		 }
 
 		 if(msgBus.getGPS(&gps)){
 //			int32_t latDecimal = (int32_t)gps.lat;
@@ -245,6 +248,20 @@ void ModuleSD::_saveTest(){
 			writeLen=sprintf_((char*)writeBuf,"Baro %u %f\n",(unsigned int)baro.timestamp,(baro.pressure));
 			_write(writeBuf, writeLen);
 		 }
+
+		 if(msgBus.getLocalPosition(&localNed)){
+				writeLen=sprintf_((char*)writeBuf,"localNED %u %f %f %f %f %f %f %f %f\n",(unsigned int)localNed.timestamp,localNed.gpsrawx,localNed.gpsrawy,localNed.x,localNed.y,localNed.z,localNed.vx,localNed.vy,localNed.vz);
+				_write(writeBuf, writeLen);
+			 }
+		 if(msgBus.getGlobalPosition(&globalLLA)){
+		 				writeLen=sprintf_((char*)writeBuf,"globalNED %u %f %f %f %f\n",(unsigned int)globalLLA.timestamp,globalLLA.lat,globalLLA.lon,globalLLA.alt,globalLLA.yaw);
+		 				_write(writeBuf, writeLen);
+		 			 }
+		 if(msgBus.getVehiclePositionSP(&positionSP)){
+				writeLen=sprintf_((char*)writeBuf,"PositionSP %u %f %f %f %f\n",(unsigned int)positionSP.timestamp,positionSP.x,positionSP.y,positionSP.z,positionSP.yaw);
+				_write(writeBuf, writeLen);
+			 }
+
 		_closeFile();
 	}
 }

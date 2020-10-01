@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionEstimator'.
 //
-// Model version                  : 1.32
+// Model version                  : 1.34
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Tue Sep 22 17:54:59 2020
+// C/C++ source code generated on : Mon Sep 28 23:39:25 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -1000,7 +1000,7 @@ void positionEstimatorModelClass::step()
   if (rtDW.DataTypeConversion_Enable1) {
     // DataStoreRead: '<S16>/Data Store ReadX'
     for (i = 0; i < 6; i++) {
-      rtDW.DataStoreReadX_p[i] = rtDW.x_p[i];
+      rtDW.DataStoreReadX_e[i] = rtDW.x_o[i];
     }
 
     // End of DataStoreRead: '<S16>/Data Store ReadX'
@@ -1010,8 +1010,8 @@ void positionEstimatorModelClass::step()
     //   Inport: '<Root>/ay'
     //   MATLAB Function: '<S16>/Correct'
 
-    rtDW.TmpSignalConversionAtSFunctio_i[0] = rtU.ax;
-    rtDW.TmpSignalConversionAtSFunctio_i[1] = rtU.ay;
+    rtDW.TmpSignalConversionAtSFunctio_c[0] = rtU.ax;
+    rtDW.TmpSignalConversionAtSFunctio_c[1] = rtU.ay;
 
     // MATLAB Function: '<S16>/Correct' incorporates:
     //   Constant: '<S2>/BlockOrdering'
@@ -1021,11 +1021,11 @@ void positionEstimatorModelClass::step()
     rtDW.blockOrdering_f = blockOrdering;
     for (i = 0; i < 36; i++) {
       // DataStoreRead: '<S16>/Data Store ReadP'
-      rtDW.P_k[i] = rtDW.P_n_c[i];
+      rtDW.P_p[i] = rtDW.P_k[i];
 
       // MATLAB Function: '<S16>/Correct'
-      a22 = rtDW.P_k[i];
-      rtDW.P_k[i] = a22;
+      a22 = rtDW.P_p[i];
+      rtDW.P_p[i] = a22;
     }
 
     // MATLAB Function: '<S16>/Correct' incorporates:
@@ -1035,22 +1035,22 @@ void positionEstimatorModelClass::step()
       z[i] = 0.0;
       for (k = 0; k < 6; k++) {
         a22 = z[i];
-        a22 += static_cast<real_T>(a_0[(k << 1) + i]) * rtDW.DataStoreReadX_p[k];
+        a22 += static_cast<real_T>(a_0[(k << 1) + i]) * rtDW.DataStoreReadX_e[k];
         z[i] = a22;
       }
     }
 
     for (r1 = 0; r1 < 6; r1++) {
       for (i = 0; i < 6; i++) {
-        imvec[i] = rtDW.DataStoreReadX_p[i];
+        imvec[i] = rtDW.DataStoreReadX_e[i];
       }
 
-      epsilon = 1.4901161193847656E-8 * std::abs(rtDW.DataStoreReadX_p[r1]);
+      epsilon = 1.4901161193847656E-8 * std::abs(rtDW.DataStoreReadX_e[r1]);
       if ((1.4901161193847656E-8 > epsilon) || rtIsNaN(epsilon)) {
         epsilon = 1.4901161193847656E-8;
       }
 
-      imvec[r1] = rtDW.DataStoreReadX_p[r1] + epsilon;
+      imvec[r1] = rtDW.DataStoreReadX_e[r1] + epsilon;
       for (i = 0; i < 2; i++) {
         imvec_2 = 0.0;
         for (k = 0; k < 6; k++) {
@@ -1066,7 +1066,7 @@ void positionEstimatorModelClass::step()
         Pxy[i + 6 * k] = 0.0;
         for (r1 = 0; r1 < 6; r1++) {
           a22 = Pxy[6 * k + i];
-          a22 += rtDW.P_k[6 * r1 + i] * dHdx[(r1 << 1) + k];
+          a22 += rtDW.P_p[6 * r1 + i] * dHdx[(r1 << 1) + k];
           Pxy[i + 6 * k] = a22;
         }
       }
@@ -1077,7 +1077,7 @@ void positionEstimatorModelClass::step()
         gain[i + (k << 1)] = 0.0;
         for (r1 = 0; r1 < 6; r1++) {
           a22 = gain[(k << 1) + i];
-          a22 += dHdx[(r1 << 1) + i] * rtDW.P_k[6 * k + r1];
+          a22 += dHdx[(r1 << 1) + i] * rtDW.P_p[6 * k + r1];
           gain[i + (k << 1)] = a22;
         }
       }
@@ -1112,16 +1112,16 @@ void positionEstimatorModelClass::step()
       imvec_2 = 0.0;
       for (k = 0; k < 6; k++) {
         imvec_2 += static_cast<real_T>(a_0[(k << 1) + i]) *
-          rtDW.DataStoreReadX_p[k];
+          rtDW.DataStoreReadX_e[k];
       }
 
-      z[i] = rtDW.TmpSignalConversionAtSFunctio_i[i] - imvec_2;
+      z[i] = rtDW.TmpSignalConversionAtSFunctio_c[i] - imvec_2;
     }
 
     for (i = 0; i < 6; i++) {
       imvec_2 = gain[i] * z[0];
       imvec_2 += gain[i + 6] * z[1];
-      rtDW.xNew_n[i] = rtDW.DataStoreReadX_p[i] + imvec_2;
+      rtDW.xNew_a[i] = rtDW.DataStoreReadX_e[i] + imvec_2;
       for (k = 0; k < 6; k++) {
         gain_0[i + 6 * k] = 0.0;
         a22 = gain_0[6 * k + i];
@@ -1135,23 +1135,23 @@ void positionEstimatorModelClass::step()
       for (k = 0; k < 6; k++) {
         imvec_2 = 0.0;
         for (r1 = 0; r1 < 6; r1++) {
-          imvec_2 += gain_0[6 * r1 + i] * rtDW.P_k[6 * k + r1];
+          imvec_2 += gain_0[6 * r1 + i] * rtDW.P_p[6 * k + r1];
         }
 
-        tmp_0[i + 6 * k] = rtDW.P_k[6 * k + i] - imvec_2;
+        tmp_0[i + 6 * k] = rtDW.P_p[6 * k + i] - imvec_2;
       }
     }
 
     for (i = 0; i < 36; i++) {
-      rtDW.P_k[i] = tmp_0[i];
+      rtDW.P_p[i] = tmp_0[i];
 
       // DataStoreWrite: '<S16>/Data Store WriteP'
-      rtDW.P_n_c[i] = rtDW.P_k[i];
+      rtDW.P_k[i] = rtDW.P_p[i];
     }
 
     // DataStoreWrite: '<S16>/Data Store WriteX'
     for (i = 0; i < 6; i++) {
-      rtDW.x_p[i] = rtDW.xNew_n[i];
+      rtDW.x_o[i] = rtDW.xNew_a[i];
     }
 
     // End of DataStoreWrite: '<S16>/Data Store WriteX'
@@ -1171,7 +1171,7 @@ void positionEstimatorModelClass::step()
   if (rtDW.LogicalOperator) {
     // DataStoreRead: '<S17>/Data Store ReadX'
     for (i = 0; i < 6; i++) {
-      rtDW.DataStoreReadX_j[i] = rtDW.x_p[i];
+      rtDW.DataStoreReadX_a[i] = rtDW.x_o[i];
     }
 
     // End of DataStoreRead: '<S17>/Data Store ReadX'
@@ -1194,7 +1194,7 @@ void positionEstimatorModelClass::step()
     rtDW.blockOrdering = blockOrdering;
     for (i = 0; i < 36; i++) {
       // DataStoreRead: '<S17>/Data Store ReadP'
-      rtDW.P_f[i] = rtDW.P_n_c[i];
+      rtDW.P_f[i] = rtDW.P_k[i];
 
       // MATLAB Function: '<S17>/Correct'
       a22 = rtDW.P_f[i];
@@ -1206,23 +1206,23 @@ void positionEstimatorModelClass::step()
 
     for (r1 = 0; r1 < 6; r1++) {
       for (i = 0; i < 6; i++) {
-        imvec[i] = rtDW.DataStoreReadX_j[i];
+        imvec[i] = rtDW.DataStoreReadX_a[i];
       }
 
-      epsilon = 1.4901161193847656E-8 * std::abs(rtDW.DataStoreReadX_j[r1]);
+      epsilon = 1.4901161193847656E-8 * std::abs(rtDW.DataStoreReadX_a[r1]);
       if ((1.4901161193847656E-8 > epsilon) || rtIsNaN(epsilon)) {
         epsilon = 1.4901161193847656E-8;
       }
 
-      imvec[r1] = rtDW.DataStoreReadX_j[r1] + epsilon;
-      dHdx_0[r1 << 2] = (imvec[0] - rtDW.DataStoreReadX_j[0]) / epsilon;
-      dHdx_0[(r1 << 2) + 1] = (imvec[1] - rtDW.DataStoreReadX_j[1]) / epsilon;
-      dHdx_0[(r1 << 2) + 2] = (imvec[2] - rtDW.DataStoreReadX_j[2]) / epsilon;
-      dHdx_0[(r1 << 2) + 3] = (imvec[3] - rtDW.DataStoreReadX_j[3]) / epsilon;
+      imvec[r1] = rtDW.DataStoreReadX_a[r1] + epsilon;
+      dHdx_0[r1 << 2] = (imvec[0] - rtDW.DataStoreReadX_a[0]) / epsilon;
+      dHdx_0[(r1 << 2) + 1] = (imvec[1] - rtDW.DataStoreReadX_a[1]) / epsilon;
+      dHdx_0[(r1 << 2) + 2] = (imvec[2] - rtDW.DataStoreReadX_a[2]) / epsilon;
+      dHdx_0[(r1 << 2) + 3] = (imvec[3] - rtDW.DataStoreReadX_a[3]) / epsilon;
     }
 
     for (i = 0; i < 6; i++) {
-      imvec[i] = rtDW.DataStoreReadX_j[i];
+      imvec[i] = rtDW.DataStoreReadX_a[i];
     }
 
     for (i = 0; i < 4; i++) {
@@ -1235,7 +1235,7 @@ void positionEstimatorModelClass::step()
         }
       }
 
-      Pyy[i] = rtDW.TmpSignalConversionAtSFunctionI[i] - rtDW.DataStoreReadX_j[i];
+      Pyy[i] = rtDW.TmpSignalConversionAtSFunctionI[i] - rtDW.DataStoreReadX_a[i];
     }
 
     for (i = 0; i < 6; i++) {
@@ -1262,19 +1262,19 @@ void positionEstimatorModelClass::step()
 
     EKFCorrector_correctStateAndCov(imvec, rtDW.P_f, Pyy, tmp, dHdx_3, dHdx_0);
     for (i = 0; i < 6; i++) {
-      rtDW.xNew_g[i] = imvec[i];
+      rtDW.xNew_j[i] = imvec[i];
     }
 
     // DataStoreWrite: '<S17>/Data Store WriteP'
     for (i = 0; i < 36; i++) {
-      rtDW.P_n_c[i] = rtDW.P_f[i];
+      rtDW.P_k[i] = rtDW.P_f[i];
     }
 
     // End of DataStoreWrite: '<S17>/Data Store WriteP'
 
     // DataStoreWrite: '<S17>/Data Store WriteX'
     for (i = 0; i < 6; i++) {
-      rtDW.x_p[i] = rtDW.xNew_g[i];
+      rtDW.x_o[i] = rtDW.xNew_j[i];
     }
 
     // End of DataStoreWrite: '<S17>/Data Store WriteX'
@@ -1285,14 +1285,14 @@ void positionEstimatorModelClass::step()
   // Outputs for Atomic SubSystem: '<S2>/Output'
   // DataStoreRead: '<S18>/Data Store Read'
   for (i = 0; i < 6; i++) {
-    rtDW.DataStoreRead[i] = rtDW.x_p[i];
+    rtDW.DataStoreRead[i] = rtDW.x_o[i];
   }
 
   // End of DataStoreRead: '<S18>/Data Store Read'
 
   // DataStoreRead: '<S18>/Data Store Read1'
   for (i = 0; i < 36; i++) {
-    rtDW.DataStoreRead1[i] = rtDW.P_n_c[i];
+    rtDW.DataStoreRead1[i] = rtDW.P_k[i];
   }
 
   // End of DataStoreRead: '<S18>/Data Store Read1'
@@ -1444,7 +1444,7 @@ void positionEstimatorModelClass::step()
 
     // DataStoreRead: '<S7>/Data Store ReadP'
     for (i = 0; i < 9; i++) {
-      rtDW.P_a[i] = rtDW.P_i_m[i];
+      rtDW.P_ak[i] = rtDW.P_i_m[i];
     }
 
     // End of DataStoreRead: '<S7>/Data Store ReadP'
@@ -1456,8 +1456,8 @@ void positionEstimatorModelClass::step()
     blockOrdering = rtDW.blockOrdering_p;
     rtDW.blockOrdering_p = blockOrdering;
     for (i = 0; i < 9; i++) {
-      a22 = rtDW.P_a[i];
-      rtDW.P_a[i] = a22;
+      a22 = rtDW.P_ak[i];
+      rtDW.P_ak[i] = a22;
     }
 
     for (r1 = 0; r1 < 3; r1++) {
@@ -1473,18 +1473,18 @@ void positionEstimatorModelClass::step()
 
     a22 = 0.0;
     for (i = 0; i < 3; i++) {
-      epsilon = rtDW.P_a[3 * i] * dHdx_1[0];
-      epsilon += rtDW.P_a[3 * i + 1] * dHdx_1[1];
-      epsilon += rtDW.P_a[3 * i + 2] * dHdx_1[2];
+      epsilon = rtDW.P_ak[3 * i] * dHdx_1[0];
+      epsilon += rtDW.P_ak[3 * i + 1] * dHdx_1[1];
+      epsilon += rtDW.P_ak[3 * i + 2] * dHdx_1[2];
       a22 += epsilon * dHdx_1[i];
     }
 
     epsilon = a22 + rtP.R3_Value;
     a22 = rtDW.NED_convert - rtDW.DataStoreReadX_i[0];
     for (i = 0; i < 3; i++) {
-      imvec_2 = rtDW.P_a[i] * dHdx_1[0];
-      imvec_2 += rtDW.P_a[i + 3] * dHdx_1[1];
-      imvec_2 += rtDW.P_a[i + 6] * dHdx_1[2];
+      imvec_2 = rtDW.P_ak[i] * dHdx_1[0];
+      imvec_2 += rtDW.P_ak[i + 3] * dHdx_1[1];
+      imvec_2 += rtDW.P_ak[i + 6] * dHdx_1[2];
       imvec_2 /= epsilon;
       rtDW.xNew_p[i] = imvec_2 * a22 + rtDW.DataStoreReadX_i[i];
       imvec_0[i] = imvec_2;
@@ -1499,18 +1499,18 @@ void positionEstimatorModelClass::step()
 
     for (i = 0; i < 3; i++) {
       for (k = 0; k < 3; k++) {
-        imvec_2 = rtDW.P_a[3 * i] * imvec_1[k];
-        imvec_2 += rtDW.P_a[3 * i + 1] * imvec_1[k + 3];
-        imvec_2 += rtDW.P_a[3 * i + 2] * imvec_1[k + 6];
-        a[k + 3 * i] = rtDW.P_a[3 * i + k] - imvec_2;
+        imvec_2 = rtDW.P_ak[3 * i] * imvec_1[k];
+        imvec_2 += rtDW.P_ak[3 * i + 1] * imvec_1[k + 3];
+        imvec_2 += rtDW.P_ak[3 * i + 2] * imvec_1[k + 6];
+        a[k + 3 * i] = rtDW.P_ak[3 * i + k] - imvec_2;
       }
     }
 
     for (i = 0; i < 9; i++) {
-      rtDW.P_a[i] = a[i];
+      rtDW.P_ak[i] = a[i];
 
       // DataStoreWrite: '<S7>/Data Store WriteP'
-      rtDW.P_i_m[i] = rtDW.P_a[i];
+      rtDW.P_i_m[i] = rtDW.P_ak[i];
     }
 
     // End of MATLAB Function: '<S7>/Correct'
@@ -1923,6 +1923,16 @@ void positionEstimatorModelClass::step()
 
   rtY.Estim_Alt = rtDW.alt_o - rtU.HOME_lla[2];
 
+  // Outport: '<Root>/GPSrawVX' incorporates:
+  //   Inport: '<Root>/vx'
+
+  rtY.GPSrawVX = rtU.vx;
+
+  // Outport: '<Root>/GPSrawVY' incorporates:
+  //   Inport: '<Root>/vy'
+
+  rtY.GPSrawVY = rtU.vy;
+
   // Outputs for Atomic SubSystem: '<S1>/Predict'
   // DataStoreRead: '<S10>/Data Store ReadX'
   rtDW.DataStoreReadX_g[0] = rtDW.x[0];
@@ -1989,17 +1999,17 @@ void positionEstimatorModelClass::step()
   // Outputs for Atomic SubSystem: '<S2>/Predict'
   // DataStoreRead: '<S19>/Data Store ReadX'
   for (i = 0; i < 6; i++) {
-    rtDW.DataStoreReadX[i] = rtDW.x_p[i];
+    rtDW.DataStoreReadX[i] = rtDW.x_o[i];
   }
 
   // End of DataStoreRead: '<S19>/Data Store ReadX'
   for (i = 0; i < 36; i++) {
     // DataStoreRead: '<S19>/Data Store ReadP'
-    rtDW.P_n[i] = rtDW.P_n_c[i];
+    rtDW.P_a[i] = rtDW.P_k[i];
 
     // MATLAB Function: '<S19>/Predict'
-    a22 = rtDW.P_n[i];
-    rtDW.P_n[i] = a22;
+    a22 = rtDW.P_a[i];
+    rtDW.P_a[i] = a22;
   }
 
   // MATLAB Function: '<S19>/Predict' incorporates:
@@ -2012,7 +2022,7 @@ void positionEstimatorModelClass::step()
       gain_0[i + 6 * k] = 0.0;
       for (r1 = 0; r1 < 6; r1++) {
         a22 = gain_0[6 * k + i];
-        a22 += a_2[6 * r1 + i] * rtDW.P_n[6 * k + r1];
+        a22 += a_2[6 * r1 + i] * rtDW.P_a[6 * k + r1];
         gain_0[i + 6 * k] = a22;
       }
     }
@@ -2025,20 +2035,20 @@ void positionEstimatorModelClass::step()
         imvec_2 += gain_0[6 * r1 + k] * b_0[6 * i + r1];
       }
 
-      rtDW.P_n[k + 6 * i] = rtP.Q_Value_c[6 * i + k] + imvec_2;
+      rtDW.P_a[k + 6 * i] = rtP.Q_Value_c[6 * i + k] + imvec_2;
     }
   }
 
   // DataStoreWrite: '<S19>/Data Store WriteP'
   for (i = 0; i < 36; i++) {
-    rtDW.P_n_c[i] = rtDW.P_n[i];
+    rtDW.P_k[i] = rtDW.P_a[i];
   }
 
   // End of DataStoreWrite: '<S19>/Data Store WriteP'
 
   // DataStoreWrite: '<S19>/Data Store WriteX'
   for (i = 0; i < 6; i++) {
-    rtDW.x_p[i] = rtDW.xNew[i];
+    rtDW.x_o[i] = rtDW.xNew[i];
   }
 
   // End of DataStoreWrite: '<S19>/Data Store WriteX'
@@ -2070,27 +2080,27 @@ void positionEstimatorModelClass::initialize()
 
     // Start for DataStoreMemory: '<S2>/DataStoreMemory - P'
     for (i = 0; i < 36; i++) {
-      rtDW.P_n_c[i] = rtP.DataStoreMemoryP_InitialValue_m[i];
+      rtDW.P_k[i] = rtP.DataStoreMemoryP_InitialValue_h[i];
     }
 
     // End of Start for DataStoreMemory: '<S2>/DataStoreMemory - P'
 
     // Start for DataStoreMemory: '<S2>/DataStoreMemory - x'
     for (i = 0; i < 6; i++) {
-      rtDW.x_p[i] = rtP.DataStoreMemoryx_InitialValue_j[i];
+      rtDW.x_o[i] = rtP.DataStoreMemoryx_InitialValue_k[i];
     }
 
     // End of Start for DataStoreMemory: '<S2>/DataStoreMemory - x'
 
     // SystemInitialize for Enabled SubSystem: '<S2>/Correct1'
     // SystemInitialize for Outport: '<S16>/yBlockOrdering'
-    rtDW.blockOrdering_f = rtP.yBlockOrdering_Y0_a;
+    rtDW.blockOrdering_f = rtP.yBlockOrdering_Y0_k;
 
     // End of SystemInitialize for SubSystem: '<S2>/Correct1'
 
     // SystemInitialize for Enabled SubSystem: '<S2>/Correct2'
     // SystemInitialize for Outport: '<S17>/yBlockOrdering'
-    rtDW.blockOrdering = rtP.yBlockOrdering_Y0_g;
+    rtDW.blockOrdering = rtP.yBlockOrdering_Y0_m;
 
     // End of SystemInitialize for SubSystem: '<S2>/Correct2'
 

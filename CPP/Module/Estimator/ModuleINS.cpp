@@ -42,8 +42,8 @@ void ModuleINS::main(){
 		moduleINS.onestep();
 		ModulePositionController::setSignal(PC_fromEKF);
 		if(microsecond()-dt>1000000){
-			int len = sprintf((char*)telemBuffer, "ins hz: %d \r\n",cnt);
-			telem.send(telemBuffer, len);
+//			int len = sprintf((char*)telemBuffer, "ins hz: %d \r\n",cnt);
+//			telem.send(telemBuffer, len);
 			cnt=0;
 			dt=microsecond();
 		}
