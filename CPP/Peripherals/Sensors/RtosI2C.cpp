@@ -26,30 +26,40 @@ RtosI2C::RtosI2C(I2C_HandleTypeDef *hi2c, RtosI2Ctype type)
 void RtosI2C::read(uint16_t DevAddress, uint16_t MemAddress, uint8_t *pData, uint16_t Size){
 	uint8_t ret = 0;
 	osMutexAcquire(readMutexHandle, osWaitForever);
-	switch(type){
-	case I2C_Interrupt:
-		HAL_I2C_Mem_Read_IT(hi2c, DevAddress, MemAddress, 1, pData, Size);
-		break;
-	case I2C_DMA:
-		HAL_I2C_Mem_Read_DMA(hi2c, DevAddress, MemAddress, 1, pData, Size);
-		break;
+
+//	switch(type){
+//	case I2C_Interrupt:
+//		HAL_I2C_Mem_Read_IT(hi2c, DevAddress, MemAddress, 1, pData, Size);
+//		break;
+//	case I2C_DMA:
+//		HAL_I2C_Mem_Read_DMA(hi2c, DevAddress, MemAddress, 1, pData, Size);
+//		break;
+//	}
+	_read(DevAddress, MemAddress, pData, Size);
+	while(osMessageQueueGet(readQueueId, (void*)&ret, NULL, 1000) != osOK){
+		_read(DevAddress, MemAddress, pData, Size);
 	}
-	osMessageQueueGet(readQueueId, (void*)&ret, NULL, osWaitForever);
+
 	osMutexRelease(readMutexHandle);
 }
 
 void RtosI2C::write(uint16_t DevAddress, uint16_t MemAddress, uint8_t *pData, uint16_t Size){
 	uint8_t ret = 0;
 	osMutexAcquire(writeMutexHandle, osWaitForever);
-	switch(type){
-	case I2C_Interrupt:
-		HAL_I2C_Mem_Write_IT(hi2c, DevAddress, MemAddress, 1, pData, Size);
-		break;
-	case I2C_DMA:
-		HAL_I2C_Mem_Write_DMA(hi2c, DevAddress, MemAddress, 1, pData, Size);
-		break;
+
+	_write(DevAddress, MemAddress, pData, Size);
+	while(osMessageQueueGet(writeQueueId, (void*)&ret, NULL, 1000) != osOK){
+		_write(DevAddress, MemAddress, pData, Size);
 	}
-	osMessageQueueGet(writeQueueId, (void*)&ret, NULL, osWaitForever);
+//	switch(type){
+//	case I2C_Interrupt:
+//		HAL_I2C_Mem_Write_IT(hi2c, DevAddress, MemAddress, 1, pData, Size);
+//		break;
+//	case I2C_DMA:
+//		HAL_I2C_Mem_Write_DMA(hi2c, DevAddress, MemAddress, 1, pData, Size);
+//		break;
+//	}
+
 	osMutexRelease(writeMutexHandle);
 }
 

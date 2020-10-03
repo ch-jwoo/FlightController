@@ -25,26 +25,26 @@ typedef enum{
 	/* ahrs beta */
 	Madgwick_beta,
 
-	ParameterEnd,		/* temporary */
+	ACCEL_TRANSFORM_0_0,
+	ACCEL_TRANSFORM_0_1,
+	ACCEL_TRANSFORM_0_2,
+	ACCEL_TRANSFORM_1_0,
+	ACCEL_TRANSFORM_1_1,
+	ACCEL_TRANSFORM_1_2,
+	ACCEL_TRANSFORM_2_0,
+	ACCEL_TRANSFORM_2_1,
+	ACCEL_TRANSFORM_2_2,
 
-	/* ins covariance */
-	EKF_VerticalAccelCov,
-	EKF_VerticalBaroCov,
-	EKF_VerticalLidarCov,
-	EKF_VerticalGpsCov,
+	ACCEL_OFFSET_0,
+	ACCEL_OFFSET_1,
+	ACCEL_OFFSET_2,
 
-	EKF_HorisionAccelCov,
-	EKF_HorisionGpsCov,
-
-	/* attitude controller */
 	/* multicopter */
 	MC_Roll_P,
 	MC_Roll_I,
-	MC_Roll_D,
 
 	MC_Pitch_P,
 	MC_Pitch_I,
-	MC_Pitch_D,
 
 	MC_RollRate_P,
 	MC_RollRate_I,
@@ -56,16 +56,13 @@ typedef enum{
 
 	MC_YawRate_P,
 	MC_YawRate_I,
-	MC_YawRate_D,
 
 	/* fixedwing*/
 	FW_Roll_P,
 	FW_Roll_I,
-	FW_Roll_D,
 
 	FW_Pitch_P,
 	FW_Pitch_I,
-	FW_Pitch_D,
 
 	FW_RollRate_P,
 	FW_RollRate_I,
@@ -77,7 +74,36 @@ typedef enum{
 
 	FW_YawRate_P,
 	FW_YawRate_I,
-	FW_YawRate_D,
+
+	TILT_TO_FW_THR,
+	TILT_TO_FW_DT1,
+	TILT_TO_FW_DT2,
+	MC_SERVO_1,
+	MC_SERVO_2,
+	FW_SERVO_1,
+	FW_SERVO_2,
+	TRANS_SERVO_1,
+	TRANS_SERVO_2,
+
+	/* ins covariance */
+	EKF_VAccCov,
+	EKF_VBaroCov,
+	EKF_VLidarCov,
+	EKF_VGpsCov,
+
+	EKF_HAccCov_1,
+	EKF_HAccCov_2,
+
+	EKF_HGpsPCov_1,
+	EKF_HGpsPCov_2,
+	EKF_HGpsVCov_1,
+	EKF_HGpsVCov_2,
+
+	ParameterEnd,		/* temporary */
+	/* attitude controller */
+
+
+
 
 	/* position controller */
 	/* multicopter */
@@ -115,6 +141,11 @@ typedef enum{
 	FW_D
 } ParamIndex_t;
 
+typedef enum {
+	PARAM_FLOAT,
+	PARAM_DOUBLE
+} ParamType;
+
 void paramInit();
 
 const char* getParamID(uint8_t index);
@@ -127,8 +158,11 @@ uint16_t getParamIndexFromID(const char* id);
 
 void setParamValue(uint16_t index, float value);
 
-
 #define PARAM(parameter) static float parameter;
+//#define PARAM(parameter) static parameter_t parameter;
+
+//#define PARAM_VALUE_INIT()
+
 
 } /* namespace FC */
 

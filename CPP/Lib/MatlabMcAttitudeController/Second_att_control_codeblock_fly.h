@@ -18,8 +18,8 @@
 //
 #ifndef RTW_HEADER_Second_att_control_codeblock_fly_h_
 #define RTW_HEADER_Second_att_control_codeblock_fly_h_
-#include <MatlabAttitudeController/rtwtypes.h>
-#include <MatlabAttitudeController/Second_att_control_codeblock_fly_types.h>
+#include <MatlabMcAttitudeController/rtwtypes.h>
+#include <MatlabMcAttitudeController/Second_att_control_codeblock_fly_types.h>
 #include <cmath>
 
 // Macros for accessing real-time model data structure
@@ -79,7 +79,7 @@ extern real32_T kP_Yaw_rate_PID;       // Variable: kP_Yaw_rate_PID
 extern const real32_T Max_angle_coef;  // Referenced by: '<S1>/Max_angle_coef'
 
 // Class declaration for model Second_att_control_codeblock_fly
-class px4_AlgorithmModelClass {
+class MC_px4_AlgorithmModelClass {
   // public data and function members
  public:
   // Block signals (default storage)
@@ -273,10 +273,10 @@ class px4_AlgorithmModelClass {
   void terminate();
 
   // Constructor
-  px4_AlgorithmModelClass();
+  MC_px4_AlgorithmModelClass();
 
   // Destructor
-  ~px4_AlgorithmModelClass();
+  ~MC_px4_AlgorithmModelClass();
 
   // Root-level structure-based inputs set method
 
@@ -290,7 +290,7 @@ class px4_AlgorithmModelClass {
   // Root-level structure-based outputs get method
 
   // Root outports get method
-  const px4_AlgorithmModelClass::ExtY_Second_att_control_codeb_T
+  const MC_px4_AlgorithmModelClass::ExtY_Second_att_control_codeb_T
     & getExternalOutputs() const
   {
     return Second_att_control_codeblock__Y;

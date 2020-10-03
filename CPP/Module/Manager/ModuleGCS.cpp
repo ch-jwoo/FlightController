@@ -46,14 +46,18 @@ void ModuleGCS::main(){
 }
 
 void ModuleGCS::periodicSendTask(void *instance){
+	uint32_t tick;
 	uint32_t heartbeatTick;
 	ModuleGCS *moduleGCS = (ModuleGCS*)instance;
 	uint8_t txBuffer[MAVLINK_MAX_PACKET_LEN];
 	mavlink_message_t sendMsg;
 
 	heartbeatTick = millisecond();
-
+	tick = osKernelGetTickCount();
 	while(1){
+		tick += 100;
+		osDelayUntil(tick);		/* 10hz */
+
 		if(millisecond() - heartbeatTick > 1000){
 			moduleGCS->sendHeartbeat(txBuffer, &sendMsg);
 			moduleGCS->sendGpsStatus(txBuffer, &sendMsg);
@@ -63,7 +67,6 @@ void ModuleGCS::periodicSendTask(void *instance){
 		}
 		moduleGCS->sendAttitude(txBuffer, &sendMsg);
 		moduleGCS->sendGlobalPosition(txBuffer, &sendMsg);
-		osDelay(20);
 	}
 }
 

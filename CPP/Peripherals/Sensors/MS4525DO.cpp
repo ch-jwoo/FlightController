@@ -6,58 +6,90 @@
  */
 
 #include <Peripherals/Sensors/MS4525DO.h>
+
 namespace FC {
 
 MS4525DO::MS4525DO(RtosI2C *i2c)
 : i2c(i2c)
+, caliFlag(false)
+, caliCount(0)
 , pressureHigh(0.0f)
 , pressureLow(0.0f)
 , temperatureHigh(0.0f)
 , temperatureLow(0.0f)
+, countAverage(0)
+, difPressureSumValue(0)
+, smoothAdc(0)
+, airSpeedDataAdc0(0.0f)
+, absDifPressureAdc(0.0f)
+, expSmoothAdc(0.0f)
+, smoothAirSpeed(0.0f)
+, difPressureAdc(0.0f)
+, difPressureAdc0(0.0f)
+, offset4525(0.0f)
+, difPressureSum(0.0f)
 {
 
 }
 
 
 bool MS4525DO::update(){
-//	readBytes(MS4525DO_ADDRESS, 0x00, 4, buffer);
 	i2c->read(MS4525DO_ADDRESS, 0x00, buffer, 4);
 	pressureHigh = buffer[0];
 	pressureLow = buffer[1];
 	temperatureHigh = buffer[2];
 	temperatureLow = buffer[3];
-	gettingPressure(pressureHigh, pressureLow, &difPressure);
-	gettingTemperature(temperatureHigh, temperatureLow, &difTemperature);
-	gettingTrueAirSpeed(difPressure, &TAS);
-	return true;
+
+	//check buffer[0] for checking data is correct
+	if((pressureHigh & 0xC0) == 0){
+		difPressureAdc = (((pressureHigh << 8) + pressureLow) & 0x3FFF) - 0x2000;
+		// start calibration
+		if(!caliFlag){
+			caliCount++;
+			if(caliCount == 256){
+				offset4525 = (float) difPressureSum / 128.0f;
+				caliFlag = true;
+			}
+			/* calibCount 128~256 */
+			else if(caliCount >= 128){
+				difPressureSum += difPressureAdc;
+			}
+			/* calibCount 0~128 */
+			else{
+				/* dump the data */
+			}
+			return false;
+		}
+		// end calibration
+		else{
+			//voltage correction
+			difPressureAdc0 = (float)difPressureAdc - offset4525;
+			difPressureSumValue += difPressureAdc - difPressureAdcArray[0];
+
+			difPressureAdcArray[countAverage] = difPressureAdc;
+
+			if(((++countAverage) >= 4)) countAverage = 0;
+
+			airSpeedDataAdc0 = (float) difPressureSumValue * 0.25 - offset4525;
+
+			absDifPressureAdc = abs(difPressureAdc0 - smoothAdc);
+			if(absDifPressureAdc <= FILTERING4525_ADC_MIN_AT){
+			   expSmoothAdc = FILTERING4525_ADC_MIN;
+			}
+			else if( absDifPressureAdc >= FILTERING4525_ADC_MAX_AT){
+			   expSmoothAdc = FILTERING4525_ADC_MAX;
+			}
+			else{
+			   expSmoothAdc = FILTERING4525_ADC_MIN + ( FILTERING4525_ADC_MAX - FILTERING4525_ADC_MIN) * (absDifPressureAdc - FILTERING4525_ADC_MIN_AT) / (FILTERING4525_ADC_MAX_AT - FILTERING4525_ADC_MIN_AT);
+			}
+			smoothAdc += expSmoothAdc * (difPressureAdc0 - smoothAdc);
+
+			if(smoothAdc < 0) smoothAdc = -smoothAdc;
+			diffPressure = smoothAdc;
+		}
+		return true;
+	}
+	return false;
 }
 
-void MS4525DO::gettingPressure(uint16_t pressureHigh, uint16_t pressureLow , float *difPressure){
-
-	pressureHigh = pressureHigh & 0x03f;
-
-	*difPressure = (float)((pressureHigh << 8) | pressureLow);
-
-}
-void MS4525DO::gettingTemperature(uint16_t temperatureHigh, uint16_t temperatureLow, float *difTemperature){
-	float tmp;
-
-	temperatureLow = temperatureLow >> 5;
-
-	tmp = (float)((temperatureHigh << 3) | temperatureLow);
-	tmp = tmp * 0.09770395701f - 50.0f ;
-
-	*difTemperature = tmp;
-}
-void MS4525DO::gettingTrueAirSpeed(float pressure, float *TAS){
-
-	msgBus.getGlobalPosition(&this->globalPositionSub);
-	float tmp, IAS;
-
-	tmp = (pressure - 819.15) / 14744.7;
-	tmp = tmp - 0.49060678;
-	if(tmp < 0) tmp = -tmp;
-	IAS = sqrt(tmp * 13789.5144 / 1.225) - 7.71684477;
-	*TAS = IAS + IAS * (0.2 + 1000 / 1000);
-}
 } /* namespace FC */

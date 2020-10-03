@@ -73,6 +73,7 @@ void GCS_StartTask(void *argument);
 void AUTO_StartTask(void *argument);
 void SBUS_StartTask(void *argument);
 void GPS_StartTask(void *argument);
+void MS4525D_StartTask(void *argument);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

@@ -89,6 +89,13 @@ bool ModuleCommander::commandHandler(Command cmd){
 		return toLand();
 		break;
 
+	case Command::AutoTransitionMC:
+		return toMulticopter();
+		break;
+	case Command::AutoTransitionFW:
+		return toFixedWing();
+		break;
+
 	case Command::Arm:
 		return toArm();
 		break;
@@ -221,6 +228,17 @@ bool ModuleCommander::toTakeoff(){
 
 bool ModuleCommander::toLand(){
 	//TODO change to auto land
+}
+
+
+bool ModuleCommander::toMulticopter(){
+	ModuleAttitudeController::setSignal(AC_transitionMC);
+	return true;
+}
+
+bool ModuleCommander::toFixedWing(){
+	ModuleAttitudeController::setSignal(AC_transitionFW);
+	return true;
 }
 
 bool ModuleCommander::toArm(){

@@ -161,7 +161,7 @@ const osThreadAttr_t Health_Task_attributes = {
 };
 /* Definitions for AC_Task */
 osThreadId_t AC_TaskHandle;
-uint32_t AC_TaskBuffer[ 256 ];
+uint32_t AC_TaskBuffer[ 512 ];
 osStaticThreadDef_t AC_TaskControlBlock;
 const osThreadAttr_t AC_Task_attributes = {
   .name = "AC_Task",
@@ -233,6 +233,18 @@ const osThreadAttr_t GPS_Task_attributes = {
   .cb_size = sizeof(GPS_TaskControlBlock),
   .priority = (osPriority_t) osPriorityRealtime,
 };
+/* Definitions for MS4525D_Task */
+osThreadId_t MS4525D_TaskHandle;
+uint32_t MS4525D_TaskBuffer[ 1024 ];
+osStaticThreadDef_t MS4525D_TaskControlBlock;
+const osThreadAttr_t MS4525D_Task_attributes = {
+  .name = "MS4525D_Task",
+  .stack_mem = &MS4525D_TaskBuffer[0],
+  .stack_size = sizeof(MS4525D_TaskBuffer),
+  .cb_mem = &MS4525D_TaskControlBlock,
+  .cb_size = sizeof(MS4525D_TaskControlBlock),
+  .priority = (osPriority_t) osPriorityRealtime,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -256,6 +268,7 @@ extern void GCS_StartTask(void *argument);
 extern void AUTO_StartTask(void *argument);
 extern void SBUS_StartTask(void *argument);
 extern void GPS_StartTask(void *argument);
+extern void MS4525D_StartTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -336,6 +349,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of GPS_Task */
   GPS_TaskHandle = osThreadNew(GPS_StartTask, NULL, &GPS_Task_attributes);
+
+  /* creation of MS4525D_Task */
+  MS4525D_TaskHandle = osThreadNew(MS4525D_StartTask, NULL, &MS4525D_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

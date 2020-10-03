@@ -35,6 +35,7 @@
 #include "Module/Controller/ModuleAutoController.h"
 
 #include "Peripherals/Actuator/Motor.h"
+#include "Peripherals/Actuator/Servo.h"
 #include "Peripherals/Etc/LED.h"
 #include "Peripherals/Etc/Buzzer.h"
 #include "Peripherals/Coms/Telemetry.h"
@@ -56,7 +57,7 @@ using namespace FC;
 
 float attitude;
 uint16_t hzAccel, hzBaro, hzGyro, hzGPS, hzMag;
-uint16_t hzAHRS, hzRC, hzAtti, hzPos, hzINS, hzLidar;
+uint16_t hzAHRS, hzRC, hzAtti, hzPos, hzINS, hzLidar, hzAuto;
 uint16_t pwm1, pwm2, pwm3, pwm4, pwm5, pwm6;
 float att_roll, att_pitch, att_yaw;
 uint16_t ctl_roll, ctl_pitch, ctl_yaw, ctl_throtle;
@@ -77,6 +78,7 @@ float mag_minX, mag_minY, mag_minZ;
 float mag_x, mag_y, mag_z;
 float mag_biasX, mag_biasY, mag_biasZ;
 float mag_scaleX, mag_scaleY, mag_scaleZ;
+float targetyaw,targetroll,targetx,targety,targetz,dist;
 
 float sp_roll, sp_pitch, sp_throtle, sp_yaw;
 
@@ -96,6 +98,9 @@ uint16_t timeCheck;
 int test = 0;
 
 float raw_magX, raw_magY, raw_magZ;
+
+bool accelCalibration = false;
+float airspeed = 0;
 
 void _putchar(char character){
 	HAL_UART_Transmit(&huart3, (uint8_t*)&character, 1, 10);
@@ -125,16 +130,12 @@ void Debug_StartTask(void *argument){
 	struct VehicleAttitueSP attitudeSP;
 
 	struct Lidar lidar;
-
-//	MS4525DO ms4525DO(&rtosI2C2);
+	struct AirSpeed airSpeed;
 
 	while(1){
-		tick += 20;
+		tick += 100;
 		osDelayUntil(tick);
 		debug_loop++;
-
-//		ms4525DO.update();
-//		airspeed_p = ms4525DO.difPressure;
 
 		if(msgBus.getHealth(&health)){
 			hzAccel = health.accel;
@@ -148,6 +149,7 @@ void Debug_StartTask(void *argument){
 			hzPos = health.positionController;
 			hzINS = health.ins;
 			hzLidar = health.lidar;
+			hzAuto = health.autoController;
 		}
 
 		if(msgBus.getMotorPWM(&pwm)){
@@ -255,22 +257,15 @@ void Debug_StartTask(void *argument){
 		voltageChecker.start();
 		voltage = voltageChecker.voltage;
 
-//		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f %f \n\r",local_x,local_y,sp_roll,sp_pitch,att_yaw,sp_throtle,gps.hdop);
+		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f %f \n\r",local_x,local_y,sp_roll,sp_pitch,att_yaw,sp_throtle,gps.hdop);
 //		int len= sprintf_((char*)telemBuffer,"%f %f %f %d %d \n\r",gps.lat,gps.lon,gps.hdop,gps.usedSatellites,gps.visibleSatellites);
 
-		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f  \n\r",local_x,local_y,local_vx,local_vy,gps_velN,gps_velE);
-		telem.send(telemBuffer,len);
-//		printf_("%d\t%d\t%f\t%f\t%f\r\n", ModuleINS::calGpsHomeFlag, ModuleINS::avgIndexGPS, ModuleINS::avgLat, ModuleINS::avgLon, ModuleINS::avgAlt);
+//		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f  \n\r",local_x,local_y,local_vx,local_vy, gps_velN, gps_velE);
+//		telem.send(telemBuffer,len);
+////
+//		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f  \n\r",mag_scaleX,mag_scaleY,mag_scaleZ,mag_biasX,mag_biasY,mag_biasZ);
+//		telem.send(telemBuffer,len);
 
-//		int len = sprintf((char*)telemBuffer, "ready\r\n");
-//		telem.send(telemBuffer, len);
-//		len = telem.receive(telemBuffer, 100);
-//		telem.send(telemBuffer, len);
-//
-//		int len = telem.receive(telemBuffer, 100);
-//		if(len != 0)
-//			printf_("%s\r\n", (char*)telemBuffer);
-//		osDelay(5);
 	}
 }
 
@@ -294,7 +289,8 @@ void MPU9250_StartTask(void *argument){
 		if(mpu9250.updateMPU9250())	{
 			interfaceAccel.setAccel(mpu9250.accel[0]*FC_GRAVITY_ACCEERATION,
 									mpu9250.accel[1]*FC_GRAVITY_ACCEERATION,
-									mpu9250.accel[2]*FC_GRAVITY_ACCEERATION);
+									mpu9250.accel[2]*FC_GRAVITY_ACCEERATION,
+									accelCalibration);
 			interfaceGyro.setGyro(mpu9250.gyro[0]*FC_DEG2RAD,
 								  mpu9250.gyro[1]*FC_DEG2RAD,
 								  mpu9250.gyro[2]*FC_DEG2RAD);
@@ -308,6 +304,8 @@ void MPU9250_StartTask(void *argument){
 				magTick = osKernelGetTickCount();
 			}
 		}
+
+		if(accelCalibration) accelCalibration = false;
 	}
 }
 
@@ -338,7 +336,6 @@ void BME280_StartTask(void *argument){
 		tick += 15;
 		osDelayUntil(tick);		/* 66.6hz */
 
-
 		if(bme280.update()){
 			interfaceBaro.setBaro(bme280.P, bme280.T);
 		}
@@ -352,8 +349,8 @@ void IST8310_StartTask(void *argument){
 	IST8310 ist8310(&rtosI2C2);
 	ist8310.init();
 	while(1){
-		tick += 7;
-		osDelayUntil(tick);		/* 142hz */
+		tick += 10;
+		osDelayUntil(tick);		/* 100hz */
 		ist8310.update();
 		interfaceMag.setMag(ist8310.raw[0],ist8310.raw[1],ist8310.raw[2]);
 	}
@@ -394,8 +391,8 @@ void GCS_StartTask(void *argument){
 }
 
 void AUTO_StartTask(void *argument){
-//	ModuleAutoController::main();       //NEVER EVER OPEN
-	while(1) osDelay(1000);
+	ModuleAutoController::main();       //NEVER EVER OPEN
+//	while(1) osDelay(1000);
 }
 
 
@@ -422,18 +419,14 @@ void GPS_StartTask(void *argument){
 			interfaceGPS.setGPS(tmGps.Latitude, tmGps.Longitude, tmGps.Altitude,
 								TM_GPS_ConvertSpeed(tmGps.Speed, TM_GPS_Speed_MeterPerSecond), tmGps.Direction, tmGps.HDOP, tmGps.VDOP,
 								tmGps.Satellites, tmGps.SatellitesInView, tmGps.FixMode, 0/* UTC in microsecond */);
-			printf_("%f %f %f %d\r\n", tmGps.Latitude, tmGps.Longitude, tmGps.Altitude, tmGps.Satellites);
+//			printf_("%f %f %f %d\r\n", tmGps.Latitude, tmGps.Longitude, tmGps.Altitude, tmGps.Satellites);
 		}
 	}
 }
 
 void SBUS_StartTask(void *argument){
-	uint32_t tick;
 
-	tick = osKernelGetTickCount();
 	while(1){
-		tick += 20;
-//		osDelayUntil(tick);		/* 50hz */
 		/*
 		 *  dma sbus update
 		 */
@@ -443,8 +436,25 @@ void SBUS_StartTask(void *argument){
 							  sbus.getChannelVal(4), 	/* yaw */
 							  sbus.getChannelVal(1),	/* throttle */
 							  sbus.getChannelVal(11),	/* arming */
-							  sbus.getChannelVal(5)		/* mode change */);
+							  sbus.getChannelVal(5),	/* mode change */
+							  sbus.getChannelVal(9));
 		}
+	}
+}
+
+
+void MS4525D_StartTask(void *argument){
+	uint32_t tick;
+//	MS4525DO ms4525(&rtosI2C2);
+
+	tick = osKernelGetTickCount();
+	while(1){
+		tick += 10;
+		osDelayUntil(tick);		/* 100hz */
+
+//		if(ms4525.update()){
+//			interfaceAirSpeed.setAirSpeed(ms4525.diffPressure);
+//		}
 	}
 }
 
@@ -474,6 +484,13 @@ void cppMain(){
 	m4.start();
 	m5.start();
 	m6.start();
+
+	s1.start();
+	s2.start();
+	s3.start();
+	s4.start();
+	s5.start();
+	s6.start();
 
     printf_("boot complete\r\n");
 }
@@ -516,6 +533,15 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 	}
 }
 
+void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c){
+	if(hi2c->Instance == I2C1){
+		printf_("i2c1 error\r\n");
+	}
+	if(hi2c->Instance == I2C2){
+		printf_("i2c2 error\r\n");
+	}
+}
+
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	if(Lidar1D_CaptureCallback(htim)){
 		interfaceLidar.setDistance(lidar1D.distance_mm/1000.0f);
@@ -527,7 +553,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 //		if(interfaceMag.startCalibrationFlag == false)
 //			interfaceMag.startCalibration();
 //		else interfaceMag.endCalibration();
-
+		accelCalibration = true;
 		if(ModuleINS::calGpsHomeFlag == false){
 			ModuleINS::setAvgLLA();
 		}

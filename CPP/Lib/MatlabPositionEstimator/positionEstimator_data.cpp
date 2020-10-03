@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionEstimator'.
 //
-// Model version                  : 1.32
+// Model version                  : 1.34
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Tue Sep 22 17:54:59 2020
+// C/C++ source code generated on : Mon Sep 28 23:39:25 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -350,8 +350,8 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
   // Expression: p.R{2}
   //  Referenced by: '<S2>/R2'
 
-  { 50.0, 0.0, 0.0, 0.0, 0.0, 50.0, 0.0, 0.0, 0.0, 0.0, 25.0, 0.0, 0.0, 0.0, 0.0,
-    25.0 },
+  { 100.0, 0.0, 0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 50.0, 0.0, 0.0, 0.0,
+    0.0, 50.0 },
 
   // Expression: 1
   //  Referenced by: '<S2>/MeasurementFcn2Inputs'
@@ -391,7 +391,7 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
   // Expression: p.R{3}
   //  Referenced by: '<S1>/R3'
 
-  4.0,
+  1.0,
 
   // Expression: 1
   //  Referenced by: '<S1>/MeasurementFcn3Inputs'
@@ -517,12 +517,12 @@ positionEstimatorModelClass::P positionEstimatorModelClass::rtP = {
 
   0,
 
-  // Computed Parameter: yBlockOrdering_Y0_a
+  // Computed Parameter: yBlockOrdering_Y0_k
   //  Referenced by: '<S16>/yBlockOrdering'
 
   0,
 
-  // Computed Parameter: yBlockOrdering_Y0_g
+  // Computed Parameter: yBlockOrdering_Y0_m
   //  Referenced by: '<S17>/yBlockOrdering'
 
   0,

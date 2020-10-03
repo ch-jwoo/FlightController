@@ -60,6 +60,28 @@ private:
 	osMutexId_t writeMutexHandle;
 	osMessageQueueId_t writeQueueId;
 
+	inline void _read(uint16_t DevAddress, uint16_t MemAddress, uint8_t *pData, uint16_t Size){
+		switch(type){
+		case I2C_Interrupt:
+			HAL_I2C_Mem_Read_IT(hi2c, DevAddress, MemAddress, 1, pData, Size);
+			break;
+		case I2C_DMA:
+			HAL_I2C_Mem_Read_DMA(hi2c, DevAddress, MemAddress, 1, pData, Size);
+			break;
+		}
+	}
+
+	inline void _write(uint16_t DevAddress, uint16_t MemAddress, uint8_t *pData, uint16_t Size){
+		switch(type){
+		case I2C_Interrupt:
+			HAL_I2C_Mem_Write_IT(hi2c, DevAddress, MemAddress, 1, pData, Size);
+			break;
+		case I2C_DMA:
+			HAL_I2C_Mem_Write_DMA(hi2c, DevAddress, MemAddress, 1, pData, Size);
+			break;
+		}
+	}
+
 public:
 	RtosI2C() = default;
 	~RtosI2C() = default;

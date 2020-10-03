@@ -21,6 +21,10 @@ enum class FlightMode{
 	AutoTransition
 };
 
+enum class AirframeMode{
+	Multicopter,
+	FixedWing
+};
 
 /*
  *  Peripheral data
@@ -162,6 +166,11 @@ struct ModeFlag{
 	FlightMode flightMode;
 };
 
+struct AirframeStatus{
+	uint64_t timestamp;
+	AirframeMode airframeMode;
+};
+
 
 /*
  *  health check
@@ -216,6 +225,19 @@ struct MotorPWM{
 	uint16_t m4;
 	uint16_t m5;
 	uint16_t m6;
+};
+
+struct ServoPWM{
+	uint64_t timestamp;
+	uint16_t s1;
+	uint16_t s2;
+	uint16_t s3;
+	uint16_t s4;
+};
+
+struct AirSpeed{
+	uint64_t timestamp;
+	float TAS;
 };
 
 

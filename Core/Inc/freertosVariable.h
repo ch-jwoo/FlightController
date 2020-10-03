@@ -25,6 +25,7 @@ extern osThreadId_t AC_TaskHandle;
 extern osThreadId_t INS_TaskHandle;
 extern osThreadId_t PC_TaskHandle;
 extern osThreadId_t AUTO_TaskHandle;
+extern osThreadId_t MS4525D_TaskHandle;
 
 
 #endif /* INC_FREERTOSVARIABLE_H_ */

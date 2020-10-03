@@ -16,11 +16,11 @@
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
-#include <MatlabAttitudeController/Second_att_control_codeblock_fly.h>
-#include <MatlabAttitudeController/Second_att_control_codeblock_fly_private.h>
+#include <MatlabMcAttitudeController/Second_att_control_codeblock_fly.h>
+#include <MatlabMcAttitudeController/Second_att_control_codeblock_fly_private.h>
 
 // Block parameters (default storage)
-px4_AlgorithmModelClass::P_Second_att_control_codebloc_T px4_AlgorithmModelClass::
+MC_px4_AlgorithmModelClass::P_Second_att_control_codebloc_T MC_px4_AlgorithmModelClass::
   Second_att_control_codeblock__P = {
   // Mask Parameter: DiscreteDerivative_ICPrevScaled
   //  Referenced by: '<S7>/UD'

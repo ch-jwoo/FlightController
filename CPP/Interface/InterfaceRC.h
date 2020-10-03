@@ -8,7 +8,6 @@
 
 namespace FC{
 
-#define ARMING_THRESHOLD 1500
 
 class InterfaceRC : public Freq<InterfaceRC>{
 public:
@@ -16,7 +15,8 @@ public:
 
     void setRC(uint16_t roll=0, uint16_t pitch=0, uint16_t yaw=0, uint16_t throttle=0,
     		   uint16_t armming=0,
-			   uint16_t mode=0);
+			   uint16_t mode=0,
+			   uint16_t tilting=0);
 private:
     struct ArmFlag armFlagSub;
     struct ModeFlag modeFlagSub;
@@ -34,6 +34,8 @@ private:
     static const uint16_t FLIGHT_RTL_MODE_THRSHOLD = 1350;
     static const uint16_t FLIGHT_ALT_MODE_THRSHOLD = 950;
 
+    static const uint16_t ARMING_THRESHOLD = 1500;
+    static const uint16_t TILTING_THRSHOLD = 1500;
 };
 
 

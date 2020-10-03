@@ -15,6 +15,7 @@
 #include <Interface/InterfaceLidar.h>
 #include <Interface/InterfaceMag.h>
 #include <Interface/InterfaceRC.h>
+#include <Interface/InterfaceAirSpeed.h>
 
 namespace FC{
 
@@ -25,7 +26,7 @@ extern InterfaceMag interfaceMag;
 extern InterfaceBaro interfaceBaro;
 extern InterfaceGPS interfaceGPS;
 extern InterfaceLidar interfaceLidar;
-
+extern InterfaceAirSpeed interfaceAirSpeed;
 }
 
 

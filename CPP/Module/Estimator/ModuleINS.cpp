@@ -41,17 +41,14 @@ void ModuleINS::main(){
 
 		moduleINS.onestep();
 		ModulePositionController::setSignal(PC_fromEKF);
-		if(microsecond()-dt>1000000){
-			int len = sprintf((char*)telemBuffer, "ins hz: %d \r\n",cnt);
-			telem.send(telemBuffer, len);
-			cnt=0;
-			dt=microsecond();
-		}
+
 		cnt++;;
 	}
 }
 void ModuleINS::onestep(){
    ExtU input = {0,};
+
+   msgBus.getAttitude(&attitudeSub);
 
    if(msgBus.getNedAccel(&nedAccelSub)){
       input.AhrsFlag = true;
@@ -82,16 +79,16 @@ void ModuleINS::onestep(){
    else input.GpsFlag = false;
 
 
-   input.lat=gpsSub.lat;
-input.lon=gpsSub.lon;
-input.alt=gpsSub.alt;
-input.vx=gpsSub.velN;
-input.vy=gpsSub.velE;
+	input.lat=gpsSub.lat;
+	input.lon=gpsSub.lon;
+	input.alt=gpsSub.alt;
+	input.vx=gpsSub.velN;
+	input.vy=gpsSub.velE;
 
 
-   input.HOME_lla[0]=refLat;
-   input.HOME_lla[1]=refLon;
-   input.HOME_lla[2]=refAlt;
+	input.HOME_lla[0]=refLat;
+	input.HOME_lla[1]=refLon;
+	input.HOME_lla[2]=refAlt;
 
 
    if(msgBus.getBarometer(&baroSub)){
@@ -128,17 +125,18 @@ input.vy=gpsSub.velE;
    localPositionPub.gpsrawx=(float)output.GPSrawX;
    localPositionPub.gpsrawy=(float)output.GPSrawY;
 
+   localPositionPub.refAlt = refAlt;
+   localPositionPub.refLat = refLat;
+   localPositionPub.refLon = refLon;
+
    /* global position (LLA) */
    globalPositionPub.lat=output.Estim_LatLon[0];
    globalPositionPub.lon=output.Estim_LatLon[1];
    globalPositionPub.alt=(float)output.Estim_Alt;
-
-   globalPositionPub.refAlt=refAlt;
    globalPositionPub.timestamp = microsecond();
 
 
    /* heading */
-   msgBus.getAttitude(&attitudeSub);
    localPositionPub.yaw = attitudeSub.yaw;
    globalPositionPub.yaw=attitudeSub.yaw;
 

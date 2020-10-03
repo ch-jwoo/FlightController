@@ -33,11 +33,6 @@ public:
 		osThreadFlagsSet(PC_TaskHandle, signal);
 	}
 
-	~ModulePositionController() = default;
-	ModulePositionController(const ModulePositionController &other) = delete;
-	ModulePositionController(ModulePositionController &&other) = delete;
-	ModulePositionController& operator=(const ModulePositionController &other) = delete;
-	ModulePositionController& operator=(ModulePositionController &&other) = delete;
 private:
 	struct LocalPosition localPositionSub;
 	struct ModeFlag modeFlagSub;
@@ -57,11 +52,18 @@ private:
 
 	void setFromAutoController();
 
-	static constexpr float MAX_HORISION = 3.0;
+	static constexpr float MAX_HORISION = 5.0;
 	static constexpr float MAX_VELTICAL = 1.0;
 	static constexpr float MAX_YAW = 1.570796f;			/* pi/2 */
 
 	static const uint16_t STICK_THRESHOLD = 100;
+
+public:
+	~ModulePositionController() = default;
+	ModulePositionController(const ModulePositionController &other) = delete;
+	ModulePositionController(ModulePositionController &&other) = delete;
+	ModulePositionController& operator=(const ModulePositionController &other) = delete;
+	ModulePositionController& operator=(ModulePositionController &&other) = delete;
 };
 
 } /* namespace FC */

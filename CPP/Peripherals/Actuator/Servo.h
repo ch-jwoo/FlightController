@@ -36,8 +36,8 @@ private:
 	uint32_t Channel;
 	uint16_t us;
 
-	static const uint16_t MIN_MICROSECOND = 1000;
-	static const uint16_t MAX_MICROSECOND = 2000;
+	static const uint16_t MIN_MICROSECOND = 900;
+	static const uint16_t MAX_MICROSECOND = 2100;
 
 public:
 	Servo() = delete;

@@ -16,8 +16,8 @@
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
-#include <MatlabAttitudeController/Second_att_control_codeblock_fly.h>
-#include <MatlabAttitudeController/Second_att_control_codeblock_fly_private.h>
+#include <MatlabMcAttitudeController/Second_att_control_codeblock_fly.h>
+#include <MatlabMcAttitudeController/Second_att_control_codeblock_fly_private.h>
 
 // Exported block parameters
 real32_T Angle_rate_pitch_kI = 1.0F;   // Variable: Angle_rate_pitch_kI
@@ -65,7 +65,7 @@ real32_T kP_Yaw_rate_PID = 0.3F;       // Variable: kP_Yaw_rate_PID
 // Const memory section
 // Definition for custom storage class: Const
 const real32_T Max_angle_coef = 0.5F;  // Referenced by: '<S1>/Max_angle_coef'
-real32_T rt_roundf_snf(real32_T u)
+real32_T mc_rt_roundf_snf(real32_T u)
 {
   real32_T y;
   if (std::abs(u) < 8.388608E+6F) {
@@ -84,7 +84,7 @@ real32_T rt_roundf_snf(real32_T u)
 }
 
 // Model step function
-void px4_AlgorithmModelClass::step()
+void MC_px4_AlgorithmModelClass::step()
 {
   uint32_T tmp;
   uint16_T y;
@@ -323,7 +323,7 @@ void px4_AlgorithmModelClass::step()
   // MATLAB Function: '<S1>/pwm_out1' incorporates:
   //   Inport: '<Root>/set_thrust'
 
-  u0 = rt_roundf_snf(((-Second_att_control_codeblock__B.Gain -
+  u0 = mc_rt_roundf_snf(((-Second_att_control_codeblock__B.Gain -
                        Second_att_control_codeblock__B.Sum_f) *
                       Second_att_control_codeblock__U.set_thrust / 3.0F +
                       Second_att_control_codeblock__U.set_thrust) * 1000.0F);
@@ -343,7 +343,7 @@ void px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M1 = static_cast<uint16_T>(tmp);
-  u0 = rt_roundf_snf(((Second_att_control_codeblock__B.Gain +
+  u0 = mc_rt_roundf_snf(((Second_att_control_codeblock__B.Gain +
                        Second_att_control_codeblock__B.Sum_f) *
                       Second_att_control_codeblock__U.set_thrust / 3.0F +
                       Second_att_control_codeblock__U.set_thrust) * 1000.0F);
@@ -363,7 +363,7 @@ void px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M2 = static_cast<uint16_T>(tmp);
-  u0 = rt_roundf_snf((((Second_att_control_codeblock__B.Gain / 2.0F +
+  u0 = mc_rt_roundf_snf((((Second_att_control_codeblock__B.Gain / 2.0F +
                         Second_att_control_codeblock__B.Gain1) -
                        Second_att_control_codeblock__B.Sum_f) *
                       Second_att_control_codeblock__U.set_thrust / 3.0F +
@@ -384,7 +384,7 @@ void px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M3 = static_cast<uint16_T>(tmp);
-  u0 = rt_roundf_snf((((-Second_att_control_codeblock__B.Gain1 -
+  u0 = mc_rt_roundf_snf((((-Second_att_control_codeblock__B.Gain1 -
                         Second_att_control_codeblock__B.Gain / 2.0F) +
                        Second_att_control_codeblock__B.Sum_f) *
                       Second_att_control_codeblock__U.set_thrust / 3.0F +
@@ -405,7 +405,7 @@ void px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M4 = static_cast<uint16_T>(tmp);
-  u0 = rt_roundf_snf((((Second_att_control_codeblock__B.Gain1 -
+  u0 = mc_rt_roundf_snf((((Second_att_control_codeblock__B.Gain1 -
                         Second_att_control_codeblock__B.Gain / 2.0F) +
                        Second_att_control_codeblock__B.Sum_f) *
                       Second_att_control_codeblock__U.set_thrust / 3.0F +
@@ -426,7 +426,7 @@ void px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M5 = static_cast<uint16_T>(tmp);
-  u0 = rt_roundf_snf((((Second_att_control_codeblock__B.Gain / 2.0F +
+  u0 = mc_rt_roundf_snf((((Second_att_control_codeblock__B.Gain / 2.0F +
                         -Second_att_control_codeblock__B.Gain1) -
                        Second_att_control_codeblock__B.Sum_f) *
                       Second_att_control_codeblock__U.set_thrust / 3.0F +
@@ -631,7 +631,7 @@ void px4_AlgorithmModelClass::step()
 }
 
 // Model initialize function
-void px4_AlgorithmModelClass::initialize()
+void MC_px4_AlgorithmModelClass::initialize()
 {
   // InitializeConditions for DiscreteIntegrator: '<S4>/Discrete-Time Integrator' 
   Second_att_control_codeblock_DW.DiscreteTimeIntegrator_DSTATE =
@@ -681,13 +681,13 @@ void px4_AlgorithmModelClass::initialize()
 }
 
 // Model terminate function
-void px4_AlgorithmModelClass::terminate()
+void MC_px4_AlgorithmModelClass::terminate()
 {
   // (no terminate code required)
 }
 
 // Constructor
-px4_AlgorithmModelClass::px4_AlgorithmModelClass():
+MC_px4_AlgorithmModelClass::MC_px4_AlgorithmModelClass():
   Second_att_control_codeblock__B()
   ,Second_att_control_codeblock_DW()
   ,Second_att_control_codeblock__U()
@@ -697,7 +697,7 @@ px4_AlgorithmModelClass::px4_AlgorithmModelClass():
 }
 
 // Destructor
-px4_AlgorithmModelClass::~px4_AlgorithmModelClass()
+MC_px4_AlgorithmModelClass::~MC_px4_AlgorithmModelClass()
 {
   // Currently there is no destructor body generated.
 }

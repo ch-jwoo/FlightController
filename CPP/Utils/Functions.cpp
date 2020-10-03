@@ -45,8 +45,11 @@ float rad2deg(float num){
 *  step2: converting geodetic position to ECEF position
 */
 void geo2ECEF(double lat, double lon, float alt, double *ecefX, double *ecefY, double *ecefZ) {
+
+	lat *= FC_DEG2RAD;
+	lon *= FC_DEG2RAD;
 	/* radus of curvature */
-	double radius = (uint32_t)EARTH_RADIUS / (1 - sqrt(1 - pow((float)EARTH_ECCENTRICTIY * sin(lat), 2)));
+	double radius = (uint32_t)EARTH_RADIUS / sqrt(1 - pow((float)EARTH_ECCENTRICTIY * sin(lat), 2));
 
 	/*cosine sine function with latitude and longitude*/
 	double cosLat = cos(lat);
@@ -77,6 +80,10 @@ void lla2LocalNed(double lat, double lon, float alt,
 	double ecefX, ecefY, ecefZ;
 	geo2ECEF(lat, lon, alt, &ecefX, &ecefY, &ecefZ);
 
+   lat *= FC_DEG2RAD;
+   lon *= FC_DEG2RAD;
+   refLat *= FC_DEG2RAD;
+   refLon *= FC_DEG2RAD;
 	/*
 	*  z axis rotate 'longitude'
 	*  y axis rotate '-latitude-90'
@@ -96,9 +103,9 @@ void lla2LocalNed(double lat, double lon, float alt,
 	matrix::Matrix<double, 3, 1> nedMatrix = dcmMatrix * tempMatrix;
 
 	/*local ned position*/
-	*localNedX = nedMatrix(1, 1);
-	*localNedY = nedMatrix(2, 1);
-	*localNedZ = nedMatrix(3, 1);
+   *localNedX = nedMatrix(0,0);
+   *localNedY = nedMatrix(1,0);
+   *localNedZ = nedMatrix(2,0);
 }
 
 }

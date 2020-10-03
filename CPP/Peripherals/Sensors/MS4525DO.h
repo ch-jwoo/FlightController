@@ -11,6 +11,12 @@
 #include "RtosI2C.h"
 #include "MsgBus/MsgType.h"
 #include "MsgBus/MsgBus.h"
+
+#define FILTERING4525_ADC_MIN        0.4   //
+#define FILTERING4525_ADC_MAX        0.4 //
+#define FILTERING4525_ADC_MIN_AT       10 // when abs(delta between ADC and current value) is less than MIN_AT , apply MIN
+#define FILTERING4525_ADC_MAX_AT       100
+
 namespace FC {
 
 #define MS4525DO_ADDRESS 0x28 << 1
@@ -26,26 +32,30 @@ public:
 	inline void readBytes(uint8_t address, uint8_t subAddress, uint8_t count, uint8_t * dest){
 		i2c->read(address, subAddress, dest, count);
 	}
+
 	/* Getting Temperature and pressure */
-	void gettingTemperature(uint16_t temperatureMax, uint16_t temperatureMin, float *diffTemperature);
-	void gettingPressure(uint16_t pressureMax, uint16_t pressureMin, float *diffPressure);
+	float diffPressure;
 
-	/* Getting AirSpeed */
-	void gettingTrueAirSpeed(float pressure, float *TAS);
-
-	float TAS;
-	float difTemperature;
-	float difPressure;
 private:
 	RtosI2C *i2c;
+	int difPressureAdcArray[4] = { 0 };
 
 	struct GlobalPosition globalPositionSub= { 0 };
 
+	bool caliFlag;
 	uint8_t buffer[4];
+	uint16_t caliCount;
 	uint16_t pressureHigh;
 	uint16_t pressureLow;
 	uint16_t temperatureHigh;
 	uint16_t temperatureLow;
+	int countAverage, difPressureSumValue, smoothAdc;
+	float airSpeedDataAdc0, absDifPressureAdc,expSmoothAdc, smoothAirSpeed;
+
+	int32_t difPressureAdc;
+	float difPressureAdc0, offset4525, difPressureSum;
+
+
 public:
 	MS4525DO() = delete;
 	~MS4525DO() = default;

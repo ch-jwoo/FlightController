@@ -27,6 +27,7 @@ public:
 		, attitude{0}, nedAccel{0}
 		, armFlag{0, ArmMode::DisArm}
 		, modeFlag{0, FlightMode::AttitudeControl}
+		, airframeStatus{0, AirframeMode::Multicopter}
 		, health{0}
 	{}
 
@@ -46,6 +47,7 @@ public:
     SIMPLE_FUNC_IMPL(GPS, GPS, gps)
     SIMPLE_FUNC_IMPL(Barometer, Barometer, barometer)
     SIMPLE_FUNC_IMPL(Lidar, Lidar, lidar)
+    SIMPLE_FUNC_IMPL(AirSpeed, AirSpeed, airSpeed)
 
     SIMPLE_FUNC_IMPL(Controller, Controller, controller)
     SIMPLE_FUNC_IMPL(VehicleAttitueSP, VehicleAttitueSP, vehicleAttitudeSP)
@@ -59,11 +61,13 @@ public:
 
     SIMPLE_FUNC_IMPL(ArmFlag, ArmFlag, armFlag)
     SIMPLE_FUNC_IMPL(ModeFlag, ModeFlag, modeFlag)
+    SIMPLE_FUNC_IMPL(AirframeStatus, AirframeStatus, airframeStatus)
 
     SIMPLE_FUNC_IMPL(Health, Health, health)
     SIMPLE_FUNC_IMPL(StatusFlag, StatusFlag, statusFlag)
 
     SIMPLE_FUNC_IMPL(MotorPWM, MotorPWM, motorPWM)
+    SIMPLE_FUNC_IMPL(ServoPWM, ServoPWM, servoPWM)
 
 //    SIMPLE_FUNC_IMPL(VehicleWP, VehicleWP, vehicleWP)
 
@@ -75,6 +79,7 @@ private:
     struct GPS gps;
     struct Barometer barometer;
     struct Lidar lidar;
+    struct AirSpeed airSpeed;
 
     /* control */
     struct Controller controller;
@@ -92,6 +97,7 @@ private:
     /* flight state */
     struct ArmFlag armFlag;
     struct ModeFlag modeFlag;
+    struct AirframeStatus airframeStatus;
 
     /* frequency of sensor and module etc. */
     struct Health health;
@@ -99,6 +105,7 @@ private:
 
     /* actuator */
     struct MotorPWM motorPWM;
+    struct ServoPWM servoPWM;
 
     /* waypoints */
 //    struct VehicleWP vehicleWP;

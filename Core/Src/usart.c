@@ -71,7 +71,7 @@ void MX_UART8_Init(void)
 {
 
   huart8.Instance = UART8;
-  huart8.Init.BaudRate = 38400;
+  huart8.Init.BaudRate = 115200;
   huart8.Init.WordLength = UART_WORDLENGTH_8B;
   huart8.Init.StopBits = UART_STOPBITS_1;
   huart8.Init.Parity = UART_PARITY_NONE;

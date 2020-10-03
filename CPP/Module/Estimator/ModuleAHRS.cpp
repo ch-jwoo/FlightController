@@ -14,7 +14,7 @@
 
 namespace FC{
 
-float ModuleAHRS::beta = 0.1f;
+float ModuleAHRS::beta = 0.01f;
 
 ModuleAHRS::ModuleAHRS()
 	: bodyAccelSub{}

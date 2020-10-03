@@ -177,6 +177,11 @@ void ModulePositionController::setFromRC(){
 
 void ModulePositionController::setFromAutoController(){
 	//TODO add struct VehiclePositionSP, convert to target
+	msgBus.getVehiclePositionSP(&vehiclePositionSpSub);
+	targetX = vehiclePositionSpSub.x;
+	targetY = vehiclePositionSpSub.y;
+	targetYaw = vehiclePositionSpSub.yaw;
+	targetZ = vehiclePositionSpSub.z;
 }
 
 } /* namespace FC */

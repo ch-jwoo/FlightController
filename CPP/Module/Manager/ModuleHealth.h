@@ -12,6 +12,7 @@
 #include "MsgBus/MsgBus.h"
 #include <Module/Controller/ModulePositionController.h>
 #include <Module/Estimator/ModuleINS.h>
+#include <Module/Controller/ModuleAutoController.h>
 #include "printf.h"
 #include <cstring>
 
@@ -46,7 +47,7 @@ public:
 			health.attitudeController = ModuleAttitudeController::checkFreq();
 			health.positionController = ModulePositionController::checkFreq();
 			//TODO auto, lidar health check
-			health.autoController = 0;
+			health.autoController = ModuleAutoController::checkFreq();
 
 //			printf("%d %d %d %d %d\r\n", health.accel, health.gyro, health.ahrs, health.ins, health.positionController);
 

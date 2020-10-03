@@ -30,7 +30,8 @@ enum class Command{
 	AutoRTL,
 	AutoTakeoff,
 	AutoLand,
-	AutoTransition,
+	AutoTransitionMC,
+	AutoTransitionFW,
 
 	Arm,
 	DisArm,
@@ -73,6 +74,7 @@ private:
 	struct Controller controllerSub{};
 	struct ModeFlag modeFlagSub{};
 	struct StatusFlag statusFlagSub{};
+	struct AirframeStatus airframeStatusSub{};
 
 	struct ArmFlag armFlagPub{};
 	struct ModeFlag modeFlagPub{};
@@ -95,6 +97,9 @@ private:
 	bool toRTL();
 	bool toTakeoff();
 	bool toLand();
+
+	bool toMulticopter();
+	bool toFixedWing();
 
 	bool toArm();
 	bool toDisArm();

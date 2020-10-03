@@ -23,40 +23,40 @@
 real_T hoverThr = 1500.0;              // Variable: hoverThr
                                           //  Referenced by: '<S1>/Constant'
 
-real_T pos_x_D = 0.0;                  // Variable: pos_x_D
+real_T pos_x_D = 0.3;                  // Variable: pos_x_D
                                           //  Referenced by: '<S35>/Derivative Gain'
 
 real_T pos_x_I = 0.0;                  // Variable: pos_x_I
                                           //  Referenced by: '<S38>/Integral Gain'
 
-real_T pos_x_P = 0.5;                  // Variable: pos_x_P
+real_T pos_x_P = 0.95;                  // Variable: pos_x_P
                                           //  Referenced by: '<S46>/Proportional Gain'
 
 real_T pos_x_vel_D = 0.01;             // Variable: pos_x_vel_D
                                           //  Referenced by: '<S83>/Derivative Gain'
 
-real_T pos_x_vel_I = 0.0;              // Variable: pos_x_vel_I
+real_T pos_x_vel_I = 0.02;              // Variable: pos_x_vel_I
                                           //  Referenced by: '<S86>/Integral Gain'
 
-real_T pos_x_vel_P = 0.15;              // Variable: pos_x_vel_P
+real_T pos_x_vel_P = 0.09;              // Variable: pos_x_vel_P
                                           //  Referenced by: '<S94>/Proportional Gain'
 
-real_T pos_y_D = 0.0;                  // Variable: pos_y_D
+real_T pos_y_D = 0.3;                  // Variable: pos_y_D
                                           //  Referenced by: '<S181>/Derivative Gain'
 
 real_T pos_y_I = 0.0;                  // Variable: pos_y_I
                                           //  Referenced by: '<S184>/Integral Gain'
 
-real_T pos_y_P = 0.5;                  // Variable: pos_y_P
+real_T pos_y_P = 0.95;                  // Variable: pos_y_P
                                           //  Referenced by: '<S192>/Proportional Gain'
 
 real_T pos_y_vel_D = 0.01;             // Variable: pos_y_vel_D
                                           //  Referenced by: '<S229>/Derivative Gain'
 
-real_T pos_y_vel_I = 0.0;              // Variable: pos_y_vel_I
+real_T pos_y_vel_I = 0.02;              // Variable: pos_y_vel_I
                                           //  Referenced by: '<S232>/Integral Gain'
 
-real_T pos_y_vel_P = 0.15;              // Variable: pos_y_vel_P
+real_T pos_y_vel_P = 0.09;          // Variable: pos_y_vel_P
                                           //  Referenced by: '<S240>/Proportional Gain'
 
 real_T pos_z_D = 0.1;                  // Variable: pos_z_D
@@ -68,7 +68,7 @@ real_T pos_z_I = 0.0;                  // Variable: pos_z_I
 real_T pos_z_P = 1.0;                  // Variable: pos_z_P
                                           //  Referenced by: '<S288>/Proportional Gain'
 
-real_T pos_z_vel_D = 0.01;             // Variable: pos_z_vel_D
+real_T pos_z_vel_D = 0.003;             // Variable: pos_z_vel_D
                                           //  Referenced by: '<S131>/Derivative Gain'
 
 real_T pos_z_vel_I = 0.1;              // Variable: pos_z_vel_I

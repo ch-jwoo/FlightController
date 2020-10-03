@@ -18,139 +18,153 @@
 namespace FC {
 
 typedef struct{
-	float x;
-	float y;
-	float z;
-	AutoCommand command;
-	uint16_t param;
+   float x;
+   float y;
+   float z;
+   AutoCommand command;
+   uint16_t param;
 } WaypointNED;
 
 typedef struct{
-	WaypointNED wp[20];
-	uint8_t len;
+   WaypointNED wp[20];
+   uint8_t len;
 } VehicleWpNED;
 
 enum AutoSignal{
-	AUTO_start = 0x01,
-	AUTO_stop = 0x02,
-	AUTO_reset = 0x04
+   AUTO_start = 0x01,
+   AUTO_stop = 0x02,
+   AUTO_reset = 0x04
 };
 
 class ModuleAutoController : public Freq<ModuleAutoController> {
 public:
-	ModuleAutoController();
+   ModuleAutoController();
 
-	static void main();
+   static void main();
 
-	static void start(FlightMode tempFlightMode);
+   static void start(FlightMode tempFlightMode);
 
-	static inline void setSignal(enum AutoSignal signal){
-		osThreadFlagsSet(AUTO_TaskHandle, signal);
-	}
+   static inline void setSignal(enum AutoSignal signal){
+      osThreadFlagsSet(AUTO_TaskHandle, signal);
+   }
+   void guidance(float previousWaypointX, float previousWaypointY, float previousWaypointZ,
+      float nextWaypointX, float nextWaypointY, float nextWaypointZ,
+      float vehicleX, float vehicleY, float vehicleZ,
+      float vehicleVelX, float vehicleVelY, float vehicleVelZ,
+      float *targetYaw, float *targetRoll,
+      float *targetX, float *targetY, float *targetZ, float *dist);
 
 private:
-	/* from commander */
-	static FlightMode flightMode;
+   /* from commander */
+   static FlightMode flightMode;
 
-	/* input */
-	struct LocalPosition localPositionSub { 0 };
-//	struct VehicleWP vehicleWPSub { 0 };
+   /* input */
+   struct LocalPosition localPositionSub { 0 };
+//   struct VehicleWP vehicleWPSub { 0 };
 
-	/* output */
-	struct VehiclePositionSP vehiclePositionSpPub { 0 };
+   /* output */
+   struct VehiclePositionSP vehiclePositionSpPub { 0 };
 
-	/* variable */
-	/*
-	*  variable
-	*  \curSeq        current sequence
-	*  \nextSeq       next sequence
-	*  \missionSeq    mission sequence
-	*  \flag          using for processing in auto mission function
-	*/
-	uint8_t curSeq, nextSeq, missionSeq, flag;
+   /* variable */
+   /*
+   *  variable
+   *  \curSeq        current sequence
+   *  \nextSeq       next sequence
+   *  \missionSeq    mission sequence
+   *  \flag          using for processing in auto mission function
+   */
+   uint8_t curSeq, nextSeq, missionSeq, flag = SET;
 
-	/*
-	*  setting position variables
-	*  \targetX     target x in ned
-	*  \targetY     target y in ned
-	*  \targetZ     target z in ned
-	*  \targetRoll  target roll in ned
-	*  \targetYaw   target yaw in ned
-	*/
-	float targetX;
-	float targetY;
-	float targetZ;
-	float targetRoll;
-	float targetYaw;
+   /*
+   *  setting position variables
+   *  \targetX     target x in ned
+   *  \targetY     target y in ned
+   *  \targetZ     target z in ned
+   *  \targetRoll  target roll in ned
+   *  \targetYaw   target yaw in ned
+   */
+   float targetX;
+   float targetY;
+   float targetZ;
+   float targetRoll;
+   float targetYaw;
 
-	/*
-	*  using for saving waypoint ned position
-	*/
-	VehicleWpNED vehicleWpNED;
+   float homeX;
+   float homeY;
+   float homeZ;
+   uint8_t missionFlag;
+   uint8_t hoveringFlag;
+   uint8_t transitionFlag;
+   uint8_t RTLFlag;
+   uint8_t readyLandFlag;
+   /*
+   *  using for saving waypoint ned position
+   */
+   VehicleWpNED vehicleWpNED;
 
-	PARAM(MC_D);				/* D */
-	PARAM(MC_L2);				/* L2 */
+   PARAM(MC_D);            /* D */
+   PARAM(MC_L2);            /* L2 */
 
-	uint8_t ceptAngle = 45;
+   uint8_t ceptAngle = 45;
 
-	/* onestep function */
-	void oneStep();
+   /* onestep function */
+   void oneStep();
 
 
-	/* simple calculation function */
-	void waypointLla2LocalNed();
+   /* simple calculation function */
+   void waypointLla2LocalNed();
 
-	/*
-	*  generate set point for previous vehicle waypoint to next waypoint
-	*  \param[in]      lastX      previous waypoint ned-x
-	*  \param[in]      lastY      previous waypoint ned-y
-	*  \param[in]      lastZ      previous waypoint ned-z
-	*  \param[in]      curX      current vehicle position ned-x
-	*  \param[in]      curX      current vehicle position ned-y
-	*  \param[in]      curX      current vehicle position ned-z
-	*  \param[in]      vX         current vehicle velocity of ned-x
-	*  \param[in]      vY         current vehicle velocity of ned-y
-	*  \param[in]      vZ         current vehicle velocity of ned-z
-	*  \param[out]      targetYaw   target yaw
-	*  \param[out]      targetRoll   target roll
-	*  \param[out]      targetX      target X
-	*  \param[out]      targetY      target Y
-	*  \param[out]      targetZ      target Z
-	*  \param[out]      dist      distance current position to waypoint
-	*/
-	void guidance(float previousWaypointX, float previousWaypointY, float previousWaypointZ,
-		float nextWaypointX, float nextWaypointY, float nextWaypointZ,
-		float vehicleX, float vehicleY, float vehicleZ,
-		float vehicleVelX, float vehicleVelY, float vehicleVelZ,
-		float *targetYaw, float *targetRoll,
-		float *targetX, float *targetY, float *targetZ, float *dist);
+   /*
+   *  generate set point for previous vehicle waypoint to next waypoint
+   *  \param[in]      lastX      previous waypoint ned-x
+   *  \param[in]      lastY      previous waypoint ned-y
+   *  \param[in]      lastZ      previous waypoint ned-z
+   *  \param[in]      curX      current vehicle position ned-x
+   *  \param[in]      curX      current vehicle position ned-y
+   *  \param[in]      curX      current vehicle position ned-z
+   *  \param[in]      vX         current vehicle velocity of ned-x
+   *  \param[in]      vY         current vehicle velocity of ned-y
+   *  \param[in]      vZ         current vehicle velocity of ned-z
+   *  \param[out]      targetYaw   target yaw
+   *  \param[out]      targetRoll   target roll
+   *  \param[out]      targetX      target X
+   *  \param[out]      targetY      target Y
+   *  \param[out]      targetZ      target Z
+   *  \param[out]      dist      distance current position to waypoint
+   */
+//   void guidance(float previousWaypointX, float previousWaypointY, float previousWaypointZ,
+//      float nextWaypointX, float nextWaypointY, float nextWaypointZ,
+//      float vehicleX, float vehicleY, float vehicleZ,
+//      float vehicleVelX, float vehicleVelY, float vehicleVelZ,
+//      float *targetYaw, float *targetRoll,
+//      float *targetX, float *targetY, float *targetZ, float *dist);
 
-	/*
-	*  simple auto-mission command function
-	*  \setPosition();   setting target position with msgBus
-	*  \doLand();        doing land (0, 0, curZ+3) in ned
-	*  \doTakeoff();     doing Takeoff (0, 0, -5) in ned
-	*  \doGuidance();    calculating target position, heading and roll in ned
-	*  \doRTL();         doGuidance current position to (0, 0, curZ) and doLand
-	*  \doHovering();    waiting holding time and setting position with current position
-	*  \doTransition();  getting Transition flag
-	*  every function, except doLand(); doRTL();, increases curSeq, nextSeq
-	*/
-	void setPosition();
+   /*
+   *  simple auto-mission command function
+   *  \setPosition();   setting target position with msgBus
+   *  \doLand();        doing land (0, 0, curZ+3) in ned
+   *  \doTakeoff();     doing Takeoff (0, 0, -5) in ned
+   *  \doGuidance();    calculating target position, heading and roll in ned
+   *  \doRTL();         doGuidance current position to (0, 0, curZ) and doLand
+   *  \doHovering();    waiting holding time and setting position with current position
+   *  \doTransition();  getting Transition flag
+   *  every function, except doLand(); doRTL();, increases curSeq, nextSeq
+   */
+   void setPosition();
 
-	void doLand();
-	void doTakeoff();
-	void doGuidance();
-	void doRTL();
-	void doHovering();
-	void doTransition();
+   void doLand();
+   void doTakeoff();
+   void doGuidance();
+   void doRTL();
+   void doHovering();
+   void doTransition();
 
 public:
-	~ModuleAutoController() = default;
-	ModuleAutoController(const ModuleAutoController &other) = delete;
-	ModuleAutoController(ModuleAutoController &&other) = delete;
-	ModuleAutoController& operator=(const ModuleAutoController &other) = delete;
-	ModuleAutoController& operator=(ModuleAutoController &&other) = delete;
+   ~ModuleAutoController() = default;
+   ModuleAutoController(const ModuleAutoController &other) = delete;
+   ModuleAutoController(ModuleAutoController &&other) = delete;
+   ModuleAutoController& operator=(const ModuleAutoController &other) = delete;
+   ModuleAutoController& operator=(ModuleAutoController &&other) = delete;
 
 };
 
