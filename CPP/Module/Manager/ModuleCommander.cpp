@@ -242,9 +242,32 @@ bool ModuleCommander::toFixedWing(){
 }
 
 bool ModuleCommander::toArm(){
+	bool condition = true;
+
 	msgBus.getController(&controllerSub);
 	msgBus.getModeFlag(&modeFlagSub);
-	//TODO check arm condition
+	msgBus.getStatusFlag(&statusFlagSub);
+
+//	switch(modeFlagSub.flightMode){
+//	case FlightMode::AttitudeControl:
+//		condition &= statusFlagSub.accel;
+//		condition &= statusFlagSub.gyro;
+//		condition &= statusFlagSub.receiver;
+//	case FlightMode::AltitudeControl:
+//		condition &= statusFlagSub.barometer;
+//	case FlightMode::PositionControl:
+//		condition &= statusFlagSub.mag;
+//		condition &= statusFlagSub.gps;
+//	case FlightMode::AutoWaypoint:
+//	default:
+//		break;
+//	}
+//
+//	if(!condition){
+//		ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
+//		return false;
+//	}
+
 	/* toArm condition */
 	if(controllerSub.throttle > 1050){
 		ModuleBuzzer::sendCommand(BuzzerCommand::Denied);

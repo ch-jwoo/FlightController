@@ -15,16 +15,16 @@
 
 namespace FC {
 
-float ModuleAttitudeController::vtolTransitionTHR = 2000.0;
+float ModuleAttitudeController::vtolTransitionTHR = 1750.0;
 float ModuleAttitudeController::vtolTransitionPhase1Time = 3.0;
 //float ModuleAttitudeController::vtolTransitionCpltAirSpeed = 10.0;
 float ModuleAttitudeController::vtolTransitionPhase2Time = 2.0;
 
-float ModuleAttitudeController::FW_SERVO_1 = 2000.0;
-float ModuleAttitudeController::FW_SERVO_2 = 1000.0;
+float ModuleAttitudeController::FW_SERVO_1 = 1000.0;
+float ModuleAttitudeController::FW_SERVO_2 = 2000.0;
 
-float ModuleAttitudeController::MC_SERVO_1 = 1000.0;
-float ModuleAttitudeController::MC_SERVO_2 = 2000.0;
+float ModuleAttitudeController::MC_SERVO_1 = 2000.0;
+float ModuleAttitudeController::MC_SERVO_2 = 1000.0;
 
 float ModuleAttitudeController::TRANSITION_SERVO_1 = 1500.0;
 float ModuleAttitudeController::TRANSITION_SERVO_2 = 1500.0;
@@ -91,6 +91,7 @@ void ModuleAttitudeController::oneStep(){
 		setFromPositionController();
 	}
 
+	/* tilting logic */
 	switch(phase){
 	case TiltingPhase::FW2MC_Phase1:
 		break;
@@ -104,8 +105,8 @@ void ModuleAttitudeController::oneStep(){
 			phase1TotalStep = (uint16_t)(vtolTransitionPhase1Time*AC_TASK_FREQUENCY);
 			phase1Step++;
 			phase1Ratio = phase1Step/(float)phase1TotalStep;
-			s4.setPWM(MC_SERVO_1 + ((TRANSITION_SERVO_1 - MC_SERVO_1)*phase1Ratio));
-			s5.setPWM(MC_SERVO_2 + ((TRANSITION_SERVO_2 - MC_SERVO_2)*phase1Ratio));
+			s3.setPWM(MC_SERVO_1 + ((TRANSITION_SERVO_1 - MC_SERVO_1)*phase1Ratio));
+			s4.setPWM(MC_SERVO_2 + ((TRANSITION_SERVO_2 - MC_SERVO_2)*phase1Ratio));
 		}
 		break;
 	case TiltingPhase::MC2FW_Phase2:
@@ -121,18 +122,18 @@ void ModuleAttitudeController::oneStep(){
 			phase2Step++;
 			phase2Ratio = phase2Step/(float)phase2TotalStep;
 
-			s4.setPWM(TRANSITION_SERVO_1 + ((FW_SERVO_1 - TRANSITION_SERVO_1)*phase2Ratio));
-			s5.setPWM(TRANSITION_SERVO_2 + ((FW_SERVO_2 - TRANSITION_SERVO_2)*phase2Ratio));
+			s3.setPWM(TRANSITION_SERVO_1 + ((FW_SERVO_1 - TRANSITION_SERVO_1)*phase2Ratio));
+			s4.setPWM(TRANSITION_SERVO_2 + ((FW_SERVO_2 - TRANSITION_SERVO_2)*phase2Ratio));
 		}
 		break;
 	case TiltingPhase::FixedWing:
-		s4.setPWM((uint16_t)FW_SERVO_1);
-		s5.setPWM((uint16_t)FW_SERVO_2);
+		s3.setPWM((uint16_t)FW_SERVO_1);
+		s4.setPWM((uint16_t)FW_SERVO_2);
 		airframeStatusPub.airframeMode = AirframeMode::FixedWing;
 		break;
 	case TiltingPhase::MultiCopter:
-		s4.setPWM((uint16_t)MC_SERVO_1);
-		s5.setPWM((uint16_t)MC_SERVO_2);
+		s3.setPWM((uint16_t)MC_SERVO_1);
+		s4.setPWM((uint16_t)MC_SERVO_2);
 		airframeStatusPub.airframeMode = AirframeMode::Multicopter;
 		break;
 	default:
@@ -152,6 +153,7 @@ void ModuleAttitudeController::oneStep(){
 		return;
 	}
 
+	/* attitude controller */
 	switch(airframeStatusPub.airframeMode){
 	case AirframeMode::Multicopter:
 		mcOneStep();
@@ -275,21 +277,21 @@ void ModuleAttitudeController::fwOneStep(){
 	motorPwmPub.m1 = output.PWM_OUT[0];
 	motorPwmPub.m2 = output.PWM_OUT[1];
 	motorPwmPub.m3 = output.PWM_OUT[2];
-	motorPwmPub.m4 = output.PWM_OUT[3];
+	motorPwmPub.m4 = output.PWM_OUT[3]	;
 	msgBus.setMotorPWM(motorPwmPub);
 
 	/* set servo pwm */
 	s1.setPWM(output.PWM_OUT[4]);
 	s2.setPWM(output.PWM_OUT[5]);
 //	s3.setPWM(output.PWM_OUT[6]);
-//	s4.setPWM(output.PWM_OUT[7]);
+//	s3.setPWM(output.PWM_OUT[7]);
 
 
 	servoPwmPub.timestamp = microsecond();
 	servoPwmPub.s1 = output.PWM_OUT[0];
 	servoPwmPub.s2 = output.PWM_OUT[1];
 	servoPwmPub.s3 = output.PWM_OUT[2];
-	servoPwmPub.s4 = output.PWM_OUT[3];
+	servoPwmPub.s3 = output.PWM_OUT[3];
 	msgBus.setServoPWM(servoPwmPub);
 
 }

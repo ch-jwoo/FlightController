@@ -128,8 +128,6 @@ float getParamValue(uint8_t index){
 	case PARAM_DOUBLE:
 		return (float)(*(double*)(params.at(index).variable));
 	}
-
-//	return *(params.at(index).variable);
 }
 
 uint16_t getParamLength(){

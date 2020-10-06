@@ -55,22 +55,22 @@ FW_px4_AlgorithmModelClass::P_FW_att_control_codeblock_fl_T FW_px4_AlgorithmMode
   // Variable: FW_kD_Pitch_rate_PID
   //  Referenced by: '<S5>/D_pr1'
 
-  0.03F,
+  0.0F,
 
   // Variable: FW_kD_Roll_rate_PID
   //  Referenced by: '<S5>/D_pr'
 
-  0.03F,
+  0.0F,
 
   // Variable: FW_kI_Pitch_rate_PID
   //  Referenced by: '<S5>/I_pr1'
 
-  0.3F,
+  0.03F,
 
   // Variable: FW_kI_Roll_rate_PID
   //  Referenced by: '<S5>/I_pr'
 
-  0.3F,
+  0.03F,
 
   // Variable: FW_kI_Yaw_rate_PID
   //  Referenced by: '<S38>/Integral Gain'
@@ -80,12 +80,12 @@ FW_px4_AlgorithmModelClass::P_FW_att_control_codeblock_fl_T FW_px4_AlgorithmMode
   // Variable: FW_kP_Pitch_rate_PID
   //  Referenced by: '<S5>/P_pr1'
 
-  3.0F,
+  0.3F,
 
   // Variable: FW_kP_Roll_rate_PID
   //  Referenced by: '<S5>/P_pr'
 
-  3.0F,
+  0.3F,
 
   // Variable: FW_kP_Yaw_rate_PID
   //  Referenced by: '<S46>/Proportional Gain'
@@ -145,12 +145,12 @@ FW_px4_AlgorithmModelClass::P_FW_att_control_codeblock_fl_T FW_px4_AlgorithmMode
   // Computed Parameter: Roll_rate_UpperSat
   //  Referenced by: '<S5>/Roll_rate'
 
-  8.0F,
+  1.0F,
 
   // Computed Parameter: Roll_rate_LowerSat
   //  Referenced by: '<S5>/Roll_rate'
 
-  -8.0F,
+  -1.0F,
 
   // Computed Parameter: DiscreteTimeIntegrator1_gainval
   //  Referenced by: '<S4>/Discrete-Time Integrator1'
@@ -180,12 +180,12 @@ FW_px4_AlgorithmModelClass::P_FW_att_control_codeblock_fl_T FW_px4_AlgorithmMode
   // Computed Parameter: Pitch_rate_UpperSat
   //  Referenced by: '<S5>/Pitch_rate'
 
-  8.0F,
+  1.0F,
 
   // Computed Parameter: Pitch_rate_LowerSat
   //  Referenced by: '<S5>/Pitch_rate'
 
-  -8.0F,
+  -1.0F,
 
   // Computed Parameter: Integrator_gainval
   //  Referenced by: '<S41>/Integrator'

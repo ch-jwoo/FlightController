@@ -320,7 +320,7 @@ void FW_px4_AlgorithmModelClass::step()
 
   FW_att_control_codeblock_fly_B.M3 = y;
   FW_att_control_codeblock_fly_B.M4 = 1000U;
-  u0 = fw_rt_roundf_snf((0.6F * FW_att_control_codeblock_fly_B.Roll_rate + 0.6F *
+  u0 = fw_rt_roundf_snf((FW_att_control_codeblock_fly_B.Roll_rate -
                       FW_att_control_codeblock_fly_B.Pitch_rate) / 2.0F * 500.0F
                      + 1500.0F);
   if (u0 < 65536.0F) {
@@ -334,7 +334,7 @@ void FW_px4_AlgorithmModelClass::step()
   }
 
   FW_att_control_codeblock_fly_B.S1 = y;
-  u0 = fw_rt_roundf_snf((0.6F * FW_att_control_codeblock_fly_B.Roll_rate - 0.6F *
+  u0 = fw_rt_roundf_snf((FW_att_control_codeblock_fly_B.Roll_rate +
                       FW_att_control_codeblock_fly_B.Pitch_rate) / 2.0F * 500.0F
                      + 1500.0F);
   if (u0 < 65536.0F) {

@@ -139,6 +139,10 @@ void Debug_StartTask(void *argument){
 		osDelayUntil(tick);
 		debug_loop++;
 
+		if(msgBus.getAirSpeed(&airSpeed)){
+			airspeed = airSpeed.TAS;
+		}
+
 		if(msgBus.getHealth(&health)){
 			hzAccel = health.accel;
 			hzBaro = health.baro;

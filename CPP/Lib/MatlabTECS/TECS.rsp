@@ -1,0 +1,8 @@
+SysTickScheduler.o
+TECS.o
+TECS_data.o
+ert_main.o
+m3m4m4f_multitasking.o
+startup_gcc.o
+syscalls.o
+system_LM3S.o
