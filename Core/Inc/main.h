@@ -124,6 +124,7 @@ void MS4525D_StartTask(void *argument);
 #define M1_GPIO_Port GPIOD
 #define USB_OTG_FS_OVCR_Pin GPIO_PIN_7
 #define USB_OTG_FS_OVCR_GPIO_Port GPIOG
+#define USB_OTG_FS_OVCR_EXTI_IRQn EXTI9_5_IRQn
 #define M6_Pin GPIO_PIN_7
 #define M6_GPIO_Port GPIOC
 #define TELEM_TX_Pin GPIO_PIN_5
@@ -132,6 +133,7 @@ void MS4525D_StartTask(void *argument);
 #define SAFETY_SWITCH_GPIO_Port GPIOD
 #define MPU9250_INT_Pin GPIO_PIN_5
 #define MPU9250_INT_GPIO_Port GPIOB
+#define MPU9250_INT_EXTI_IRQn EXTI9_5_IRQn
 #define MPU9250_SCL_Pin GPIO_PIN_6
 #define MPU9250_SCL_GPIO_Port GPIOB
 #define MPU9250_SDA_Pin GPIO_PIN_9

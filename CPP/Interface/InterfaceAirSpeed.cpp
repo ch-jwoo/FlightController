@@ -52,7 +52,8 @@ void InterfaceAirSpeed::setAirSpeed(float diffPressure){
 	airSpeedPub.TAS = filteredIAS + filteredIAS * (0.02 * 10.0 / 1000.0);
 	airSpeedPub.timestamp = microsecond();
 	msgBus.setAirSpeed(airSpeedPub);
-	printf_("%f\t%f\t%f\t%f\r\n", diffPressure, IAS, filteredIAS, airSpeedPub.TAS);
+
+	freqCount();
 }
 
 }

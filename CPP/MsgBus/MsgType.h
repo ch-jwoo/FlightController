@@ -188,6 +188,8 @@ struct Health{
 	uint16_t baro;
 	uint16_t lidar;
 
+	uint16_t airspeed;
+
 	uint16_t ahrs;
 	uint16_t ins;
 
@@ -203,7 +205,7 @@ struct StatusFlag{
 	bool accel;
 	bool mag;
 	bool barometer;
-	bool difPressure;
+	bool airspeed;
 	bool gps;
 	bool lidar;
 

@@ -2,7 +2,7 @@
 ## Makefile generated for Simulink model 'Second_att_control_codeblock_fly'. 
 ## 
 ## Makefile     : Second_att_control_codeblock_fly.mk
-## Generated on : Mon Aug 10 17:49:29 2020
+## Generated on : Sun Oct 04 06:03:13 2020
 ## MATLAB Coder version: 5.0 (R2020a)
 ## 
 ## Build Info:
@@ -29,7 +29,7 @@ MATLAB_ROOT               = C:/PROGRA~1/MATLAB/R2020a
 MATLAB_BIN                = C:/PROGRA~1/MATLAB/R2020a/bin
 MATLAB_ARCH_BIN           = $(MATLAB_BIN)/win64
 MASTER_ANCHOR_DIR         = 
-START_DIR                 = C:/Users/Yeojun/ONEDRI~1.EDU/2020_R~1/ROBOTA~1/SECOND~1
+START_DIR                 = C:/Users/Yeojun/ONEDRI~1.EDU/2020_R~1/CONTRO~1/ATTITU~2
 SOLVER                    = 
 SOLVER_OBJ                = 
 CLASSIC_INTERFACE         = 0

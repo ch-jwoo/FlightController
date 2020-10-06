@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'Second_att_control_codeblock_fly'.
 //
-// Model version                  : 1.33
+// Model version                  : 1.39
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Aug 31 17:02:44 2020
+// C/C++ source code generated on : Mon Oct  5 20:47:30 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -323,9 +323,10 @@ void MC_px4_AlgorithmModelClass::step()
   // MATLAB Function: '<S1>/pwm_out1' incorporates:
   //   Inport: '<Root>/set_thrust'
 
-  u0 = mc_rt_roundf_snf(((-Second_att_control_codeblock__B.Gain -
-                       Second_att_control_codeblock__B.Sum_f) *
-                      Second_att_control_codeblock__U.set_thrust / 3.0F +
+  u0 = mc_rt_roundf_snf((((Second_att_control_codeblock__B.Gain +
+                        Second_att_control_codeblock__B.Gain1) -
+                       Second_att_control_codeblock__B.Sum_f) / 2.0F *
+                      Second_att_control_codeblock__U.set_thrust +
                       Second_att_control_codeblock__U.set_thrust) * 1000.0F);
   if (u0 < 65536.0F) {
     if (u0 >= 0.0F) {
@@ -343,9 +344,10 @@ void MC_px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M1 = static_cast<uint16_T>(tmp);
-  u0 = mc_rt_roundf_snf(((Second_att_control_codeblock__B.Gain +
-                       Second_att_control_codeblock__B.Sum_f) *
-                      Second_att_control_codeblock__U.set_thrust / 3.0F +
+  u0 = mc_rt_roundf_snf((((-Second_att_control_codeblock__B.Gain +
+                        Second_att_control_codeblock__B.Gain1) +
+                       Second_att_control_codeblock__B.Sum_f) / 2.0F *
+                      Second_att_control_codeblock__U.set_thrust +
                       Second_att_control_codeblock__U.set_thrust) * 1000.0F);
   if (u0 < 65536.0F) {
     if (u0 >= 0.0F) {
@@ -363,10 +365,10 @@ void MC_px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M2 = static_cast<uint16_T>(tmp);
-  u0 = mc_rt_roundf_snf((((Second_att_control_codeblock__B.Gain / 2.0F +
+  u0 = mc_rt_roundf_snf((((-Second_att_control_codeblock__B.Gain -
                         Second_att_control_codeblock__B.Gain1) -
-                       Second_att_control_codeblock__B.Sum_f) *
-                      Second_att_control_codeblock__U.set_thrust / 3.0F +
+                       Second_att_control_codeblock__B.Sum_f) / 2.0F *
+                      Second_att_control_codeblock__U.set_thrust +
                       Second_att_control_codeblock__U.set_thrust) * 1000.0F);
   if (u0 < 65536.0F) {
     if (u0 >= 0.0F) {
@@ -384,10 +386,10 @@ void MC_px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M3 = static_cast<uint16_T>(tmp);
-  u0 = mc_rt_roundf_snf((((-Second_att_control_codeblock__B.Gain1 -
-                        Second_att_control_codeblock__B.Gain / 2.0F) +
-                       Second_att_control_codeblock__B.Sum_f) *
-                      Second_att_control_codeblock__U.set_thrust / 3.0F +
+  u0 = mc_rt_roundf_snf((((Second_att_control_codeblock__B.Gain -
+                        Second_att_control_codeblock__B.Gain1) +
+                       Second_att_control_codeblock__B.Sum_f) / 2.0F *
+                      Second_att_control_codeblock__U.set_thrust +
                       Second_att_control_codeblock__U.set_thrust) * 1000.0F);
   if (u0 < 65536.0F) {
     if (u0 >= 0.0F) {
@@ -405,48 +407,8 @@ void MC_px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M4 = static_cast<uint16_T>(tmp);
-  u0 = mc_rt_roundf_snf((((Second_att_control_codeblock__B.Gain1 -
-                        Second_att_control_codeblock__B.Gain / 2.0F) +
-                       Second_att_control_codeblock__B.Sum_f) *
-                      Second_att_control_codeblock__U.set_thrust / 3.0F +
-                      Second_att_control_codeblock__U.set_thrust) * 1000.0F);
-  if (u0 < 65536.0F) {
-    if (u0 >= 0.0F) {
-      y = static_cast<uint16_T>(u0);
-    } else {
-      y = 0U;
-    }
-  } else {
-    y = MAX_uint16_T;
-  }
-
-  tmp = y + 1000U;
-  if (tmp > 65535U) {
-    tmp = 65535U;
-  }
-
-  Second_att_control_codeblock__B.M5 = static_cast<uint16_T>(tmp);
-  u0 = mc_rt_roundf_snf((((Second_att_control_codeblock__B.Gain / 2.0F +
-                        -Second_att_control_codeblock__B.Gain1) -
-                       Second_att_control_codeblock__B.Sum_f) *
-                      Second_att_control_codeblock__U.set_thrust / 3.0F +
-                      Second_att_control_codeblock__U.set_thrust) * 1000.0F);
-  if (u0 < 65536.0F) {
-    if (u0 >= 0.0F) {
-      y = static_cast<uint16_T>(u0);
-    } else {
-      y = 0U;
-    }
-  } else {
-    y = MAX_uint16_T;
-  }
-
-  tmp = y + 1000U;
-  if (tmp > 65535U) {
-    tmp = 65535U;
-  }
-
-  Second_att_control_codeblock__B.M6 = static_cast<uint16_T>(tmp);
+  Second_att_control_codeblock__B.M5 = 1000U;
+  Second_att_control_codeblock__B.M6 = 1000U;
 
   // End of MATLAB Function: '<S1>/pwm_out1'
 

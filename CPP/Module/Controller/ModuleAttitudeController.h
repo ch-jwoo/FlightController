@@ -69,6 +69,8 @@ public:
 private:
 	struct Attitude attitudeSub;
 	struct BodyAngularVelocity bodyAngularVelocitySub;
+	struct AirSpeed airspeedSub;
+	struct StatusFlag statusFlagSub;
 	struct ArmFlag armFlagSub;
 	struct ModeFlag modeFlagSub;
 	struct Controller controllerSub;

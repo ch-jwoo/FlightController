@@ -31,6 +31,12 @@ float radianThreshold(float radian, float min, float max){
 	return radian;
 }
 
+float constraints(float value, float min, float max){
+	if(value < min) value = min;
+	else if(value > max) value = max;
+	return value;
+}
+
 float deg2rad(float num){
 	return num * (float)M_PI / 180.0;
 }

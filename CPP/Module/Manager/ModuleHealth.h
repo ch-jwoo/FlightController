@@ -13,6 +13,7 @@
 #include <Module/Controller/ModulePositionController.h>
 #include <Module/Estimator/ModuleINS.h>
 #include <Module/Controller/ModuleAutoController.h>
+#include <Interface/Interface.h>
 #include "printf.h"
 #include <cstring>
 
@@ -41,6 +42,8 @@ public:
 			health.baro = InterfaceBaro::checkFreq();
 			health.lidar = InterfaceLidar::checkFreq();
 
+			health.airspeed = InterfaceAirSpeed::checkFreq();
+
 			health.ahrs = ModuleAHRS::checkFreq();
 			health.ins = ModuleINS::checkFreq();
 
@@ -59,7 +62,7 @@ public:
 			if(health.accel > ACCEL_THRESHOLD) statusFlag.accel = true;
 			if(health.mag > MAG_THRESHOLD) statusFlag.mag = true;
 			if(health.baro > BARO_THRESHOLD) statusFlag.barometer = true;
-			//TODO differential pressure
+			if(health.airspeed > AIRSPEED_THRESHOLD) statusFlag.airspeed = true;
 			if(health.lidar > LIDAR_THRESHOLD) statusFlag.lidar = true;
 			if(health.rc > RC_THRESHOLD) statusFlag.receiver = true;
 			if(health.gps > GPS_THRESHOLD) statusFlag.gps = true;
@@ -95,6 +98,8 @@ public:
 
 	static const uint8_t BARO_THRESHOLD = 30;
 	static const uint8_t LIDAR_THRESHOLD = 30;
+
+	static const uint8_t AIRSPEED_THRESHOLD = 50;
 
 	static const uint8_t AHRS_THRESHOLD = 150;
 	static const uint8_t INS_THRESHOLD = 30;

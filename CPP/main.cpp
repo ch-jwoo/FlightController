@@ -55,6 +55,8 @@ using namespace FC;
 #define USE_SBUS
 //#define USE_AHRS
 
+uint8_t accelIntCnt=0;
+
 float attitude;
 uint16_t hzAccel, hzBaro, hzGyro, hzGPS, hzMag;
 uint16_t hzAHRS, hzRC, hzAtti, hzPos, hzINS, hzLidar, hzAuto;
@@ -437,7 +439,7 @@ void SBUS_StartTask(void *argument){
 							  sbus.getChannelVal(1),	/* throttle */
 							  sbus.getChannelVal(11),	/* arming */
 							  sbus.getChannelVal(5),	/* mode change */
-							  sbus.getChannelVal(9));
+							  sbus.getChannelVal(9));	/* tilting */
 		}
 	}
 }
@@ -445,16 +447,16 @@ void SBUS_StartTask(void *argument){
 
 void MS4525D_StartTask(void *argument){
 	uint32_t tick;
-//	MS4525DO ms4525(&rtosI2C2);
+	MS4525DO ms4525(&rtosI2C2);
 
 	tick = osKernelGetTickCount();
 	while(1){
 		tick += 10;
 		osDelayUntil(tick);		/* 100hz */
 
-//		if(ms4525.update()){
-//			interfaceAirSpeed.setAirSpeed(ms4525.diffPressure);
-//		}
+		if(ms4525.update()){
+			interfaceAirSpeed.setAirSpeed(ms4525.diffPressure);
+		}
 	}
 }
 
@@ -557,6 +559,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 		if(ModuleINS::calGpsHomeFlag == false){
 			ModuleINS::setAvgLLA();
 		}
+	}
+
+	if(GPIO_Pin == GPIO_PIN_5){
+		accelIntCnt++;
 	}
 }
 

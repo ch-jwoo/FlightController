@@ -66,7 +66,7 @@ void ModulePositionController::oneStep(){
 		setFromAutoController();
 	}
 
-	ExtU_positionControl_T input;
+	positionControlModelClass::ExtU_positionControl_T input;
 
 	input.set_x = targetX;
 	input.set_y = targetY;
@@ -81,13 +81,12 @@ void ModulePositionController::oneStep(){
 	input.estim_z = localPositionSub.z;
 	input.estim_yaw = localPositionSub.yaw;
 
-	setExternalInputs(&input);
-	step();
-	ExtY_positionControl_T output = getExternalOutputs();
+	positionControlModelClass::setExternalInputs(&input);
+	positionControlModelClass::step();
+	positionControlModelClass::ExtY_positionControl_T output = getExternalOutputs();
 
 	vehicleAttitudeSpPub.timestamp = microsecond();
 	vehicleAttitudeSpPub.throttle = output.des_Thrust;
-
 
 	/* position control mode */
 	if(modeFlagSub.flightMode == FlightMode::PositionControl){
@@ -101,6 +100,7 @@ void ModulePositionController::oneStep(){
 		vehicleAttitudeSpPub.roll = map(controllerSub.roll, 1000, 2000, -1.0, 1.0);
 		vehicleAttitudeSpPub.yawRate = map(controllerSub.yaw, 1000, 2000, -1.0, 1.0);
 	}
+
 	msgBus.setVehicleAttitueSP(vehicleAttitudeSpPub);
 
 	freqCount();
@@ -116,6 +116,7 @@ void ModulePositionController::setFromRC(){
 
 	msgBus.getController(&controllerSub);
 
+	/* throtle stick */
 	if( 1500 - STICK_THRESHOLD < controllerSub.throttle && controllerSub.throttle < 1500 + STICK_THRESHOLD){
 		// set altitude
 		if(!throtleStickSet){
@@ -128,6 +129,7 @@ void ModulePositionController::setFromRC(){
 		throtleStickSet = false;
 	}
 
+	/* yaw stick */
 	if( 1500 - STICK_THRESHOLD < controllerSub.yaw && controllerSub.yaw < 1500 + STICK_THRESHOLD){
 		// set altitude
 		if(!yawStickSet){
@@ -141,6 +143,7 @@ void ModulePositionController::setFromRC(){
 		yawStickSet = false;
 	}
 
+	/* roll stick */
 	if(1500 - STICK_THRESHOLD < controllerSub.roll && controllerSub.roll < 1500 + STICK_THRESHOLD){
 		if(!rollStickSet){
 			roll = 0;
@@ -151,6 +154,8 @@ void ModulePositionController::setFromRC(){
 		roll = map(controllerSub.roll, 1000, 2000, -MAX_HORISION, MAX_HORISION);		/* roll */
 		rollStickSet = false;
 	}
+
+	/* pitch stick */
 	if(1500 - STICK_THRESHOLD < controllerSub.pitch && controllerSub.pitch < 1500 + STICK_THRESHOLD){
 		if(!pitchStickSet){
 			pitch = 0;
@@ -161,9 +166,6 @@ void ModulePositionController::setFromRC(){
 		pitch = map(controllerSub.pitch, 1000, 2000, -MAX_HORISION, MAX_HORISION);		/* pitch */
 		pitchStickSet = false;
 	}
-//	float roll = map(controllerSub.roll, 1000, 2000, -MAX_HORISION, MAX_HORISION);		/* roll */
-//	float pitch = map(controllerSub.pitch, 1000, 2000, -MAX_HORISION, MAX_HORISION);	/* pitch */
-//	targetYaw = map(controllerSub.yaw, 1000, 2000, -MAX_YAW, MAX_YAW);
 
 	if( !rollStickSet || !pitchStickSet){
 		float cosYaw = cos(localPositionSub.yaw);
@@ -171,8 +173,6 @@ void ModulePositionController::setFromRC(){
 		targetX = localPositionSub.x + pitch*cosYaw + -roll*sinYaw;
 		targetY = localPositionSub.y + pitch*sinYaw + roll*cosYaw;
 	}
-//	targetZ += localPositionSub.z;
-//	targetYaw += localPositionSub.yaw;
 }
 
 void ModulePositionController::setFromAutoController(){

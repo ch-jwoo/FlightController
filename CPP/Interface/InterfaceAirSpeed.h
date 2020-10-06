@@ -10,7 +10,7 @@ namespace FC{
 
 #define SENSITIVITY 0.13
 
-class InterfaceAirSpeed{
+class InterfaceAirSpeed : public Freq<InterfaceAirSpeed>{
 public:
 	InterfaceAirSpeed();
 

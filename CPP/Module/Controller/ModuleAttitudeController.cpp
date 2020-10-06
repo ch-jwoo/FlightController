@@ -9,6 +9,7 @@
 #include <Peripherals/Actuator/Motor.h>
 #include <Peripherals/Actuator/Servo.h>
 #include <Utils/Functions.h>
+#include <Utils/Constants.h>
 #include "Usec.h"
 #include "printf.h"
 
@@ -217,6 +218,7 @@ void ModuleAttitudeController::mcOneStep(){
 	m5.setPWM(output.PWM_OUT[4]);
 	m6.setPWM(output.PWM_OUT[5]);
 
+
 	motorPwmPub.timestamp = microsecond();
 	motorPwmPub.m1 = output.PWM_OUT[0];
 	motorPwmPub.m2 = output.PWM_OUT[1];
@@ -232,20 +234,31 @@ void ModuleAttitudeController::mcOneStep(){
 }
 
 void ModuleAttitudeController::fwOneStep(){
-	FW_px4_AlgorithmModelClass::ExtU_FW_att_control_codeblock_T input;
-	input.set_pitch = targetPitch;
-	input.set_roll = targetRoll;
-	input.set_yaw = targetYawRate;
-	input.set_thrust = targetThrottle;
-
 	msgBus.getAttitude(&attitudeSub);
 	msgBus.getBodyAngularVelocity(&bodyAngularVelocitySub);
+	msgBus.getStatusFlag(&statusFlagSub);
 
+	FW_px4_AlgorithmModelClass::ExtU_FW_att_control_codeblock_T input;
+	/* vehicle state */
 	input.Roll = attitudeSub.roll;
 	input.Pitch = attitudeSub.pitch;
 	input.p = bodyAngularVelocitySub.xyz[0];
 	input.q = bodyAngularVelocitySub.xyz[1];
 	input.r = bodyAngularVelocitySub.xyz[2];
+
+	/* control */
+	input.set_pitch = targetPitch;
+	input.set_roll = targetRoll;
+	input.set_yaw = targetYawRate;
+//	if(statusFlagSub.airspeed){
+//		msgBus.getAirSpeed(&airspeedSub);
+//		if(airspeedSub.TAS != 0.0f){
+//			input.set_yaw = tanf(targetRoll) * cosf(targetPitch) * FC_GRAVITY_ACCEERATION / airspeedSub.TAS;
+//		}
+//	}
+	input.set_thrust = targetThrottle;
+//	_rate_setpoint = tanf(constrained_roll) * cosf(ctl_data.pitch) * CONSTANTS_ONE_G / (ctl_data.airspeed
+
 
 	/* matlab codegen function */
 	FW_px4_AlgorithmModelClass::setExternalInputs(&input);

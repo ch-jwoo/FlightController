@@ -26,30 +26,28 @@ namespace FC {
 FlightMode ModuleAutoController::flightMode = FlightMode::AutoWaypoint;
 
 float ModuleAutoController::MC_D = 0.7f;      /* D */
+float ModuleAutoController::L1_MAG = 5.0f;      /* L1 */
 float ModuleAutoController::MC_L2 = 1.5f;      /* L2 */
+float ModuleAutoController::TAKEOFF_ALT = 5.0;
 
+float ModuleAutoController::WP_ACQ_R = 3.0;
+float ModuleAutoController::RTL_ALT = 10.0;
+float ModuleAutoController::ROLL_MAX_ANGLE = 60.0f;
+float ModuleAutoController::INTERCEPT_ANGLE = 45.0f;
 
 ModuleAutoController::ModuleAutoController()
-   // TODO Auto-generated constructor stub
-:
-   curSeq(0),
-   nextSeq(1),
-   flag(0),
-   missionFlag(RESET),
-   hoveringFlag(0),
-   transitionFlag(0),
-   RTLFlag(0),
-   readyLandFlag(0)
-   {}
+: curSeq(0)
+, homeX(0.0)
+, homeY(0.0)
+, homeZ(0.0)
+{}
 
 
 void ModuleAutoController::main(){
    uint8_t firstLoop;
    ModuleAutoController moduleAutoController;
-   uint32_t tick;
    while (1) {
       firstLoop = 0;
-      tick = millisecond();
 //      //printf_("tick %d\rn",tick);
       /* wait auto controller start */
       osThreadFlagsWait(AUTO_start, osFlagsWaitAny, osWaitForever);
@@ -104,6 +102,10 @@ void ModuleAutoController::oneStep() {
 //   msgBus.getModeFlag(&modeFlag);
 //   //printf_("before first switch");
 //   osDelay(1000);
+
+   /* mission complete */
+   if(curSeq == vehicleWpNED.len) return;
+
    switch (flightMode){
 //   //printf_("first switch");
    case FlightMode::AutoWaypoint:
@@ -111,38 +113,28 @@ void ModuleAutoController::oneStep() {
 //      //printf_("second switch");
          case AutoCommand::Guidance:
             doGuidance();
-            printf_("currrent seq %u  ",curSeq);
-            printf_("Guidance\r\n");
+            printf_("guidance : %u %f, %f %f %f, %f %f\r\n",curSeq, targetX, targetY, targetZ, targetYaw * FC_RAD2DEG, targetRoll * FC_RAD2DEG);
             break;
          case AutoCommand::RTL:
-           if(readyLandFlag == SET){
             doRTL();
-//            printf_("currrent seq %u  ",curSeq);
-            printf_("RTL\r\n");
-           }
-           else{
-            printf_("NOT HOME LOCATION");
-           }
            break;
          case AutoCommand::Takeoff:
+            // aquisition, next step
             doTakeoff();
-            printf_("currrent seq %u  ",curSeq);
-            printf_("TakeOff\r\n");
+            printf_("TakeOff, currrent seq %u\r\n",curSeq);
             break;
          case AutoCommand::Land:
             doLand();
-            printf_("currrent seq %u  ",curSeq);
-            printf_("Land\r\n");
+            printf_("Land, currrent seq %u\r\n",curSeq);
             break;
          case AutoCommand::Hovering:
             doHovering();
-            printf_("currrent seq %u  ",curSeq);
-            printf_("Hovering\r\n");
+            printf_("hover, currrent seq %u\r\n",curSeq);
             break;
          case AutoCommand::Transition:
             doTransition();
-            printf_("currrent seq %u   ",curSeq);
-            printf_("Transition\r\n");
+//            printf_("currrent seq %u   ",curSeq);
+//            printf_("Transition\r\n");
             break;
       }
       //printf_("endup auto waypoint\r\n");
@@ -166,7 +158,6 @@ void ModuleAutoController::oneStep() {
    default:
       break;
    }
-   //printf_("end switch\r\n");
    freqCount();
 }
 
@@ -176,44 +167,20 @@ void ModuleAutoController::oneStep() {
 *  step2: calculating waypoints position in ned
 */
 void ModuleAutoController::waypointLla2LocalNed() {
-   WaypointLLA waypointLLA;
-   msgBus.getLocalPosition(&localPositionSub);
-//   printf_("localPositionSub %f %f %f",localPositionSub.refLat,localPositionSub.refLon,localPositionSub.refAlt);
-//   printf_("%f\r\n",localPositionSub.refAlt);
-   for (int i = 0; i < getWaypointLength(); i++) {
-      waypointLLA = getWaypointLLA(i);
-//      printf_("%d %f %f %f",i,waypointLLA.lat,waypointLLA.lon,waypointLLA.alt);
-      lla2LocalNed( waypointLLA.lat, waypointLLA.lon, waypointLLA.alt,
-            localPositionSub.refLat, localPositionSub.refLon, localPositionSub.refAlt,
-                 &vehicleWpNED.wp[i].x, &vehicleWpNED.wp[i].y, &vehicleWpNED.wp[i].z);
-      vehicleWpNED.wp[i].command = waypointLLA.command;
-      vehicleWpNED.wp[i].param = waypointLLA.param;
-      if(vehicleWpNED.wp[i].command == AutoCommand::Hovering)
-      {
-         hoveringFlag = i;
-      }
-      if(vehicleWpNED.wp[i].command == AutoCommand::RTL)
-      {
-         RTLFlag = i;
-      }
-      if(vehicleWpNED.wp[i].command == AutoCommand::Transition)
-      {
-         transitionFlag = i;
-      }
-      vehicleWpNED.wp[i].z = -waypointLLA.alt;
-//      printf_("lla, ned wp : %f %f %f, %f %f %f, %f %f %f\r\n", waypointLLA.lat, waypointLLA.lon, waypointLLA.alt, vehicleWpNED.wp[i].x, vehicleWpNED.wp[i].y, vehicleWpNED.wp[i].z
-//            ,localPositionSub.refLat, localPositionSub.refLon, localPositionSub.refAlt );
-//      printf_("param %u\r\n",waypointLLA.param);
-//      printf_("ned xyz %f %f %f \r\n",&vehicleWpNED.wp[i].x,&vehicleWpNED.wp[i].y,&vehicleWpNED.wp[i].z);
-   }
-//   printf_("ned xyz %f %f %f \r\n",&vehicleWpNED.wp[0].x,&vehicleWpNED.wp[0].y,&vehicleWpNED.wp[0].z);
-//   printf_("ned xyz %f %f %f \r\n",&vehicleWpNED.wp[0].x,&vehicleWpNED.wp[0].y,&vehicleWpNED.wp[0].z);
+	WaypointLLA waypointLLA;
+	msgBus.getLocalPosition(&localPositionSub);
+	for (int i = 0; i < getWaypointLength(); i++) {
+		waypointLLA = getWaypointLLA(i);
+		lla2LocalNed(waypointLLA.lat, waypointLLA.lon, waypointLLA.alt,
+					 localPositionSub.refLat, localPositionSub.refLon, localPositionSub.refAlt,
+					 &vehicleWpNED.wp[i].x, &vehicleWpNED.wp[i].y, &vehicleWpNED.wp[i].z);
 
-//   printf_("ned xyz %f %f %f \r\n",&vehicleWpNED.wp[1].x,&vehicleWpNED.wp[1].y,&vehicleWpNED.wp[1].z);
+		vehicleWpNED.wp[i].command = waypointLLA.command;
+		vehicleWpNED.wp[i].param = waypointLLA.param;
 
-//   curSeq = 0;
-//   nextSeq = 1;
-//   flag = 0;
+		/* change altitude to local NED z */
+		vehicleWpNED.wp[i].z = -waypointLLA.alt;
+	}
 }
 
 /*
@@ -223,263 +190,460 @@ void ModuleAutoController::waypointLla2LocalNed() {
 *  step3: calculate target yaw, roll
 *  step4: setting position with msgBus
 */
-void ModuleAutoController::guidance(float previousWaypointX, float previousWaypointY, float previousWaypointZ,
-   float nextWaypointX, float nextWaypointY, float nextWaypointZ,
-   float vehicleX, float vehicleY, float vehicleZ,
-   float vehicleVelX, float vehicleVelY, float vehicleVelZ,
-   float *targetYaw, float *targetRoll,
-   float *targetX, float *targetY, float *targetZ, float *dist) {
+void ModuleAutoController::L2guidance(float previousWaypointX, float previousWaypointY, float previousWaypointZ,
+									  float curWaypointX, float curWaypointY, float curWaypointZ,
+									  float vehicleX, float vehicleY, float vehicleZ,
+									  float vehicleVelX, float vehicleVelY, float vehicleVelZ,
+									  float *targetYaw, float *targetRoll,
+									  float *targetX, float *targetY, float *targetZ, float *dist) {
 
-   /*
-   * variables
-   * crossTrackError  distance vehicle to track with perpendicular
-   * l2               magnitude of line of sight vector, vector of vehicle -> target position
-   * D_dt             l2 inner product track, distance vehicle to target position
-   * targetDist       distance target position to next waypoint
-   * aCmd             centripetal acceleration
-   * crossAng         angle of cross product l2 vector with velocity vector
-   * dotAng           angle of inner product l2 vector with velocity vector
-   * tau              constant for l2
-   *
-   */
-   double crossTrackError, l2, D_dt, targetDist, aCmd;
-   double crossAng, dotAng, tempAng;
-   double roll;
+	/*
+	* variables
+	* crossTrackError  distance vehicle to track with perpendicular
+	* l2               magnitude of line of sight vector, vector of vehicle -> target position
+	* D_dt             l2 inner product track, distance vehicle to target position
+	* targetDist       distance target position to next waypoint
+	* aCmd             centripetal acceleration
+	* crossAng         angle of cross product l2 vector with velocity vector
+	* dotAng           angle of inner product l2 vector with velocity vector
+	* tau              constant for l2
+	*
+	*/
+	float crossTrackError, l2, D_dt, targetDist, aCmd;
+	float crossAng, dotAng;
+	float roll;
 
-   /* vectors */
-//   printf_("current %f %f %f \r\n",vehicleX,vehicleVelY,vehicleVelZ);
-//   printf_("next %f %f %f \r\n",nextWaypointX,nextWaypointY,nextWaypointZ);
+	msgBus.getLocalPosition(&localPositionSub);
 
-   matrix::Vector3f nextPos(nextWaypointX, nextWaypointY, nextWaypointZ);
-   matrix::Vector3f lastPos(previousWaypointX, previousWaypointY, previousWaypointZ);
-   matrix::Vector3f curPos(vehicleX, vehicleY, vehicleZ);
-   matrix::Vector3f distance(nextWaypointX - vehicleX, nextWaypointY - vehicleY, nextWaypointZ - vehicleZ);
-   matrix::Vector3f velocity(vehicleVelX, vehicleVelY, vehicleVelZ);
-   /* unit vectors */
-   matrix::Vector3f T = (nextPos - lastPos) / (nextPos - lastPos).norm();
-//   printf_("T uniy vectot : %f %f %f \r\n",T(0),T(1),T(2));
-   matrix::Vector3f N(-T(1), T(0), 0.0f);
-//   printf_("N uniy vectot : %f %f %f \r\n",N(0),N(1),N(2));
+	/* vectors */
+	matrix::Vector3f nextPos(curWaypointX, curWaypointY, curWaypointZ);
+	matrix::Vector3f lastPos(previousWaypointX, previousWaypointY, previousWaypointZ);
+	matrix::Vector3f curPos(vehicleX, vehicleY, vehicleZ);
+	matrix::Vector3f distance(curWaypointX - vehicleX, curWaypointY - vehicleY, curWaypointZ - vehicleZ);
+	matrix::Vector3f velocity(vehicleVelX, vehicleVelY, vehicleVelZ);
 
-   crossTrackError = N.dot(curPos - lastPos);
-//   printf_("CrossTracl error %f\r\n",crossTrackError);
-   l2 = velocity.norm() * MC_L2;
-//   printf_("l2 %f\r\n",l2);
-   /* calculate D_dt */
-   if (crossTrackError > l2)
-      D_dt = std::min<double>(crossTrackError / tan(ceptAngle), l2 * MC_D);
-   else
-      D_dt = std::max<double>(std::min<double>(crossTrackError / tan(ceptAngle), l2 * MC_D), sqrt(pow(l2, 2) - pow(crossTrackError, 2)));
-//   printf_("D_dt %f\r\n",D_dt);
-   targetDist = T.dot(nextPos - curPos) - D_dt;
-//   printf_("targetDist %f %f %f\r\n",targetDist,nextPos.norm(),curPos.norm());
-   matrix::Vector3f targetPos = -T * std::max<double>(0, targetDist) + nextPos;
-//   printf_("targetPos : %f %f %f %f\r\n",targetPos(0),targetPos(1),targetPos(2),targetPos.norm());
+	/* unit vectors */
+	matrix::Vector3f T = (nextPos - lastPos) / (nextPos - lastPos).norm();
+	matrix::Vector3f N(-T(1), T(0), 0.0f);
+	matrix::Vector3f signCheck = T.cross(N);
 
-   crossAng = asin((float)(((targetPos - curPos).cross(velocity)).norm()) / ((velocity).norm() * (targetPos - curPos).norm()));
+	crossTrackError = N.dot(curPos - lastPos);
 
-   dotAng = (float)((targetPos - curPos).dot(velocity)) / ((velocity).norm() * (targetPos - curPos).norm());
-   if(dotAng < 0)
-   {
-      dotAng = -dotAng;
-   }
-   dotAng = acos((float)dotAng);
-//   printf_("angles %f %f\r\n",dotAng,crossAng);
-   if((float)abs(crossAng-dotAng) < 0.1){
-      tempAng = dotAng;
-   }
-   else
-      tempAng = 999;
-//   printf_("yaw angles %f\r\n",tempAng);
-   aCmd = 2.0f * sin(tempAng) * velocity.norm() / MC_L2;
-//   printf_("acmd %f\r\n",aCmd);
-   /* setting target position */
-   roll = atan(aCmd / FC_GRAVITY_ACCEERATION);
-//   printf_("roll %f\r\n",roll);
+	l2 = velocity.norm() * MC_L2;
 
-//   *targetRoll = roll;
-   if(roll > 60.0f * FC_PI / 180.0f)
-   {
-      roll = 60.0f * FC_PI / 180.0f;
-   }
-//   printf_("roll %f\r\n",*targetRoll);
+	/* calculate D_dt */
+	if (crossTrackError > l2)
+		D_dt = std::min<float>(crossTrackError / tan(INTERCEPT_ANGLE), l2 * MC_D);
+	else
+		D_dt = std::max<float>(std::min<float>(crossTrackError / tan(INTERCEPT_ANGLE), l2 * MC_D), sqrt(pow(l2, 2) - pow(crossTrackError, 2)));
 
-   *targetRoll = roll;
-   *targetYaw = tempAng;
-   *targetX = targetPos(0);
-   *targetY = targetPos(1);
-   *targetZ = targetPos(2);
-   *dist = distance.norm();
-   printf_("guidance value %f %f %f %f %f %f",targetPos(0),targetPos(1),targetPos(2),tempAng * FC_PI / 180, roll*FC_PI / 180,distance.norm());
+	targetDist = T.dot(nextPos - curPos) - D_dt;
+
+	matrix::Vector3f targetPos = -T * std::max<float>(0, targetDist) + nextPos;
+
+
+	crossAng = asin((float)(((targetPos - curPos).cross(velocity)).norm()) / ((velocity).norm() * (targetPos - curPos).norm()));
+	printf_("body %f",crossAng);
+
+	/* transform body yaw to ned yaw */
+	if(signCheck(2) > 0){
+		crossAng *= -1;
+	}
+	crossAng += localPositionSub.yaw;
+	crossAng = radianThreshold(localPositionSub.yaw + crossAng, -FC_PI, FC_PI);
+
+	printf_("cy %f  final %f\r\n",localPositionSub.yaw,crossAng);
+
+	//   printf_("yaw angles %f\r\n",tempAng);
+	aCmd = 2.0f * sin(crossAng) * velocity.norm() / MC_L2;
+	//   printf_("acmd %f\r\n",aCmd);
+	/* setting target position */
+	roll = atan(aCmd / FC_GRAVITY_ACCEERATION);
+	//   printf_("roll %f\r\n",roll);
+
+	//   *targetRoll = roll;
+	if(roll > ROLL_MAX_ANGLE * FC_DEG2RAD){
+		roll = ROLL_MAX_ANGLE * FC_DEG2RAD;
+	}
+	//   printf_("roll %f\r\n",*targetRoll);
+
+	*targetRoll = roll;
+	*targetYaw = crossAng;
+	*targetX = targetPos(0);
+	*targetY = targetPos(1);
+	*targetZ = targetPos(2);
+	*dist = distance.norm();
+	printf_("dist %f\r\n",distance.norm());
+}
+
+void ModuleAutoController::L1guidance(float previousWaypointX, float previousWaypointY, float previousWaypointZ,
+         	 	 	 	 	 	 	  float curWaypointX, float curWaypointY, float curWaypointZ,
+									  float vehicleX, float vehicleY, float vehicleZ,
+									  float vehicleVelX, float vehicleVelY, float vehicleVelZ,
+									  float *targetYaw, float *targetRoll,
+									  float *targetX, float *targetY, float *targetZ, float *dist){
+
+	float D_dt, aCmd;
+	float tempAng;
+	float errorMag;		/* error magnitude */
+
+	msgBus.getLocalPosition(&localPositionSub);
+
+	/* make input vectors */
+	matrix::Vector3f prevWP(previousWaypointX, previousWaypointY, previousWaypointZ);
+	matrix::Vector3f curWP(curWaypointX, curWaypointY, curWaypointZ);
+	matrix::Vector3f vehiclePos(vehicleX, vehicleY, vehicleZ);
+	matrix::Vector3f vehicleVel(vehicleVelX, vehicleVelY, vehicleVelZ);
+
+	/* vectors */
+	matrix::Vector3f distance(curWaypointX - vehicleX, curWaypointY - vehicleY, curWaypointZ - vehicleZ);
+	matrix::Vector3f T = (curWP - prevWP);
+	T.normalize();
+	matrix::Vector3f N(-T(1), T(0), 0.0f);
+	N.normalize();
+	errorMag = N.dot(vehiclePos - prevWP);
+	D_dt = sqrt(L1_MAG*L1_MAG - errorMag*errorMag);
+	matrix::Vector3f L1(D_dt * T - errorMag * N);
+
+	tempAng= asin(L1.cross(vehicleVel).norm() / (L1.norm() * vehicleVel.norm()));
+	if(localPositionSub.vx  > 0){
+		if(localPositionSub.vy > 0){
+			printf_("1 quadrant\r\n");
+			tempAng += localPositionSub.yaw;
+		}
+		else if(localPositionSub.vy < 0){
+			printf_("4 quadrant\r\n");
+			tempAng = localPositionSub.yaw - tempAng;
+		}
+		else{
+			tempAng = localPositionSub.yaw;
+		}
+	}
+	else{
+		if(localPositionSub.vy > 0){
+			printf_("2 quadrant\r\n");
+			tempAng = localPositionSub.yaw - tempAng;
+		}
+		else if(localPositionSub.vy < 0){
+			printf_("3 quadrant\r\n");
+			tempAng = localPositionSub.yaw + tempAng;
+		}
+		else{
+			tempAng = localPositionSub.yaw;
+		}
+	}
+
+	printf_("cy%f \r\n by %f",localPositionSub.yaw,tempAng);
+	tempAng = radianThreshold(localPositionSub.yaw + tempAng, -FC_PI, FC_PI);
+	*targetYaw = tempAng;
+	aCmd = 2 * pow(vehicleVel.norm(), 2) * sin(*targetYaw) / L1.norm();
+	*targetRoll = atan(aCmd / FC_GRAVITY_ACCEERATION);
+	*targetX = L1(0);
+	*targetY = L1(1);
+	*targetZ = L1(2);
+	*dist = distance.norm();
+}
+void ModuleAutoController::directGuidance(float vehicleX, float vehicleY, float vehicleZ,
+										  float nextX, float nextY, float nextZ,
+										  float velX, float velY, float velZ,
+										  float *targetYaw, float *targetRoll,
+										  float *targetX, float *targetY, float *targetZ, float *dist){
+
+	double tempAng;
+	matrix::Vector3f curPos(vehicleX, vehicleY, vehicleZ);
+	matrix::Vector3f targetPos(nextX, nextY, nextZ);
+	matrix::Vector3f distance(velX,velY,velZ);
+	matrix::Vector3f L1(nextX- vehicleX, nextY - vehicleY, nextZ - vehicleZ);
+
+	tempAng = asin(L1.cross(distance).norm() / (L1.norm() * distance.norm()));
+
+	if(localPositionSub.vx  > 0){
+		if(localPositionSub.vy > 0){
+			printf_("1 quadrant\r\n");
+			tempAng += localPositionSub.yaw;
+		}
+		else if(localPositionSub.vy < 0){
+			printf_("4 quadrant\r\n");
+			tempAng = localPositionSub.yaw - tempAng;
+		}
+		else{
+			tempAng = localPositionSub.yaw;
+		}
+	}
+	else{
+		if(localPositionSub.vy > 0){
+			printf_("2 quadrant\r\n");
+			tempAng = localPositionSub.yaw - tempAng;
+		}
+		else if(localPositionSub.vy < 0){
+			printf_("3 quadrant\r\n");
+			tempAng = localPositionSub.yaw + tempAng;
+		}
+		else{
+			tempAng = localPositionSub.yaw;
+		}
+	}
+
+	tempAng = radianThreshold(tempAng, -FC_PI, FC_PI);
+	printf_("cy%f  final %f\r\n",localPositionSub.yaw,tempAng*FC_RAD2DEG);
+	//    tempAng = radianThreshold(localPositionSub.yaw + tempAng, -FC_PI, FC_PI);
+	float aCmd = 2 * pow(distance.norm(), 2) * sin(*targetYaw) / L1.norm();
+
+	*targetYaw = tempAng;
+	*targetRoll = atan(aCmd / FC_GRAVITY_ACCEERATION);
+	*targetX = nextX;
+	*targetY = nextY;
+	*targetZ = nextZ;
+	*dist = L1.norm();
+}
+
+void ModuleAutoController::lateralTrackControl(float prevWpX, float prevWpY, float prevWpZ,
+   	   	   	   	   	   	   	   	   	   	   	   float curWpX, float curWpY, float curWpZ,
+											   float vehicleX, float vehicleY, float vehicleZ,
+											   float velX, float velY, float velZ,
+											   float* targetX, float* targetY, float* targetZ, float* targetYaw){
+
+	matrix::Vector3f prevWP(prevWpX, prevWpY, prevWpZ);
+	matrix::Vector3f curWP(curWpX, curWpY, curWpZ);
+	matrix::Vector3f curPos(vehicleX, vehicleY, vehicleZ);
+	matrix::Vector3f trackVector = curWP - prevWP;
+	matrix::Vector3f curRelPos = curPos - prevWP;
 }
 
 /* ModuleAutoController::setPosition */
 /* setting target position */
 void ModuleAutoController::setPosition() {
 
-   vehiclePositionSpPub.timestamp = microsecond();
-   vehiclePositionSpPub.x = targetX;
-   vehiclePositionSpPub.y = targetY;
-   vehiclePositionSpPub.z = targetZ;
-   vehiclePositionSpPub.yaw = targetYaw;
-   //    VehicleWP.targetRoll = &targetRoll;
-
-   msgBus.setVehiclePositionSP(vehiclePositionSpPub);
+	vehiclePositionSpPub.timestamp = microsecond();
+	vehiclePositionSpPub.x = targetX;
+	vehiclePositionSpPub.y = targetY;
+	vehiclePositionSpPub.z = targetZ;
+	vehiclePositionSpPub.yaw = targetYaw;
+	msgBus.setVehiclePositionSP(vehiclePositionSpPub);
 }
 
 /* ModuleAutoController::doLand*/
 /* do landing with current position x, y, z+3 until current velocity z is zero */
 
 void ModuleAutoController::doLand() {
+	static bool firstRun = true;
+	static float startX, startY, startYaw;
 
-   msgBus.getLocalPosition(&this->localPositionSub);
+	msgBus.getLocalPosition(&this->localPositionSub);
 
-   vehiclePositionSpPub.timestamp = microsecond();
-   vehiclePositionSpPub.x = homeX;
-   vehiclePositionSpPub.y = homeY;
-   vehiclePositionSpPub.z = localPositionSub.z + 3;
-   vehiclePositionSpPub.yaw = 0.0f;
-//   vehiclePositionSpPub.targetRoll = 0.0;
+	if(firstRun){
+		startX = localPositionSub.x;
+		startY = localPositionSub.y;
+		startYaw = localPositionSub.yaw;
+		firstRun = false;
+	}
 
-   msgBus.setVehiclePositionSP(vehiclePositionSpPub);
+	vehiclePositionSpPub.timestamp = microsecond();
+	vehiclePositionSpPub.x = startX;
+	vehiclePositionSpPub.y = startY;
+	vehiclePositionSpPub.z = localPositionSub.z + 3.0f;
+	vehiclePositionSpPub.yaw = startYaw;
 
-   if (localPositionSub.vz <= 0.0) flag = SET;
+	msgBus.setVehiclePositionSP(vehiclePositionSpPub);
+
+	if (localPositionSub.vz <= 0.0f) curSeq++;
 }
 
 /* ModuleAutoController::doTakeoff */
 /* step1: doing takeoff (current x, current y, -5) until current position z >= 4.5*/
 /* step2: doing navigate home -> waypoint0 */
 void ModuleAutoController::doTakeoff() {
-   // get home position through average while 2 seconds
-   homeX = 0.0f;
-   homeY = 0.0f;
-   homeZ = 0.0f;
-   uint32_t tick = millisecond();
-   uint8_t avg = 0;
-   msgBus.getLocalPosition(&this->localPositionSub);
-   if(tick - 2000 > 0){
-      homeX += localPositionSub.x;
-      homeY += localPositionSub.y;
-      homeZ += localPositionSub.z;
-      avg++;
-   }
-   else{
-   homeX = homeX / avg;
-   homeX = homeY / avg;
-   homeX = homeZ / avg;
-   printf_("HOME %f %f %f \r\n",homeX,homeY,homeZ);
-   vehiclePositionSpPub.timestamp = microsecond();
-   vehiclePositionSpPub.x = homeX;
-   vehiclePositionSpPub.y = homeY;
-   vehiclePositionSpPub.z = homeZ - 5.0f;
-   vehiclePositionSpPub.yaw = localPositionSub.yaw;
-   vehiclePositionSpPub.roll = 0.0f;
+	static bool firstRun = true;
+	static float startX, startY, startYaw;
+	// get home position through average while 2 seconds
+	msgBus.getLocalPosition(&this->localPositionSub);
 
-   msgBus.setVehiclePositionSP(vehiclePositionSpPub);
-   if (localPositionSub.z <= -1.0) curSeq++;
-   }
+
+	if(firstRun){
+		startX = localPositionSub.x;
+		startY = localPositionSub.y;
+		startYaw = localPositionSub.yaw;
+		firstRun = false;
+	}
+
+	vehiclePositionSpPub.timestamp = microsecond();
+	vehiclePositionSpPub.x = startX;
+	vehiclePositionSpPub.y = startY;
+	vehiclePositionSpPub.z = localPositionSub.z - 5.0f;
+	vehiclePositionSpPub.yaw = startYaw;
+	vehiclePositionSpPub.roll = 0.0f;
+
+	msgBus.setVehiclePositionSP(vehiclePositionSpPub);
+
+	/* takeoff complete */
+	if (localPositionSub.z < -TAKEOFF_ALT ) {
+		curSeq++;
+		firstRun = true;
+	}
+
 }
 /* ModuleAutoController::doGuidance */
 /* do navigate previous waypoint -> next waypoint */
-void ModuleAutoController::doGuidance() {
+void ModuleAutoController::doGuidance(){
+//	static uint8_t lastSeq = 0;
+//	static bool firstRun = true;
+//	static float startX, startY, startZ;
+//	float dist;
 
-   float dist;
-   msgBus.getLocalPosition(&this->localPositionSub);
-   // HOME TO WP1
-   if(missionFlag == RESET){
-      guidance(homeX, homeY, homeZ,
-            vehicleWpNED.wp[curSeq].x, vehicleWpNED.wp[curSeq].y, vehicleWpNED.wp[curSeq].z,
-            localPositionSub.x, localPositionSub.y, localPositionSub.z,
-            localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
-            &targetYaw, &targetRoll,
-            &targetX, &targetY, &targetZ, &dist);
-      if (dist < 3) missionFlag = SET;
-//      printf_("%f\r\n", dist);
-      }
-   else{
-      // As possible as go mission location radius 0.05
-   if(curSeq == hoveringFlag - 2){
-      guidance(vehicleWpNED.wp[curSeq].x, vehicleWpNED.wp[curSeq].y, vehicleWpNED.wp[curSeq].z,
-          vehicleWpNED.wp[nextSeq].x, vehicleWpNED.wp[nextSeq].y, vehicleWpNED.wp[nextSeq].z,
-          localPositionSub.x, localPositionSub.y, localPositionSub.z,
-          localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
-          &targetYaw, &targetRoll,
-          &targetX, &targetY, &targetZ, &dist);
-      if (dist < 0.05) {
-        osDelay(1500);
-        curSeq++;
-        curSeq++;
-        nextSeq++;
-        nextSeq++;
-      }
-   }
-   // guidance before hovering waypoint to next hovering waypoint
-   else if(curSeq == hoveringFlag + 1){
-         guidance(vehicleWpNED.wp[curSeq - 2].x, vehicleWpNED.wp[curSeq - 2].y, vehicleWpNED.wp[curSeq - 2].z,
-             vehicleWpNED.wp[nextSeq - 1].x, vehicleWpNED.wp[nextSeq - 1].y, vehicleWpNED.wp[nextSeq - 1].z,
-             localPositionSub.x, localPositionSub.y, localPositionSub.z,
-             localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
-             &targetYaw, &targetRoll,
-             &targetX, &targetY, &targetZ, &dist);
-         if (dist < 3) {
-           curSeq++;
-           nextSeq++;
-         }
-   }
-   // guidance RTL waypoint to HOME
-   else if(curSeq == RTLFlag){
-         guidance(vehicleWpNED.wp[curSeq - 1].x, vehicleWpNED.wp[curSeq - 1].y, vehicleWpNED.wp[curSeq - 1].z,
-             homeX,homeY,homeZ,
-             localPositionSub.x, localPositionSub.y, localPositionSub.z,
-             localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
-             &targetYaw, &targetRoll,
-             &targetX, &targetY, &targetZ, &dist);
-         if (dist < 0.05) {
-            readyLandFlag =SET;
-         }
-   }
-   else{
-    guidance(vehicleWpNED.wp[curSeq].x, vehicleWpNED.wp[curSeq].y, vehicleWpNED.wp[curSeq].z,
-         vehicleWpNED.wp[nextSeq].x, vehicleWpNED.wp[nextSeq].y, vehicleWpNED.wp[nextSeq].z,
-         localPositionSub.x, localPositionSub.y, localPositionSub.z,
-         localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
-         &targetYaw, &targetRoll,
-         &targetX, &targetY, &targetZ, &dist);
+	msgBus.getLocalPosition(&localPositionSub);
 
-   if (dist < 3) {
-      curSeq++;
-      nextSeq++;
-   }
-   }
-   }
-//   printf_("%f\r\n", dist);
-   setPosition();
+	float relX = vehicleWpNED.wp[curSeq].x - localPositionSub.x;
+	float relY = vehicleWpNED.wp[curSeq].y - localPositionSub.y;
+	float relZ = vehicleWpNED.wp[curSeq].z - localPositionSub.z;
+
+	float cosVal = relX/(sqrt(relX*relX + relY*relY));
+	cosVal = constraints(cosVal, -1, 1);
+	float yaw = std::acos(cosVal);
+	if(relY < 0.0f){
+		yaw  = -yaw;
+	}
+
+	vehiclePositionSpPub.timestamp = microsecond();
+	vehiclePositionSpPub.x = vehicleWpNED.wp[curSeq].x;
+	vehiclePositionSpPub.y = vehicleWpNED.wp[curSeq].y;
+	vehiclePositionSpPub.z = vehicleWpNED.wp[curSeq].z;
+	vehiclePositionSpPub.yaw = yaw;
+
+	msgBus.setVehiclePositionSP(vehiclePositionSpPub);
+
+	float dist = sqrt(relX*relX + relY*relY + relZ*relZ);
+
+	if (dist < WP_ACQ_R){
+//		lastSeq = curSeq;
+		curSeq++;
+//		firstRun = true;
+	}
+
+//	matrix::Vector3f lastwp(localPositionSub.vx,localPositionSub.vy,localPositionSub.vz);
+
+	// HOME TO WP1
+//	if(lastSeq == 0){
+//		if(firstRun){
+//			startX = localPositionSub.x;
+//			startY = localPositionSub.y;
+//			startZ = localPositionSub.z;
+//			firstRun = false;
+//		}
+//		if(lastwp.norm() < 5){
+//			directGuidance(localPositionSub.x, localPositionSub.y, localPositionSub.z,
+//					       vehicleWpNED.wp[curSeq].x, vehicleWpNED.wp[curSeq].y, vehicleWpNED.wp[curSeq].z,
+//						   localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
+//						   &targetYaw, &targetRoll, &targetX, &targetY, &targetZ,
+//						   &dist);
+//		}
+//		else{
+//			L1guidance(startX, startY, startZ,
+//					   vehicleWpNED.wp[curSeq].x, vehicleWpNED.wp[curSeq].y, vehicleWpNED.wp[curSeq].z,
+//					   localPositionSub.x, localPositionSub.y, localPositionSub.z,
+//					   localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
+//					   &targetYaw, &targetRoll,
+//					   &targetX, &targetY, &targetZ, &dist);
+//
+//			L2guidance(startX, startY, startZ,
+//					   vehicleWpNED.wp[curSeq].x, vehicleWpNED.wp[curSeq].y, vehicleWpNED.wp[curSeq].z,
+//					   localPositionSub.x, localPositionSub.y, localPositionSub.z,
+//					   localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
+//					   &targetYaw, &targetRoll,
+//					   &targetX, &targetY, &targetZ, &dist);
+//		}
+//
+//
+//		if (dist < WP_ACQ_R){
+//			lastSeq = curSeq;
+//			curSeq++;
+//			firstRun = true;
+//		}
+//	}
+//	else{
+//		if(lastwp.norm() < 5){
+//			directGuidance(localPositionSub.x, localPositionSub.y, localPositionSub.z, vehicleWpNED.wp[curSeq].x, vehicleWpNED.wp[curSeq].y, vehicleWpNED.wp[curSeq].z, startX, startY, startZ, &targetYaw, &targetRoll, &targetX, &targetY, &targetZ, &dist);
+//		}
+//		else{
+//			L1guidance(startX, startY, startZ,
+//					   vehicleWpNED.wp[curSeq].x, vehicleWpNED.wp[curSeq].y, vehicleWpNED.wp[curSeq].z,
+//					   localPositionSub.x, localPositionSub.y, localPositionSub.z,
+//					   localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
+//					   &targetYaw, &targetRoll,
+//					   &targetX, &targetY, &targetZ, &dist);
+//			L2guidance(startX, startY, startZ,
+//					   vehicleWpNED.wp[curSeq].x, vehicleWpNED.wp[curSeq].y, vehicleWpNED.wp[curSeq].z,
+//					   localPositionSub.x, localPositionSub.y, localPositionSub.z,
+//					   localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
+//					   &targetYaw, &targetRoll,
+//					   &targetX, &targetY, &targetZ, &dist);
+//		}
+//		if (dist < WP_ACQ_R) {
+//			lastSeq = curSeq;
+//			curSeq++;
+//		}
+//	}
+//	setPosition();
 }
 
 /* MoudleAutoController::doRTL */
 /* step1: do navigate current position -> home (0,0,current position z) */
 /* step2: do landing */
 void ModuleAutoController::doRTL() {
-      doLand();
+	static uint8_t RTLstep = 0;
+	static float startX, startY, startZ;
+	static bool firstRun = true;
+	float dist;
+
+
+	if(RTLstep == 0){
+		if(firstRun){
+			startX = localPositionSub.x;
+			startY = localPositionSub.y;
+			startZ = localPositionSub.z;
+			firstRun = false;
+		}
+
+		L2guidance(startX, startY, startZ,
+				   0.0f, 0.0f, -RTL_ALT,
+				   localPositionSub.x, localPositionSub.y, localPositionSub.z,
+				   localPositionSub.vx, localPositionSub.vy, localPositionSub.vz,
+				   &targetYaw, &targetRoll,
+				   &targetX, &targetY, &targetZ, &dist);
+
+		if(dist < WP_ACQ_R){
+			RTLstep++;
+		}
+	}
+	else{
+		doLand();
+	}
 }
 
 /* ModuleAutoController::doHovering */
 /* setting position with current position x,y,z while holding time*/
 void ModuleAutoController::doHovering() {
+	static bool firstRun = true;
+	static float delayTime = 0;
+	static uint32_t startTime = 0;
 
-   msgBus.getLocalPosition(&this->localPositionSub);
+	if(firstRun){
+		msgBus.getLocalPosition(&localPositionSub);
+		vehiclePositionSpPub.yaw = localPositionSub.yaw;
+		delayTime = vehicleWpNED.wp[curSeq].param;
+		firstRun = false;
+		startTime = millisecond();
+	}
 
-   vehiclePositionSpPub.timestamp = microsecond();
-   vehiclePositionSpPub.x = localPositionSub.x;
-   vehiclePositionSpPub.y = localPositionSub.y;
-   vehiclePositionSpPub.z = localPositionSub.z;
-   vehiclePositionSpPub.yaw = 0.0f;
-
-   osDelay(5);
-
-   curSeq++;
-   nextSeq++;
-   //TODO Get winch finish flag or get holding time, hal_gettick?
+	if((millisecond()-startTime)*1000.0f> delayTime){
+		vehiclePositionSpPub.timestamp = microsecond();
+		vehiclePositionSpPub.x = vehicleWpNED.wp[curSeq - 1].x;
+		vehiclePositionSpPub.y = vehicleWpNED.wp[curSeq - 1].y;
+		vehiclePositionSpPub.z = vehicleWpNED.wp[curSeq - 1].z;
+	}
+	else{
+		firstRun = true;
+		curSeq++;
+	}
 }
 
 /* ModuleAutoController::doTransition */
@@ -487,33 +651,28 @@ void ModuleAutoController::doHovering() {
 /* step2: depending on state and contion, curSeq++ nextSeq++ */
 void ModuleAutoController::doTransition() {
 
-   msgBus.getLocalPosition(&this->localPositionSub);
+	msgBus.getLocalPosition(&this->localPositionSub);
 
-   matrix::Vector3f speed(localPositionSub.vx, localPositionSub.vy, localPositionSub.vz);
+	matrix::Vector3f speed(localPositionSub.vx, localPositionSub.vy, localPositionSub.vz);
 
-   switch (vehicleWpNED.wp[curSeq].param) {
-   case 1: {
-      //TODO sending starting transition signal
-      if (speed.norm() > 20) {
-         //TODO set virtual setpoint(?)
-         curSeq++;
-         nextSeq++;
-
-      }
-      break;
-   }
-   case 2: {
-      //TODO sending starting transition signal
-      //TODO set virtual setpoint(?)
-      if (speed.norm() < 5) {
-         curSeq++;
-         nextSeq++;
-      }
-      break;
-   }
-   }
-   //TODO Front transition -> position conroller off -> if( cruise speead<20) seq++
-   //TODO Back transition -> position controller off -> if() seq++
+	switch (vehicleWpNED.wp[curSeq].param) {
+	case 1:
+		//TODO sending starting transition signal
+		if (speed.norm() > 20) {
+		//TODO set virtual setpoint(?)
+		curSeq++;
+		}
+		break;
+	case 2:
+		//TODO sending starting transition signal
+		//TODO set virtual setpoint(?)
+		if (speed.norm() < 5) {
+			curSeq++;
+		}
+		break;
+	}
+	//TODO Front transition -> position conroller off -> if( cruise speead<20) seq++
+	//TODO Back transition -> position controller off -> if() seq++
 }
 
 

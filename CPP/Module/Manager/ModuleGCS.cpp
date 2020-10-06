@@ -134,7 +134,7 @@ void ModuleGCS::sendSysStatus(uint8_t *txBuffer, mavlink_message_t *sendMsg){
 	if(flag.accel) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_3D_ACCEL;
 	if(flag.mag) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_3D_MAG;
 	if(flag.barometer) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_ABSOLUTE_PRESSURE;
-	if(flag.difPressure) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_DIFFERENTIAL_PRESSURE;
+	if(flag.airspeed) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_DIFFERENTIAL_PRESSURE;
 	if(flag.gps) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_GPS;
 	if(flag.lidar) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_LASER_POSITION;
 	if(flag.attitudeCTL) onboard_control_sensors_health |= MAV_SYS_STATUS_SENSOR_ATTITUDE_STABILIZATION;

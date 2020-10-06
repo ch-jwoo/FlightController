@@ -52,6 +52,10 @@ private:
 
 	void setFromAutoController();
 
+	void mcOneStep();
+
+	void fwOneStep();
+
 	static constexpr float MAX_HORISION = 5.0;
 	static constexpr float MAX_VELTICAL = 1.0;
 	static constexpr float MAX_YAW = 1.570796f;			/* pi/2 */

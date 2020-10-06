@@ -47,12 +47,43 @@ public:
    static inline void setSignal(enum AutoSignal signal){
       osThreadFlagsSet(AUTO_TaskHandle, signal);
    }
-   void guidance(float previousWaypointX, float previousWaypointY, float previousWaypointZ,
-      float nextWaypointX, float nextWaypointY, float nextWaypointZ,
-      float vehicleX, float vehicleY, float vehicleZ,
-      float vehicleVelX, float vehicleVelY, float vehicleVelZ,
-      float *targetYaw, float *targetRoll,
-      float *targetX, float *targetY, float *targetZ, float *dist);
+
+   void L2guidance(float previousWaypointX, float previousWaypointY, float previousWaypointZ,
+		   	   	   float curWaypointX, float curWaypointY, float curWaypointZ,
+				   float vehicleX, float vehicleY, float vehicleZ,
+				   float vehicleVelX, float vehicleVelY, float vehicleVelZ,
+				   float *targetYaw, float *targetRoll,
+				   float *targetX, float *targetY, float *targetZ, float *dist);
+
+   void L1guidance(float previousWaypointX, float previousWaypointY, float previousWaypointZ,
+		   	   	   float curWaypointX, float curWaypointY, float curWaypointZ,
+				   float vehicleX, float vehicleY, float vehicleZ,
+				   float vehicleVelX, float vehicleVelY, float vehicleVelZ,
+				   float *targetYaw, float *targetRoll,
+				   float *targetX, float *targetY, float *targetZ, float *dist);
+
+   void directGuidance(float vehicleX, float vehicleY, float vehicleZ,
+		   	   	   	   float nextX, float nextY, float nextZ,
+					   float velX, float velY, float velZ,
+					   float *targetYaw, float *targetRoll,
+					   float *targetX, float *targetY, float *targetZ, float *dist);
+
+   void lateralTrackControl(float prevWpX, float prevWpY, float prevWpZ,
+  	   	   	   	   	   	    float curWpX, float curWpY, float curWpZ,
+		   	   	   	   	    float vehicleX, float vehicleY, float vehicleZ,
+		   	   	   	   	    float velX, float velY, float velZ,
+							float* targetX, float* targetY, float* targetZ, float* targetYaw);
+
+   PARAM(TAKEOFF_ALT);
+   PARAM(WP_ACQ_R);
+   PARAM(RTL_ALT);
+
+   /* guidance parameters */
+   PARAM(MC_D);            /* D */
+   PARAM(L1_MAG);
+   PARAM(MC_L2);            /* L2 */
+   PARAM(ROLL_MAX_ANGLE);
+   PARAM(INTERCEPT_ANGLE);
 
 private:
    /* from commander */
@@ -73,7 +104,7 @@ private:
    *  \missionSeq    mission sequence
    *  \flag          using for processing in auto mission function
    */
-   uint8_t curSeq, nextSeq, missionSeq, flag = SET;
+   uint8_t curSeq, nextSeq, missionSeq;
 
    /*
    *  setting position variables
@@ -92,18 +123,11 @@ private:
    float homeX;
    float homeY;
    float homeZ;
-   uint8_t missionFlag;
-   uint8_t hoveringFlag;
-   uint8_t transitionFlag;
-   uint8_t RTLFlag;
-   uint8_t readyLandFlag;
    /*
    *  using for saving waypoint ned position
    */
    VehicleWpNED vehicleWpNED;
 
-   PARAM(MC_D);            /* D */
-   PARAM(MC_L2);            /* L2 */
 
    uint8_t ceptAngle = 45;
 
@@ -167,6 +191,7 @@ public:
    ModuleAutoController& operator=(ModuleAutoController &&other) = delete;
 
 };
+
 
 } /* namespace FC */
 
