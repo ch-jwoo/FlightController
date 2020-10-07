@@ -7,17 +7,17 @@
 //
 // Code generated for Simulink model 'Second_att_control_codeblock_fly'.
 //
-// Model version                  : 1.39
+// Model version                  : 1.40
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Oct  5 20:47:30 2020
+// C/C++ source code generated on : Wed Oct  7 13:29:08 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
-#include <MatlabMcAttitudeController/Second_att_control_codeblock_fly.h>
-#include <MatlabMcAttitudeController/Second_att_control_codeblock_fly_private.h>
+#include "Second_att_control_codeblock_fly.h"
+#include "Second_att_control_codeblock_fly_private.h"
 
 // Block parameters (default storage)
 MC_px4_AlgorithmModelClass::P_Second_att_control_codebloc_T MC_px4_AlgorithmModelClass::

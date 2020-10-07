@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'Second_att_control_codeblock_fly'.
 //
-// Model version                  : 1.39
+// Model version                  : 1.40
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Oct  5 20:47:30 2020
+// C/C++ source code generated on : Wed Oct  7 13:29:08 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -18,9 +18,9 @@
 //
 #ifndef RTW_HEADER_Second_att_control_codeblock_fly_private_h_
 #define RTW_HEADER_Second_att_control_codeblock_fly_private_h_
-#include <MatlabMcAttitudeController/rtwtypes.h>
+#include "rtwtypes.h"
 
-extern real32_T mc_rt_roundf_snf(real32_T u);
+extern real32_T rt_roundf_snf(real32_T u);
 
 #endif                // RTW_HEADER_Second_att_control_codeblock_fly_private_h_
 

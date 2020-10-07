@@ -7,17 +7,17 @@
 //
 // Code generated for Simulink model 'Second_att_control_codeblock_fly'.
 //
-// Model version                  : 1.39
+// Model version                  : 1.40
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Oct  5 20:47:30 2020
+// C/C++ source code generated on : Wed Oct  7 13:29:08 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
-#include <MatlabMcAttitudeController/Second_att_control_codeblock_fly.h>
-#include <MatlabMcAttitudeController/Second_att_control_codeblock_fly_private.h>
+#include "Second_att_control_codeblock_fly.h"
+#include "Second_att_control_codeblock_fly_private.h"
 
 // Exported block parameters
 real32_T Angle_rate_pitch_kI = 1.0F;   // Variable: Angle_rate_pitch_kI
@@ -65,7 +65,7 @@ real32_T kP_Yaw_rate_PID = 0.3F;       // Variable: kP_Yaw_rate_PID
 // Const memory section
 // Definition for custom storage class: Const
 const real32_T Max_angle_coef = 0.5F;  // Referenced by: '<S1>/Max_angle_coef'
-real32_T mc_rt_roundf_snf(real32_T u)
+real32_T rt_roundf_snf(real32_T u)
 {
   real32_T y;
   if (std::abs(u) < 8.388608E+6F) {
@@ -323,8 +323,8 @@ void MC_px4_AlgorithmModelClass::step()
   // MATLAB Function: '<S1>/pwm_out1' incorporates:
   //   Inport: '<Root>/set_thrust'
 
-  u0 = mc_rt_roundf_snf((((Second_att_control_codeblock__B.Gain +
-                        Second_att_control_codeblock__B.Gain1) -
+  u0 = rt_roundf_snf((((-Second_att_control_codeblock__B.Gain +
+                        Second_att_control_codeblock__B.Gain1) +
                        Second_att_control_codeblock__B.Sum_f) / 2.0F *
                       Second_att_control_codeblock__U.set_thrust +
                       Second_att_control_codeblock__U.set_thrust) * 1000.0F);
@@ -344,7 +344,7 @@ void MC_px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M1 = static_cast<uint16_T>(tmp);
-  u0 = mc_rt_roundf_snf((((-Second_att_control_codeblock__B.Gain +
+  u0 = rt_roundf_snf((((Second_att_control_codeblock__B.Gain -
                         Second_att_control_codeblock__B.Gain1) +
                        Second_att_control_codeblock__B.Sum_f) / 2.0F *
                       Second_att_control_codeblock__U.set_thrust +
@@ -365,7 +365,7 @@ void MC_px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M2 = static_cast<uint16_T>(tmp);
-  u0 = mc_rt_roundf_snf((((-Second_att_control_codeblock__B.Gain -
+  u0 = rt_roundf_snf((((Second_att_control_codeblock__B.Gain +
                         Second_att_control_codeblock__B.Gain1) -
                        Second_att_control_codeblock__B.Sum_f) / 2.0F *
                       Second_att_control_codeblock__U.set_thrust +
@@ -386,8 +386,8 @@ void MC_px4_AlgorithmModelClass::step()
   }
 
   Second_att_control_codeblock__B.M3 = static_cast<uint16_T>(tmp);
-  u0 = mc_rt_roundf_snf((((Second_att_control_codeblock__B.Gain -
-                        Second_att_control_codeblock__B.Gain1) +
+  u0 = rt_roundf_snf((((-Second_att_control_codeblock__B.Gain -
+                        Second_att_control_codeblock__B.Gain1) -
                        Second_att_control_codeblock__B.Sum_f) / 2.0F *
                       Second_att_control_codeblock__U.set_thrust +
                       Second_att_control_codeblock__U.set_thrust) * 1000.0F);
