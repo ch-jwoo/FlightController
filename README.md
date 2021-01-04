@@ -3,7 +3,9 @@ This project is for the KRAC(Korea Robot Aircraft Competition).
 In this competition a box(300g) should carried by a drone using winch. 
 At the same time, the drone should pass some waypoints and detour a no-fly zone.
 
-(figure1. mission profile)
+<div>
+    <img width="300" src="./.readme/mission profile.png">
+</div>
 
 ## Design elements
 ### hardware
@@ -26,7 +28,10 @@ At the same time, the drone should pass some waypoints and detour a no-fly zone.
 * FrSky X8R (receiver)
 * Holybro 915Mhz (telemetry)
 
-(figure 2. artwork)
+<div>
+    <img width="150" src="./.readme/artwork.png">
+    <img width="150" src="./.readme/pcb.png">
+</div>
 
 ## Used Tool
 * C++ (language)
@@ -41,8 +46,16 @@ So, we struggled to modularize by function.
 We used interface for publishing or subscribing intertask data.
 So, even if a module is replaced by a new module, it use the interface for the other task can work.
 
-(figure 3. architecture)
+<div>
+    <img width="500" src="./.readme/architecture.jpg">
+</div>
 
+* [to driver folder](https://github.com/ch-jwoo/FlightController/tree/stm32h743/CPP/Peripherals)
+* [to interface folder](https://github.com/ch-jwoo/FlightController/tree/stm32h743/CPP/Interface)
+* [to estimator folder](https://github.com/ch-jwoo/FlightController/tree/stm32h743/CPP/Module/Estimator)
+* [to controller folder](https://github.com/ch-jwoo/FlightController/tree/stm32h743/CPP/Module/Controller)
+* [to storage folder](https://github.com/ch-jwoo/FlightController/tree/stm32h743/CPP/Module/Storage)
+   
 But I think It was fail. 
 We couldn't implement a message managing task like uorb in pixhawk because of the short development period. 
 
