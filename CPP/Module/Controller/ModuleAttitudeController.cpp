@@ -105,7 +105,7 @@ void ModuleAttitudeController::oneStep(){
 			phase1TotalStep = (uint16_t)(vtolTransitionPhase1Time*AC_TASK_FREQUENCY);
 			phase1Step++;
 			phase1Ratio = phase1Step/(float)phase1TotalStep;
-			s3.setPWM(MC_SERVO_1 + ((TRANSITION_SERVO_1 - MC_SERVO_1)*phase1Ratio));
+			s3.setPWM(MC_SERVO_1 + ((TRANSITION_SERVO_1 - MC_SERVO_1)*phase1Ratio));               //erased for pusher test
 			s4.setPWM(MC_SERVO_2 + ((TRANSITION_SERVO_2 - MC_SERVO_2)*phase1Ratio));
 		}
 		break;
@@ -121,18 +121,18 @@ void ModuleAttitudeController::oneStep(){
 			phase2TotalStep = (uint16_t)(vtolTransitionPhase2Time*AC_TASK_FREQUENCY);
 			phase2Step++;
 			phase2Ratio = phase2Step/(float)phase2TotalStep;
-
-			s3.setPWM(TRANSITION_SERVO_1 + ((FW_SERVO_1 - TRANSITION_SERVO_1)*phase2Ratio));
+//
+			s3.setPWM(TRANSITION_SERVO_1 + ((FW_SERVO_1 - TRANSITION_SERVO_1)*phase2Ratio));      //erased for pusher test
 			s4.setPWM(TRANSITION_SERVO_2 + ((FW_SERVO_2 - TRANSITION_SERVO_2)*phase2Ratio));
 		}
 		break;
 	case TiltingPhase::FixedWing:
-		s3.setPWM((uint16_t)FW_SERVO_1);
+		s3.setPWM((uint16_t)FW_SERVO_1);														//erased for pusher test
 		s4.setPWM((uint16_t)FW_SERVO_2);
 		airframeStatusPub.airframeMode = AirframeMode::FixedWing;
 		break;
 	case TiltingPhase::MultiCopter:
-		s3.setPWM((uint16_t)MC_SERVO_1);
+		s3.setPWM((uint16_t)MC_SERVO_1);														//erased for pusher test
 		s4.setPWM((uint16_t)MC_SERVO_2);
 		airframeStatusPub.airframeMode = AirframeMode::Multicopter;
 		break;
@@ -267,7 +267,34 @@ void ModuleAttitudeController::fwOneStep(){
 	FW_px4_AlgorithmModelClass::step();
 	FW_px4_AlgorithmModelClass::ExtY_FW_att_control_codeblock_T output = FW_px4_AlgorithmModelClass::getExternalOutputs();
 
-	/* set motor pwm */
+	/* set motor pwm for tiltrotor */
+//	m1.setPWM(output.PWM_OUT[0]);
+//	m2.setPWM(output.PWM_OUT[1]);
+//	m3.setPWM(output.PWM_OUT[2]);
+//	m4.setPWM(output.PWM_OUT[3]);
+//
+//	motorPwmPub.timestamp = microsecond();
+//	motorPwmPub.m1 = output.PWM_OUT[0];
+//	motorPwmPub.m2 = output.PWM_OUT[1];
+//	motorPwmPub.m3 = output.PWM_OUT[2];
+//	motorPwmPub.m4 = output.PWM_OUT[3]	;
+//	msgBus.setMotorPWM(motorPwmPub);
+//
+//	/* set servo pwm */
+//	s1.setPWM(output.PWM_OUT[4]);
+//	s2.setPWM(output.PWM_OUT[5]);
+////	s3.setPWM(output.PWM_OUT[6]);
+////	s3.setPWM(output.PWM_OUT[7]);
+//
+//
+//	servoPwmPub.timestamp = microsecond();
+//	servoPwmPub.s1 = output.PWM_OUT[0];
+//	servoPwmPub.s2 = output.PWM_OUT[1];
+//	servoPwmPub.s3 = output.PWM_OUT[2];
+//	servoPwmPub.s4 = output.PWM_OUT[3];
+//	msgBus.setServoPWM(servoPwmPub);
+
+	/*pusher test plane*/
 	m1.setPWM(output.PWM_OUT[0]);
 	m2.setPWM(output.PWM_OUT[1]);
 	m3.setPWM(output.PWM_OUT[2]);
@@ -277,21 +304,21 @@ void ModuleAttitudeController::fwOneStep(){
 	motorPwmPub.m1 = output.PWM_OUT[0];
 	motorPwmPub.m2 = output.PWM_OUT[1];
 	motorPwmPub.m3 = output.PWM_OUT[2];
-	motorPwmPub.m4 = output.PWM_OUT[3]	;
+	motorPwmPub.m4 = output.PWM_OUT[3];
 	msgBus.setMotorPWM(motorPwmPub);
 
 	/* set servo pwm */
 	s1.setPWM(output.PWM_OUT[4]);
 	s2.setPWM(output.PWM_OUT[5]);
-//	s3.setPWM(output.PWM_OUT[6]);
-//	s3.setPWM(output.PWM_OUT[7]);
+	s3.setPWM(output.PWM_OUT[6]);
+	s4.setPWM(output.PWM_OUT[7]);
 
 
 	servoPwmPub.timestamp = microsecond();
-	servoPwmPub.s1 = output.PWM_OUT[0];
-	servoPwmPub.s2 = output.PWM_OUT[1];
-	servoPwmPub.s3 = output.PWM_OUT[2];
-	servoPwmPub.s3 = output.PWM_OUT[3];
+	servoPwmPub.s1 = output.PWM_OUT[4];
+	servoPwmPub.s2 = output.PWM_OUT[5];
+	servoPwmPub.s3 = output.PWM_OUT[6];
+	servoPwmPub.s4 = output.PWM_OUT[7];
 	msgBus.setServoPWM(servoPwmPub);
 
 }

@@ -41,7 +41,7 @@ void ModuleSD::main(){
    ModuleSD moduleSD(&led3);
 
 	moduleSD.mount();
-//   osDelay(1000);
+   osDelay(1000);
 
    moduleSD._loadParm();
    moduleSD._loadWP();
@@ -57,10 +57,10 @@ void ModuleSD::main(){
 	   }
 	   else{
 //		   moduleSD._saveLog();
-		   moduleSD._saveTest();
+//		   moduleSD._saveTest();
 	   }
 
-      osDelay(5);         /* 10hz */
+      osDelay(100);         /* 10hz */
    }
 }
 

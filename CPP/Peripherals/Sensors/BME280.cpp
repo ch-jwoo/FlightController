@@ -56,9 +56,12 @@ void BME280::init(){
 }
 
 bool BME280::update(){
-	i2c->read(BME280_ADDRESS, BME280_PRESS_MSB, buf, 6);
-	countP = (int32_t) (((int32_t) buf[0] << 24 | (int32_t) buf[1] << 16 | (int32_t) buf[2] << 8) >> 12);
-	countT = (int32_t) (((int32_t) buf[3] << 24 | (int32_t) buf[4] << 16 | (int32_t) buf[5] << 8) >> 12);
+	i2c->read(BME280_ADDRESS, BME280_PRESS_MSB, buf, 8);
+//	countP = (int32_t) (((int32_t) buf[0] << 24 | (int32_t) buf[1] << 16 | (int32_t) buf[2] << 8) >> 12);
+//	countT = (int32_t) (((int32_t) buf[3] << 24 | (int32_t) buf[4] << 16 | (int32_t) buf[5] << 8) >> 12);
+
+	uint32_t countP = (buf[0] << 12) | (buf[1] << 4) | (buf[2] >> 4);
+	uint32_t countT = (buf[3] << 12) | (buf[4] << 4) | (buf[5] >> 4);
 
 	P = compensateP(countP)/25600.0;	/* hPa */
 	T = compensateT(countT)/100.0;		/* degC */

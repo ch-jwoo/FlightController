@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionControl'.
 //
-// Model version                  : 1.19
+// Model version                  : 1.20
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Sep 21 22:15:56 2020
+// C/C++ source code generated on : Wed Oct  7 21:39:34 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -24,29 +24,26 @@ positionControlModelClass::P_positionControl_T positionControlModelClass::
   positionControl_P = {
   // Variable: vel_Horizon_Max
   //  Referenced by:
+  //    '<S34>/DeadZone'
   //    '<S48>/Saturation'
-  //    '<S194>/Saturation'
+  //    '<S178>/DeadZone'
+  //    '<S192>/Saturation'
 
   3.0,
 
   // Variable: vel_climbMax
   //  Referenced by:
-  //    '<S276>/DeadZone'
-  //    '<S290>/Saturation'
+  //    '<S274>/DeadZone'
+  //    '<S288>/Saturation'
 
   1.0,
 
   // Variable: vel_descentMax
   //  Referenced by:
-  //    '<S276>/DeadZone'
-  //    '<S290>/Saturation'
+  //    '<S274>/DeadZone'
+  //    '<S288>/Saturation'
 
   1.0,
-
-  // Mask Parameter: PIDController3_DifferentiatorIC
-  //  Referenced by: '<S132>/UD'
-
-  0.0,
 
   // Mask Parameter: PIDController_InitialConditionF
   //  Referenced by: '<S36>/Filter'
@@ -54,12 +51,12 @@ positionControlModelClass::P_positionControl_T positionControlModelClass::
   0.0,
 
   // Mask Parameter: PIDController4_InitialCondition
-  //  Referenced by: '<S182>/Filter'
+  //  Referenced by: '<S180>/Filter'
 
   0.0,
 
   // Mask Parameter: PIDController5_InitialCondition
-  //  Referenced by: '<S230>/Filter'
+  //  Referenced by: '<S228>/Filter'
 
   0.0,
 
@@ -69,7 +66,12 @@ positionControlModelClass::P_positionControl_T positionControlModelClass::
   0.0,
 
   // Mask Parameter: ZPostoVel_InitialConditionForFi
-  //  Referenced by: '<S278>/Filter'
+  //  Referenced by: '<S276>/Filter'
+
+  0.0,
+
+  // Mask Parameter: PIDController3_InitialCondition
+  //  Referenced by: '<S132>/Filter'
 
   0.0,
 
@@ -79,12 +81,12 @@ positionControlModelClass::P_positionControl_T positionControlModelClass::
   0.0,
 
   // Mask Parameter: PIDController4_InitialConditi_i
-  //  Referenced by: '<S187>/Integrator'
+  //  Referenced by: '<S185>/Integrator'
 
   0.0,
 
   // Mask Parameter: PIDController5_InitialConditi_c
-  //  Referenced by: '<S235>/Integrator'
+  //  Referenced by: '<S233>/Integrator'
 
   0.0,
 
@@ -94,39 +96,33 @@ positionControlModelClass::P_positionControl_T positionControlModelClass::
   0.0,
 
   // Mask Parameter: ZPostoVel_InitialConditionForIn
-  //  Referenced by: '<S283>/Integrator'
+  //  Referenced by: '<S281>/Integrator'
 
   0.0,
 
-  // Mask Parameter: PIDController3_InitialCondition
-  //  Referenced by: '<S139>/Integrator'
+  // Mask Parameter: PIDController3_InitialConditi_d
+  //  Referenced by: '<S137>/Integrator'
 
   0.0,
-
-  // Mask Parameter: PIDController1_Kb
-  //  Referenced by: '<S82>/Kb'
-
-  0.01,
-
-  // Mask Parameter: PIDController5_Kb
-  //  Referenced by: '<S228>/Kb'
-
-  0.01,
 
   // Mask Parameter: PIDController5_LowerSaturationL
-  //  Referenced by: '<S242>/Saturation'
+  //  Referenced by:
+  //    '<S226>/DeadZone'
+  //    '<S240>/Saturation'
 
   -1.0,
 
   // Mask Parameter: PIDController1_LowerSaturationL
-  //  Referenced by: '<S96>/Saturation'
+  //  Referenced by:
+  //    '<S82>/DeadZone'
+  //    '<S96>/Saturation'
 
   -1.0,
 
   // Mask Parameter: PIDController3_LowerSaturationL
   //  Referenced by:
   //    '<S130>/DeadZone'
-  //    '<S146>/Saturation'
+  //    '<S144>/Saturation'
 
   -0.1,
 
@@ -136,41 +132,70 @@ positionControlModelClass::P_positionControl_T positionControlModelClass::
   10.0,
 
   // Mask Parameter: PIDController4_N
-  //  Referenced by: '<S190>/Filter Coefficient'
+  //  Referenced by: '<S188>/Filter Coefficient'
 
   10.0,
 
   // Mask Parameter: PIDController5_N
-  //  Referenced by: '<S238>/Filter Coefficient'
+  //  Referenced by: '<S236>/Filter Coefficient'
 
-  10.0,
+  5.0,
 
   // Mask Parameter: PIDController1_N
   //  Referenced by: '<S92>/Filter Coefficient'
 
-  10.0,
+  5.0,
 
   // Mask Parameter: ZPostoVel_N
-  //  Referenced by: '<S286>/Filter Coefficient'
+  //  Referenced by: '<S284>/Filter Coefficient'
+
+  5.0,
+
+  // Mask Parameter: PIDController3_N
+  //  Referenced by: '<S140>/Filter Coefficient'
 
   10.0,
 
   // Mask Parameter: PIDController5_UpperSaturationL
-  //  Referenced by: '<S242>/Saturation'
+  //  Referenced by:
+  //    '<S226>/DeadZone'
+  //    '<S240>/Saturation'
 
   1.0,
 
   // Mask Parameter: PIDController1_UpperSaturationL
-  //  Referenced by: '<S96>/Saturation'
+  //  Referenced by:
+  //    '<S82>/DeadZone'
+  //    '<S96>/Saturation'
 
   1.0,
 
   // Mask Parameter: PIDController3_UpperSaturationL
   //  Referenced by:
   //    '<S130>/DeadZone'
-  //    '<S146>/Saturation'
+  //    '<S144>/Saturation'
 
   0.5,
+
+  // Expression: 0
+  //  Referenced by: '<S34>/Constant1'
+
+  0.0,
+
+  // Expression: 0
+  //  Referenced by: '<S82>/Constant1'
+
+  0.0,
+
+  // Expression: 0
+  //  Referenced by: '<S178>/Constant1'
+
+  0.0,
+
+  // Expression: 0
+  //  Referenced by: '<S226>/Constant1'
+
+  0.0,
 
   // Expression: 0
   //  Referenced by: '<S130>/Constant1'
@@ -178,7 +203,7 @@ positionControlModelClass::P_positionControl_T positionControlModelClass::
   0.0,
 
   // Expression: 0
-  //  Referenced by: '<S276>/Constant1'
+  //  Referenced by: '<S274>/Constant1'
 
   0.0,
 
@@ -198,22 +223,22 @@ positionControlModelClass::P_positionControl_T positionControlModelClass::
   0.01,
 
   // Computed Parameter: Integrator_gainval_l
-  //  Referenced by: '<S187>/Integrator'
+  //  Referenced by: '<S185>/Integrator'
 
   0.01,
 
   // Computed Parameter: Filter_gainval_l
-  //  Referenced by: '<S182>/Filter'
+  //  Referenced by: '<S180>/Filter'
 
   0.01,
 
   // Computed Parameter: Integrator_gainval_k
-  //  Referenced by: '<S235>/Integrator'
+  //  Referenced by: '<S233>/Integrator'
 
   0.01,
 
   // Computed Parameter: Filter_gainval_i
-  //  Referenced by: '<S230>/Filter'
+  //  Referenced by: '<S228>/Filter'
 
   0.01,
 
@@ -238,12 +263,12 @@ positionControlModelClass::P_positionControl_T positionControlModelClass::
   -1.0,
 
   // Computed Parameter: Integrator_gainval_j
-  //  Referenced by: '<S283>/Integrator'
+  //  Referenced by: '<S281>/Integrator'
 
   0.01,
 
   // Computed Parameter: Filter_gainval_c
-  //  Referenced by: '<S278>/Filter'
+  //  Referenced by: '<S276>/Filter'
 
   0.01,
 
@@ -253,14 +278,14 @@ positionControlModelClass::P_positionControl_T positionControlModelClass::
   -1.0,
 
   // Computed Parameter: Integrator_gainval_a
-  //  Referenced by: '<S139>/Integrator'
+  //  Referenced by: '<S137>/Integrator'
 
   0.01,
 
-  // Computed Parameter: Tsamp_WtEt
-  //  Referenced by: '<S134>/Tsamp'
+  // Computed Parameter: Filter_gainval_g
+  //  Referenced by: '<S132>/Filter'
 
-  100.0,
+  0.01,
 
   // Expression: 1
   //  Referenced by: '<S1>/Saturation'
@@ -273,12 +298,32 @@ positionControlModelClass::P_positionControl_T positionControlModelClass::
   0.0,
 
   // Expression: 0
+  //  Referenced by: '<S34>/ZeroGain'
+
+  0.0,
+
+  // Expression: 0
+  //  Referenced by: '<S82>/ZeroGain'
+
+  0.0,
+
+  // Expression: 0
+  //  Referenced by: '<S178>/ZeroGain'
+
+  0.0,
+
+  // Expression: 0
+  //  Referenced by: '<S226>/ZeroGain'
+
+  0.0,
+
+  // Expression: 0
   //  Referenced by: '<S130>/ZeroGain'
 
   0.0,
 
   // Expression: 0
-  //  Referenced by: '<S276>/ZeroGain'
+  //  Referenced by: '<S274>/ZeroGain'
 
   0.0
 };

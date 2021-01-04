@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'Second_att_control_codeblock_fly'.
 //
-// Model version                  : 1.40
+// Model version                  : 1.42
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Wed Oct  7 13:29:08 2020
+// C/C++ source code generated on : Thu Oct  8 01:44:30 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex

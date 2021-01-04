@@ -28,7 +28,7 @@ FlightMode ModuleAutoController::flightMode = FlightMode::AutoWaypoint;
 float ModuleAutoController::MC_D = 0.7f;      /* D */
 float ModuleAutoController::L1_MAG = 5.0f;      /* L1 */
 float ModuleAutoController::MC_L2 = 1.5f;      /* L2 */
-float ModuleAutoController::TAKEOFF_ALT = 5.0;
+float ModuleAutoController::TAKEOFF_ALT = 2.0;
 
 float ModuleAutoController::WP_ACQ_R = 3.0;
 float ModuleAutoController::RTL_ALT = 10.0;
@@ -113,7 +113,7 @@ void ModuleAutoController::oneStep() {
 //      //printf_("second switch");
          case AutoCommand::Guidance:
             doGuidance();
-            printf_("guidance : %u %f, %f %f %f, %f %f\r\n",curSeq, targetX, targetY, targetZ, targetYaw * FC_RAD2DEG, targetRoll * FC_RAD2DEG);
+//            printf_("guidance : %u %f, %f %f %f, %f %f\r\n",curSeq, targetX, targetY, targetZ, targetYaw * FC_RAD2DEG, targetRoll * FC_RAD2DEG);
             break;
          case AutoCommand::RTL:
             doRTL();
@@ -121,15 +121,15 @@ void ModuleAutoController::oneStep() {
          case AutoCommand::Takeoff:
             // aquisition, next step
             doTakeoff();
-            printf_("TakeOff, currrent seq %u\r\n",curSeq);
+//            printf_("TakeOff, currrent seq %u\r\n",curSeq);
             break;
          case AutoCommand::Land:
             doLand();
-            printf_("Land, currrent seq %u\r\n",curSeq);
+//            printf_("Land, currrent seq %u\r\n",curSeq);
             break;
          case AutoCommand::Hovering:
             doHovering();
-            printf_("hover, currrent seq %u\r\n",curSeq);
+//            printf_("hover, currrent seq %u\r\n",curSeq);
             break;
          case AutoCommand::Transition:
             doTransition();
@@ -141,19 +141,19 @@ void ModuleAutoController::oneStep() {
       break;
    case FlightMode::AutoRTL:
       doRTL();
-      printf_("autoRTL\r\n");
+//      printf_("autoRTL\r\n");
       break;
    case FlightMode::AutoTakeoff:
       doTakeoff();
-      printf_("AutoTakeoff\r\n");
+//      printf_("AutoTakeoff\r\n");
       break;
    case FlightMode::AutoLand:
       doLand();
-      printf_("AutoLand\r\n");
+//      printf_("AutoLand\r\n");
       break;
    case FlightMode::AutoTransition:
       doTransition();
-      printf_("AutoTransition\r\n");
+//      printf_("AutoTransition\r\n");
       break;
    default:
       break;
@@ -333,7 +333,7 @@ void ModuleAutoController::L1guidance(float previousWaypointX, float previousWay
 		}
 	}
 
-	printf_("cy%f \r\n by %f",localPositionSub.yaw,tempAng);
+//	printf_("cy%f \r\n by %f",localPositionSub.yaw,tempAng);
 	tempAng = radianThreshold(localPositionSub.yaw + tempAng, -FC_PI, FC_PI);
 	*targetYaw = tempAng;
 	aCmd = 2 * pow(vehicleVel.norm(), 2) * sin(*targetYaw) / L1.norm();
@@ -634,7 +634,7 @@ void ModuleAutoController::doHovering() {
 		startTime = millisecond();
 	}
 
-	if((millisecond()-startTime)*1000.0f> delayTime){
+	if((millisecond()-startTime) * 1000 > delayTime){
 		vehiclePositionSpPub.timestamp = microsecond();
 		vehiclePositionSpPub.x = vehicleWpNED.wp[curSeq - 1].x;
 		vehiclePositionSpPub.y = vehicleWpNED.wp[curSeq - 1].y;

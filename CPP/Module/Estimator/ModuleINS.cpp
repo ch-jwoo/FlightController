@@ -52,9 +52,24 @@ void ModuleINS::onestep(){
 
    if(msgBus.getNedAccel(&nedAccelSub)){
       input.AhrsFlag = true;
+//      if(nedAccelSub.xyz[0]<-0.1 || 0.1<nedAccelSub.xyz[0]){
+//    	 input.ax = nedAccelSub.xyz[0];
+//      }
+//      else input.ax=0;
+//
+//      if(nedAccelSub.xyz[1]<-0.1 || 0.1<nedAccelSub.xyz[1]){
+//     	 input.ay = nedAccelSub.xyz[1];
+//      }
+//      else input.ay=0;
+//
+//      if(abs(nedAccelSub.xyz[2] + FC_GRAVITY_ACCEERATION) > 0.1){
+//		 input.az = nedAccelSub.xyz[2] + FC_GRAVITY_ACCEERATION; /* subtract gravity */
+//	  }
+//      else input.az=0;
       input.ax = nedAccelSub.xyz[0];
       input.ay = nedAccelSub.xyz[1];
-      input.az = nedAccelSub.xyz[2] + FC_GRAVITY_ACCEERATION;      /* subtract gravity */
+      input.az = nedAccelSub.xyz[2] + FC_GRAVITY_ACCEERATION;
+
    }
    else input.AhrsFlag = false;
 
@@ -76,7 +91,7 @@ void ModuleINS::onestep(){
          input.GPS_switch=true;
       }
    }
-   else input.GpsFlag = false;
+   else {input.GpsFlag = false;}
 
 
 	input.lat=gpsSub.lat;
@@ -97,7 +112,7 @@ void ModuleINS::onestep(){
    }
    else input.BaroFlag = false;
 
-   if(msgBus.getLidar(&lidar) && lidar.valid){
+   if(msgBus.getLidar(&lidar) && lidar.valid && lidar.altitude<5.0){
       input.LidarFlag = true;
       input.Lidar_height = lidar.altitude;
    }
@@ -124,6 +139,7 @@ void ModuleINS::onestep(){
    localPositionPub.z = (float)output.estiZ;
    localPositionPub.gpsrawx=(float)output.GPSrawX;
    localPositionPub.gpsrawy=(float)output.GPSrawY;
+   localPositionPub.gpsrawz=(float)output.GPSrawZ;
 
    localPositionPub.refAlt = refAlt;
    localPositionPub.refLat = refLat;
@@ -133,8 +149,10 @@ void ModuleINS::onestep(){
    globalPositionPub.lat=output.Estim_LatLon[0];
    globalPositionPub.lon=output.Estim_LatLon[1];
    globalPositionPub.alt=(float)output.Estim_Alt;
+   globalPositionPub.refAlt = refAlt;
    globalPositionPub.timestamp = microsecond();
 
+//   printf_("%f %f\r\n", gpsSub.alt, refAlt);
 
    /* heading */
    localPositionPub.yaw = attitudeSub.yaw;

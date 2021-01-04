@@ -42,6 +42,7 @@ private:
 	struct BodyAccel bodyAccelSub;
 	struct AirSpeed airSpeedSub;
 	struct AirframeStatus airframeStatusSub;
+	struct Attitude vehicleAttitude;
 
 	struct VehicleAttitueSP vehicleAttitudeSpPub;
 	
@@ -52,10 +53,13 @@ private:
 	float targetYaw;
 
 	/* fixed wing rc control */
-	float targetAirspeed;
-	float targetAlt;
-	float targetRoll;
+	float fwtargetAirspeed;
+	float fwtargetAlt;
+	float fwtargetRoll;
+	float fwtargetYawRate=0;
 
+	float fwPrevX, fwPrevY, fwPrevZ;
+	float fwTargetX, fwTargetY, fwTargetZ;
 
 	void setFromAutoController();
 
@@ -66,6 +70,12 @@ private:
 	/* fixed wing */
 	void fwOneStep();
 	void fwSetFromRC();
+	void fwSetFromAuto();
+	void L1guidance(float previousWaypointX, float previousWaypointY, float previousWaypointZ,
+					float curWaypointX, float curWaypointY, float curWaypointZ,
+					float vehicleX, float vehicleY, float vehicleZ,
+					float vehicleVelX, float vehicleVelY, float vehicleVelZ,
+					float *targetRoll);
 
 	/* multicopter constants */
 	static constexpr float MAX_HORISION = 5.0;
@@ -73,10 +83,9 @@ private:
 	static constexpr float MAX_YAW = 1.570796f;			/* pi/2 */
 	
 	/* fixed wing constants */
-	static constexpr float MAX_VELOCITY = 33.3;
-	static constexpr float MIN_VELOCITY = 10;
-	static constexpr float MAX_CLIMB_ALT = 10.0;
-	static constexpr float MIN_SINK_ALT = 4.0;
+	static constexpr float VEL_INCREMENT = 5.0;
+	static constexpr float MAX_CLIMB_ALT = 5.0;
+	static constexpr float MAX_BANK_ANGLE_RAD = 1.047;  //60deg
 
 	static const uint16_t STICK_THRESHOLD = 100;
 

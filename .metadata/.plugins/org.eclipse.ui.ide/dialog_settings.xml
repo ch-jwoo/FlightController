@@ -9,6 +9,7 @@
 		<item key="SmartImportRootWizardPage.STORE_NESTED_PROJECTS" value="true"/>
 		<item key="SmartImportRootWizardPage.STORE_CONFIGURE_NATURES" value="true"/>
 		<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+			<item value="C:\Users\junwoo\OneDrive - 인하대학교\종설 로항\FlightController (2)\FlightController"/>
 			<item value="C:\git\FlightController_STM32H743"/>
 			<item value="C:\git\deprecated_telemTest"/>
 			<item value="C:\git\fc"/>

@@ -13,7 +13,7 @@
 #include "MsgBus/MsgBus.h"
 
 #define FILTERING4525_ADC_MIN        0.4   //
-#define FILTERING4525_ADC_MAX        0.4 //
+#define FILTERING4525_ADC_MAX        1.0 //
 #define FILTERING4525_ADC_MIN_AT       10 // when abs(delta between ADC and current value) is less than MIN_AT , apply MIN
 #define FILTERING4525_ADC_MAX_AT       100
 
@@ -35,10 +35,10 @@ public:
 
 	/* Getting Temperature and pressure */
 	float diffPressure;
+	float air2;
 
 private:
 	RtosI2C *i2c;
-	int difPressureAdcArray[4] = { 0 };
 
 	struct GlobalPosition globalPositionSub= { 0 };
 

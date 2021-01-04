@@ -193,6 +193,8 @@ function RTW_rtwnameSIDMap() {
 	this.sidHashMap["positionEstimator:254"] = {rtwname: "<Root>/Subsystem"};
 	this.rtwnameHashMap["<Root>/from_home"] = {sid: "positionEstimator:171"};
 	this.sidHashMap["positionEstimator:171"] = {rtwname: "<Root>/from_home"};
+	this.rtwnameHashMap["<Root>/fuckgpsalt"] = {sid: "positionEstimator:274"};
+	this.sidHashMap["positionEstimator:274"] = {rtwname: "<Root>/fuckgpsalt"};
 	this.rtwnameHashMap["<Root>/estiX"] = {sid: "positionEstimator:156"};
 	this.sidHashMap["positionEstimator:156"] = {rtwname: "<Root>/estiX"};
 	this.rtwnameHashMap["<Root>/estiY"] = {sid: "positionEstimator:157"};
@@ -223,6 +225,8 @@ function RTW_rtwnameSIDMap() {
 	this.sidHashMap["positionEstimator:270"] = {rtwname: "<Root>/GPSrawVX"};
 	this.rtwnameHashMap["<Root>/GPSrawVY"] = {sid: "positionEstimator:271"};
 	this.sidHashMap["positionEstimator:271"] = {rtwname: "<Root>/GPSrawVY"};
+	this.rtwnameHashMap["<Root>/GPSrawZ"] = {sid: "positionEstimator:273"};
+	this.sidHashMap["positionEstimator:273"] = {rtwname: "<Root>/GPSrawZ"};
 	this.rtwnameHashMap["<S1>/Enable1"] = {sid: "positionEstimator:1:990"};
 	this.sidHashMap["positionEstimator:1:990"] = {rtwname: "<S1>/Enable1"};
 	this.rtwnameHashMap["<S1>/y1"] = {sid: "positionEstimator:1:13"};

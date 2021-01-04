@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'TECS'.
 //
-// Model version                  : 1.27
+// Model version                  : 1.30
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Oct  5 14:56:44 2020
+// C/C++ source code generated on : Thu Oct 15 15:30:38 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -18,6 +18,7 @@
 //
 #ifndef RTW_HEADER_TECS_types_h_
 #define RTW_HEADER_TECS_types_h_
+#include <array>
 
 // Model Code Variants
 #endif                                 // RTW_HEADER_TECS_types_h_
@@ -27,4 +28,3 @@
 //
 // [EOF]
 //
-

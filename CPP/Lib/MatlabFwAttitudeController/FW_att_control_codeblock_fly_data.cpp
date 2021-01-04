@@ -7,17 +7,17 @@
 //
 // Code generated for Simulink model 'FW_att_control_codeblock_fly'.
 //
-// Model version                  : 1.52
+// Model version                  : 1.53
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Fri Oct  2 16:09:59 2020
+// C/C++ source code generated on : Sat Oct  3 15:03:51 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
-#include <MatlabFwAttitudeController/FW_att_control_codeblock_fly.h>
-#include <MatlabFwAttitudeController/FW_att_control_codeblock_fly_private.h>
+#include "FW_att_control_codeblock_fly.h"
+#include "FW_att_control_codeblock_fly_private.h"
 
 // Block parameters (default storage)
 FW_px4_AlgorithmModelClass::P_FW_att_control_codeblock_fl_T FW_px4_AlgorithmModelClass::
@@ -25,7 +25,7 @@ FW_px4_AlgorithmModelClass::P_FW_att_control_codeblock_fl_T FW_px4_AlgorithmMode
   // Variable: FW_Angle_rate_pitch_kI
   //  Referenced by: '<S4>/I_pr1'
 
-  1.0F,
+  0.0F,
 
   // Variable: FW_Angle_rate_pitch_kP
   //  Referenced by: '<S4>/P_pr1'
@@ -35,7 +35,7 @@ FW_px4_AlgorithmModelClass::P_FW_att_control_codeblock_fl_T FW_px4_AlgorithmMode
   // Variable: FW_Angle_rate_roll_PI_kI
   //  Referenced by: '<S4>/I_pr'
 
-  1.0F,
+  0.0F,
 
   // Variable: FW_Angle_rate_roll_PI_kP
   //  Referenced by: '<S4>/P_pr'
@@ -45,7 +45,7 @@ FW_px4_AlgorithmModelClass::P_FW_att_control_codeblock_fl_T FW_px4_AlgorithmMode
   // Variable: FW_Max_angle_coef
   //  Referenced by: '<S1>/FW_Max_angle_coef'
 
-  0.5F,
+  1.0F,
 
   // Variable: FW_Yaw_angel_rate_P
   //  Referenced by: '<S6>/Gain'
@@ -75,17 +75,17 @@ FW_px4_AlgorithmModelClass::P_FW_att_control_codeblock_fl_T FW_px4_AlgorithmMode
   // Variable: FW_kI_Yaw_rate_PID
   //  Referenced by: '<S38>/Integral Gain'
 
-  0.2F,
+  0.02F,
 
   // Variable: FW_kP_Pitch_rate_PID
   //  Referenced by: '<S5>/P_pr1'
 
-  0.3F,
+  0.5F,
 
   // Variable: FW_kP_Roll_rate_PID
   //  Referenced by: '<S5>/P_pr'
 
-  0.3F,
+  0.4F,
 
   // Variable: FW_kP_Yaw_rate_PID
   //  Referenced by: '<S46>/Proportional Gain'

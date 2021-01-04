@@ -2,7 +2,7 @@
 ## Makefile generated for Simulink model 'TECS'. 
 ## 
 ## Makefile     : TECS.mk
-## Generated on : Sun Sep 27 14:12:31 2020
+## Generated on : Thu Oct 15 15:01:40 2020
 ## MATLAB Coder version: 5.0 (R2020a)
 ## 
 ## Build Info:
@@ -29,11 +29,11 @@ MATLAB_ROOT               = C:/PROGRA~1/MATLAB/R2020a
 MATLAB_BIN                = C:/PROGRA~1/MATLAB/R2020a/bin
 MATLAB_ARCH_BIN           = $(MATLAB_BIN)/win64
 MASTER_ANCHOR_DIR         = 
-START_DIR                 = C:/Users/SAMSUNG/MATLAB/Projects/examples/asbQuadcopter11/work
+START_DIR                 = D:/OneDrive - inha.edu/2020_Robot_Aircraft/ControllerS/TECS
 SOLVER                    = 
 SOLVER_OBJ                = 
 CLASSIC_INTERFACE         = 0
-TGT_FCN_LIB               = ISO_C
+TGT_FCN_LIB               = ISO_C++
 MODEL_HAS_DYNAMICALLY_LOADED_SFCNS = 0
 RELATIVE_PATH_TO_ANCHOR   = ..
 COMPILER_COMMAND_FILE     = TECS_comp.rsp
@@ -216,22 +216,20 @@ INCLUDES = $(INCLUDES_BUILDINFO)
 ## DEFINES
 ###########################################################################
 
-DEFINES_ = -DMODEL=TECS -DNUMST=1 -DNCSTATES=0 -DHAVESTDIO -DMODEL_HAS_DYNAMICALLY_LOADED_SFCNS=0 -DCLASSIC_INTERFACE=0 -DALLOCATIONFCN=0 -DTID01EQ=0 -DTERMFCN=1 -DONESTEPFCN=1 -DMAT_FILE=0 -DMULTI_INSTANCE_CODE=0 -DINTEGER_CODE=0 -DMT=0 -DNULL=0 -D__NO_SYSTEM_INIT -DARM_MATH_CM3=1 -D__NVIC_PRIO_BITS=3 -DEXIT_FAILURE=1 -DEXTMODE_DISABLEPRINTF -DEXTMODE_DISABLETESTING -DEXTMODE_DISABLE_ARGS_PROCESSING=1 -DSTACK_SIZE=64 -D__MW_TARGET_USE_HARDWARE_RESOURCES_H__ -DRT
-DEFINES_BUILD_ARGS = -DCLASSIC_INTERFACE=0 -DALLOCATIONFCN=0 -DTERMFCN=1 -DONESTEPFCN=1 -DMAT_FILE=0 -DMULTI_INSTANCE_CODE=0 -DINTEGER_CODE=0 -DMT=0
+DEFINES_BUILD_ARGS = -DCLASSIC_INTERFACE=0 -DALLOCATIONFCN=0 -DTERMFCN=1 -DONESTEPFCN=1 -DMAT_FILE=0 -DMULTI_INSTANCE_CODE=1 -DINTEGER_CODE=0 -DMT=0
 DEFINES_CUSTOM = 
 DEFINES_OPTS = -DTID01EQ=0
-DEFINES_SKIPFORSIL = -DNULL=0 -D__NO_SYSTEM_INIT -DARM_MATH_CM3=1 -D__NVIC_PRIO_BITS=3 -DEXIT_FAILURE=1 -DEXTMODE_DISABLEPRINTF -DEXTMODE_DISABLETESTING -DEXTMODE_DISABLE_ARGS_PROCESSING=1 -DSTACK_SIZE=64 -DRT
 DEFINES_STANDARD = -DMODEL=TECS -DNUMST=1 -DNCSTATES=0 -DHAVESTDIO -DMODEL_HAS_DYNAMICALLY_LOADED_SFCNS=0
 
-DEFINES = $(DEFINES_) $(DEFINES_BUILD_ARGS) $(DEFINES_CUSTOM) $(DEFINES_OPTS) $(DEFINES_SKIPFORSIL) $(DEFINES_STANDARD)
+DEFINES = $(DEFINES_BUILD_ARGS) $(DEFINES_CUSTOM) $(DEFINES_OPTS) $(DEFINES_STANDARD)
 
 ###########################################################################
 ## SOURCE FILES
 ###########################################################################
 
-SRCS = $(START_DIR)/TECS_ert_rtw/TECS.c $(START_DIR)/TECS_ert_rtw/TECS_data.c C:/ProgramData/MATLAB/SupportPackages/R2020a/toolbox/target/supportpackages/arm_cortex_m/registry/../src/startup_gcc.c C:/ProgramData/MATLAB/SupportPackages/R2020a/toolbox/target/supportpackages/arm_cortex_m/registry/../src/system_LM3S.c C:/ProgramData/MATLAB/SupportPackages/R2020a/toolbox/target/supportpackages/arm_cortex_m/registry/../src/syscalls.c C:/ProgramData/MATLAB/SupportPackages/R2020a/toolbox/target/supportpackages/armcortexmbase/scheduler/src/SysTickScheduler.c C:/ProgramData/MATLAB/SupportPackages/R2020a/toolbox/target/supportpackages/armcortexmbase/scheduler/src/m3m4m4f_multitasking.c
+SRCS = $(START_DIR)/TECS_ert_rtw/TECS.cpp $(START_DIR)/TECS_ert_rtw/TECS_data.cpp $(START_DIR)/TECS_ert_rtw/rtGetInf.cpp $(START_DIR)/TECS_ert_rtw/rtGetNaN.cpp $(START_DIR)/TECS_ert_rtw/rt_nonfinite.cpp
 
-MAIN_SRC = $(START_DIR)/TECS_ert_rtw/ert_main.c
+MAIN_SRC = $(MATLAB_ROOT)/rtw/c/src/common/rt_cppclass_main.cpp
 
 ALL_SRCS = $(SRCS) $(MAIN_SRC)
 
@@ -239,9 +237,9 @@ ALL_SRCS = $(SRCS) $(MAIN_SRC)
 ## OBJECTS
 ###########################################################################
 
-OBJS = TECS.o TECS_data.o startup_gcc.o system_LM3S.o syscalls.o SysTickScheduler.o m3m4m4f_multitasking.o
+OBJS = TECS.o TECS_data.o rtGetInf.o rtGetNaN.o rt_nonfinite.o
 
-MAIN_OBJ = ert_main.o
+MAIN_OBJ = rt_cppclass_main.o
 
 ALL_OBJS = $(OBJS) $(MAIN_OBJ)
 
@@ -255,7 +253,7 @@ PREBUILT_OBJS =
 ## LIBRARIES
 ###########################################################################
 
-LIBS = C:/ProgramData/MATLAB/SupportPackages/R2020a/3P.instrset/cmsis.instrset/CMSIS/Lib/GCC/libarm_cortexM3l_math.a
+LIBS = 
 
 ###########################################################################
 ## SYSTEM LIBRARIES
@@ -271,43 +269,17 @@ SYSTEM_LIBS =
 # C Compiler
 #---------------
 
-CFLAGS_SKIPFORSIL = -mcpu=cortex-m3 -mthumb -mlittle-endian -mthumb-interwork
 CFLAGS_BASIC = $(DEFINES) $(INCLUDES) @$(COMPILER_COMMAND_FILE)
 
-CFLAGS += $(CFLAGS_SKIPFORSIL) $(CFLAGS_BASIC)
+CFLAGS += $(CFLAGS_BASIC)
 
 #-----------------
 # C++ Compiler
 #-----------------
 
-CPPFLAGS_SKIPFORSIL = -mcpu=cortex-m3 -mthumb -mlittle-endian -mthumb-interwork
 CPPFLAGS_BASIC = $(DEFINES) $(INCLUDES) @$(COMPILER_COMMAND_FILE)
 
-CPPFLAGS += $(CPPFLAGS_SKIPFORSIL) $(CPPFLAGS_BASIC)
-
-#---------------
-# C++ Linker
-#---------------
-
-CPP_LDFLAGS_SKIPFORSIL = -mcpu=cortex-m3 -mthumb -mlittle-endian -mthumb-interwork -nostartfiles -T "C:\ProgramData\MATLAB\SupportPackages\R2020a\toolbox\target\supportpackages\arm_cortex_m\registry\../src/arm_cortex_m3_qemu_gcc.ld"
-
-CPP_LDFLAGS += $(CPP_LDFLAGS_SKIPFORSIL)
-
-#------------------------------
-# C++ Shared Library Linker
-#------------------------------
-
-CPP_SHAREDLIB_LDFLAGS_SKIPFORSIL = -mcpu=cortex-m3 -mthumb -mlittle-endian -mthumb-interwork -nostartfiles -T "C:\ProgramData\MATLAB\SupportPackages\R2020a\toolbox\target\supportpackages\arm_cortex_m\registry\../src/arm_cortex_m3_qemu_gcc.ld"
-
-CPP_SHAREDLIB_LDFLAGS += $(CPP_SHAREDLIB_LDFLAGS_SKIPFORSIL)
-
-#-----------
-# Linker
-#-----------
-
-LDFLAGS_SKIPFORSIL = -mcpu=cortex-m3 -mthumb -mlittle-endian -mthumb-interwork -nostartfiles -T "C:\ProgramData\MATLAB\SupportPackages\R2020a\toolbox\target\supportpackages\arm_cortex_m\registry\../src/arm_cortex_m3_qemu_gcc.ld"
-
-LDFLAGS += $(LDFLAGS_SKIPFORSIL)
+CPPFLAGS += $(CPPFLAGS_BASIC)
 
 #---------------------
 # MEX C++ Compiler
@@ -324,14 +296,6 @@ MEX_CPPFLAGS += $(MEX_CPP_Compiler_BASIC)
 MEX_Compiler_BASIC =  @$(COMPILER_COMMAND_FILE)
 
 MEX_CFLAGS += $(MEX_Compiler_BASIC)
-
-#--------------------------
-# Shared Library Linker
-#--------------------------
-
-SHAREDLIB_LDFLAGS_SKIPFORSIL = -mcpu=cortex-m3 -mthumb -mlittle-endian -mthumb-interwork -nostartfiles -T "C:\ProgramData\MATLAB\SupportPackages\R2020a\toolbox\target\supportpackages\arm_cortex_m\registry\../src/arm_cortex_m3_qemu_gcc.ld"
-
-SHAREDLIB_LDFLAGS += $(SHAREDLIB_LDFLAGS_SKIPFORSIL)
 
 ###########################################################################
 ## INLINED COMMANDS
@@ -367,7 +331,7 @@ all : build postbuild
 build : prebuild $(PRODUCT)
 
 
-buildobj : prebuild $(OBJS) $(PREBUILT_OBJS) $(LIBS)
+buildobj : prebuild $(OBJS) $(PREBUILT_OBJS)
 	@echo "### Successfully generated all binary outputs."
 
 
@@ -403,9 +367,9 @@ execute : download
 # Create a standalone executable            
 #-------------------------------------------
 
-$(PRODUCT) : $(OBJS) $(PREBUILT_OBJS) $(LIBS) $(MAIN_OBJ)
+$(PRODUCT) : $(OBJS) $(PREBUILT_OBJS) $(MAIN_OBJ)
 	@echo "### Creating standalone executable "$(PRODUCT)" ..."
-	$(CPP_LD) $(CPP_LDFLAGS) -o $(PRODUCT) @$(CMD_FILE) $(LIBS) $(SYSTEM_LIBS) $(TOOLCHAIN_LIBS)
+	$(CPP_LD) $(CPP_LDFLAGS) -o $(PRODUCT) @$(CMD_FILE) $(SYSTEM_LIBS) $(TOOLCHAIN_LIBS)
 	@echo "### Created: $(PRODUCT)"
 
 
@@ -585,36 +549,28 @@ $(PRODUCT) : $(OBJS) $(PREBUILT_OBJS) $(LIBS) $(MAIN_OBJ)
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-TECS.o : $(START_DIR)/TECS_ert_rtw/TECS.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
+TECS.o : $(START_DIR)/TECS_ert_rtw/TECS.cpp
+	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-TECS_data.o : $(START_DIR)/TECS_ert_rtw/TECS_data.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
+TECS_data.o : $(START_DIR)/TECS_ert_rtw/TECS_data.cpp
+	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-ert_main.o : $(START_DIR)/TECS_ert_rtw/ert_main.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
+rtGetInf.o : $(START_DIR)/TECS_ert_rtw/rtGetInf.cpp
+	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-startup_gcc.o : C:/ProgramData/MATLAB/SupportPackages/R2020a/toolbox/target/supportpackages/arm_cortex_m/registry/../src/startup_gcc.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
+rtGetNaN.o : $(START_DIR)/TECS_ert_rtw/rtGetNaN.cpp
+	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-system_LM3S.o : C:/ProgramData/MATLAB/SupportPackages/R2020a/toolbox/target/supportpackages/arm_cortex_m/registry/../src/system_LM3S.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
+rt_nonfinite.o : $(START_DIR)/TECS_ert_rtw/rt_nonfinite.cpp
+	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-syscalls.o : C:/ProgramData/MATLAB/SupportPackages/R2020a/toolbox/target/supportpackages/arm_cortex_m/registry/../src/syscalls.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
-
-
-SysTickScheduler.o : C:/ProgramData/MATLAB/SupportPackages/R2020a/toolbox/target/supportpackages/armcortexmbase/scheduler/src/SysTickScheduler.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
-
-
-m3m4m4f_multitasking.o : C:/ProgramData/MATLAB/SupportPackages/R2020a/toolbox/target/supportpackages/armcortexmbase/scheduler/src/m3m4m4f_multitasking.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
+rt_cppclass_main.o : $(MATLAB_ROOT)/rtw/c/src/common/rt_cppclass_main.cpp
+	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
 ###########################################################################

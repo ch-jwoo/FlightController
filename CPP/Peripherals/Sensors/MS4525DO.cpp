@@ -17,8 +17,6 @@ MS4525DO::MS4525DO(RtosI2C *i2c)
 , pressureLow(0.0f)
 , temperatureHigh(0.0f)
 , temperatureLow(0.0f)
-, countAverage(0)
-, difPressureSumValue(0)
 , smoothAdc(0)
 , airSpeedDataAdc0(0.0f)
 , absDifPressureAdc(0.0f)
@@ -34,6 +32,8 @@ MS4525DO::MS4525DO(RtosI2C *i2c)
 
 
 bool MS4525DO::update(){
+	static int countAverage, difPressureSumValue;
+	static int difPressureAdcArray[4] = { 0 };
 	i2c->read(MS4525DO_ADDRESS, 0x00, buffer, 4);
 	pressureHigh = buffer[0];
 	pressureLow = buffer[1];
@@ -86,6 +86,7 @@ bool MS4525DO::update(){
 
 			if(smoothAdc < 0) smoothAdc = -smoothAdc;
 			diffPressure = smoothAdc;
+			air2 = sqrt(2 * 1.052 * diffPressure/1.225);
 		}
 		return true;
 	}

@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionEstimator'.
 //
-// Model version                  : 1.34
+// Model version                  : 1.37
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Sep 28 23:39:25 2020
+// C/C++ source code generated on : Fri Oct  9 22:04:49 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -177,7 +177,6 @@ extern "C" {
     real_T NED_convert1;               // '<Root>/NED_convert1'
     real_T NED_convert;                // '<Root>/NED_convert'
     real_T alt;                        // '<S46>/Sum'
-    real_T Pz;                         // '<S46>/Ze2height'
     real_T UnitConversion_me;          // '<S41>/Unit Conversion'
     real_T SinCos_o1_f;                // '<S26>/SinCos'
     real_T SinCos_o2_e;                // '<S26>/SinCos'
@@ -276,6 +275,7 @@ extern "C" {
     boolean_T DataTypeConversion_Enable1;// '<S2>/DataTypeConversion_Enable1'
     boolean_T LogicalOperator;         // '<Root>/Logical Operator'
     boolean_T DataTypeConversion_Enable1_a;// '<S1>/DataTypeConversion_Enable1'
+    boolean_T DataTypeConversion_Enable2;// '<S1>/DataTypeConversion_Enable2'
     boolean_T DataTypeConversion_Enable3;// '<S1>/DataTypeConversion_Enable3'
     boolean_T DataTypeConversion_Enable4;// '<S1>/DataTypeConversion_Enable4'
     boolean_T Compare_cm;              // '<S38>/Compare'
@@ -329,6 +329,7 @@ extern "C" {
     real_T GPSrawY;                    // '<Root>/GPSrawY'
     real_T GPSrawVX;                   // '<Root>/GPSrawVX'
     real_T GPSrawVY;                   // '<Root>/GPSrawVY'
+    real_T GPSrawZ;                    // '<Root>/GPSrawZ'
   } ExtY;
 
   // Parameters for system: '<S1>/Correct2'
@@ -588,6 +589,9 @@ extern "C" {
     real_T MeasurementFcn1Inputs_Value_e;// Expression: 0
                                             //  Referenced by: '<S1>/MeasurementFcn1Inputs'
 
+    real_T fuckgpsalt_Value;           // Expression: 0
+                                          //  Referenced by: '<Root>/fuckgpsalt'
+
     real_T Constant_Value_ay;          // Expression: 0
                                           //  Referenced by: '<S3>/Constant'
 
@@ -697,10 +701,11 @@ extern "C" {
   // Real-Time Model get method
   positionEstimatorModelClass::RT_MODEL * getRTM();
 
-  static P rtP;
+  // Tunable parameters
+    static P rtP;
   // private data and function members
  private:
-  // Tunable parameters
+
 
   // Block signals and states
   DW rtDW;
@@ -746,7 +751,6 @@ extern "C" {
 //  Block '<S2>/checkMeasurementFcn1Signals' : Unused code path elimination
 //  Block '<S2>/checkMeasurementFcn2Signals' : Unused code path elimination
 //  Block '<S2>/checkStateTransitionFcnSignals' : Unused code path elimination
-//  Block '<S1>/DataTypeConversion_Enable2' : Eliminate redundant data type conversion
 //  Block '<S1>/DataTypeConversion_Q' : Eliminate redundant data type conversion
 //  Block '<S1>/DataTypeConversion_R1' : Eliminate redundant data type conversion
 //  Block '<S1>/DataTypeConversion_R2' : Eliminate redundant data type conversion

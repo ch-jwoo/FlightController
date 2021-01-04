@@ -180,7 +180,7 @@ const osThreadAttr_t INS_Task_attributes = {
 };
 /* Definitions for PC_Task */
 osThreadId_t PC_TaskHandle;
-uint32_t PC_TaskBuffer[ 512 ];
+uint32_t PC_TaskBuffer[ 1024 ];
 osStaticThreadDef_t PC_TaskControlBlock;
 const osThreadAttr_t PC_Task_attributes = {
   .name = "PC_Task",

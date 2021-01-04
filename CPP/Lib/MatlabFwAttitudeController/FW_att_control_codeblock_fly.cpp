@@ -7,17 +7,17 @@
 //
 // Code generated for Simulink model 'FW_att_control_codeblock_fly'.
 //
-// Model version                  : 1.52
+// Model version                  : 1.53
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Fri Oct  2 16:09:59 2020
+// C/C++ source code generated on : Sat Oct  3 15:03:51 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
-#include <MatlabFwAttitudeController/FW_att_control_codeblock_fly.h>
-#include <MatlabFwAttitudeController/FW_att_control_codeblock_fly_private.h>
+#include "FW_att_control_codeblock_fly.h"
+#include "FW_att_control_codeblock_fly_private.h"
 
 real32_T fw_rt_roundf_snf(real32_T u)
 {
@@ -288,9 +288,7 @@ void FW_px4_AlgorithmModelClass::step()
   // MATLAB Function: '<S1>/pwm_out1' incorporates:
   //   Inport: '<Root>/set_thrust'
 
-  u0 = fw_rt_roundf_snf((-FW_att_control_codeblock_fly_B.Sum_f *
-                      FW_att_control_codeblock_fly_U.set_thrust / 2.0F +
-                      FW_att_control_codeblock_fly_U.set_thrust) * 1000.0F +
+  u0 = fw_rt_roundf_snf(FW_att_control_codeblock_fly_U.set_thrust * 1000.0F +
                      1000.0F);
   if (u0 < 65536.0F) {
     if (u0 >= 0.0F) {
@@ -304,25 +302,9 @@ void FW_px4_AlgorithmModelClass::step()
 
   FW_att_control_codeblock_fly_B.M1 = y;
   FW_att_control_codeblock_fly_B.M2 = 1000U;
-  u0 = fw_rt_roundf_snf((FW_att_control_codeblock_fly_B.Sum_f *
-                      FW_att_control_codeblock_fly_U.set_thrust / 2.0F +
-                      FW_att_control_codeblock_fly_U.set_thrust) * 1000.0F +
-                     1000.0F);
-  if (u0 < 65536.0F) {
-    if (u0 >= 0.0F) {
-      y = static_cast<uint16_T>(u0);
-    } else {
-      y = 0U;
-    }
-  } else {
-    y = MAX_uint16_T;
-  }
-
-  FW_att_control_codeblock_fly_B.M3 = y;
+  FW_att_control_codeblock_fly_B.M3 = 1000U;
   FW_att_control_codeblock_fly_B.M4 = 1000U;
-  u0 = fw_rt_roundf_snf((FW_att_control_codeblock_fly_B.Roll_rate -
-                      FW_att_control_codeblock_fly_B.Pitch_rate) / 2.0F * 500.0F
-                     + 1500.0F);
+  u0 = fw_rt_roundf_snf(-FW_att_control_codeblock_fly_B.Roll_rate * 500.0F + 1500.0F);
   if (u0 < 65536.0F) {
     if (u0 >= 0.0F) {
       y = static_cast<uint16_T>(u0);
@@ -334,9 +316,8 @@ void FW_px4_AlgorithmModelClass::step()
   }
 
   FW_att_control_codeblock_fly_B.S1 = y;
-  u0 = fw_rt_roundf_snf((FW_att_control_codeblock_fly_B.Roll_rate +
-                      FW_att_control_codeblock_fly_B.Pitch_rate) / 2.0F * 500.0F
-                     + 1500.0F);
+  u0 = fw_rt_roundf_snf(-FW_att_control_codeblock_fly_B.Pitch_rate * 500.0F +
+                     1500.0F);
   if (u0 < 65536.0F) {
     if (u0 >= 0.0F) {
       y = static_cast<uint16_T>(u0);
@@ -348,7 +329,18 @@ void FW_px4_AlgorithmModelClass::step()
   }
 
   FW_att_control_codeblock_fly_B.S2 = y;
-  FW_att_control_codeblock_fly_B.S3 = 1000U;
+  u0 = fw_rt_roundf_snf(-FW_att_control_codeblock_fly_B.Sum_f * 500.0F + 1500.0F);
+  if (u0 < 65536.0F) {
+    if (u0 >= 0.0F) {
+      y = static_cast<uint16_T>(u0);
+    } else {
+      y = 0U;
+    }
+  } else {
+    y = MAX_uint16_T;
+  }
+
+  FW_att_control_codeblock_fly_B.S3 = y;
   FW_att_control_codeblock_fly_B.S4 = 1000U;
 
   // End of MATLAB Function: '<S1>/pwm_out1'

@@ -85,36 +85,65 @@ void InterfaceRC::setRC(uint16_t roll, uint16_t pitch, uint16_t yaw, uint16_t th
 	}
 
 	/* mode */
-	if(mode > FLIGHT_ATTITUDE_MODE_THRSHOLD){
+	if(mode < FLIGHT_ATTITUDE_MODE_THRSHOLD){
 		if(curMode != RC_PREV_ATTITUDE){
 			ModuleCommander::sendCommand(Command::ControlAttitude); /* send command */
 			curMode = RC_PREV_ATTITUDE;
+			printf_("attitude\r\n");
 		}
 	}
-	else if(mode > FLIGHT_POSITION_MODE_THRSHOLD){
+	else if(mode < FLIGHT_ALT_MODE_THRSHOLD){
+			if(curMode != RC_PREV_ALTITUDE){
+				ModuleCommander::sendCommand(Command::ControlALT); /* send command */
+				curMode = RC_PREV_ALTITUDE;
+				printf_("alt\r\n");
+			}
+		}
+	else if(mode < FLIGHT_POSITION_MODE_THRSHOLD){
 		if(curMode != RC_PREV_POSITION){
 			ModuleCommander::sendCommand(Command::ControlPosition); /* send command */
 			curMode = RC_PREV_POSITION;
+			printf_("pos\r\n");
 		}
 	}
-	else if(mode > FLIGHT_AUTO_MODE_THRSHOLD){ /* FLIGHT_AUTO_MODE_THRSHOLD */
+	else if(mode < FLIGHT_AUTO_MODE_THRSHOLD){ /* FLIGHT_AUTO_MODE_THRSHOLD */
 		if(curMode != RC_PREV_AUTOWAYPOINT){
 			ModuleCommander::sendCommand(Command::AutoWaypoint); /* send command */
 			curMode = RC_PREV_AUTOWAYPOINT;
+			printf_("auto\r\n");
 		}
 	}
-	else if(mode > FLIGHT_RTL_MODE_THRSHOLD){
-		if(curMode != RC_PREV_AUTORTL){
-			ModuleCommander::sendCommand(Command::AutoRTL); /* send command */
-			curMode = RC_PREV_AUTORTL;
-		}
-	}
-	else if(mode > FLIGHT_ALT_MODE_THRSHOLD){
-		if(curMode != RC_PREV_ALTITUDE){
-			ModuleCommander::sendCommand(Command::ControlALT); /* send command */
-			curMode = RC_PREV_ALTITUDE;
-		}
-	}
+
+//	if(mode > FLIGHT_ATTITUDE_MODE_THRSHOLD){
+//		if(curMode != RC_PREV_ATTITUDE){
+//			ModuleCommander::sendCommand(Command::ControlAttitude); /* send command */
+//			curMode = RC_PREV_ATTITUDE;
+//		}
+//	}
+//	else if(mode > FLIGHT_POSITION_MODE_THRSHOLD){
+//		if(curMode != RC_PREV_POSITION){
+//			ModuleCommander::sendCommand(Command::ControlPosition); /* send command */
+//			curMode = RC_PREV_POSITION;
+//		}
+//	}
+//	else if(mode > FLIGHT_AUTO_MODE_THRSHOLD){ /* FLIGHT_AUTO_MODE_THRSHOLD */
+//		if(curMode != RC_PREV_AUTOWAYPOINT){
+//			ModuleCommander::sendCommand(Command::AutoWaypoint); /* send command */
+//			curMode = RC_PREV_AUTOWAYPOINT;
+//		}
+//	}
+//	else if(mode > FLIGHT_RTL_MODE_THRSHOLD){
+//		if(curMode != RC_PREV_AUTORTL){
+//			ModuleCommander::sendCommand(Command::AutoRTL); /* send command */
+//			curMode = RC_PREV_AUTORTL;
+//		}
+//	}
+//	else if(mode > FLIGHT_ALT_MODE_THRSHOLD){
+//		if(curMode != RC_PREV_ALTITUDE){
+//			ModuleCommander::sendCommand(Command::ControlALT); /* send command */
+//			curMode = RC_PREV_ALTITUDE;
+//		}
+//	}
 
 
 

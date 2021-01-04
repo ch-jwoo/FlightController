@@ -164,13 +164,12 @@ bool ModuleCommander::toAltitude(){
 
 bool ModuleCommander::toPosition(){
 	msgBus.getStatusFlag(&statusFlagSub);
+	msgBus.getModeFlag(&modeFlagSub);
 	if(!statusFlagSub.positionCTL){
 		ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
 		return false;
 	}
 
-	msgBus.getModeFlag(&modeFlagSub);
-	//TODO check condition of position controller
 
 	/* if not altitude and position control, task start */
 	if(modeFlagSub.flightMode == FlightMode::AttitudeControl){
@@ -196,7 +195,11 @@ bool ModuleCommander::toPosition(){
 }
 
 bool ModuleCommander::toWaypoint(){
-	//TODO check condition of autoWaypoint
+	msgBus.getStatusFlag(&statusFlagSub);
+	if(!statusFlagSub.positionCTL){
+		ModuleBuzzer::sendCommand(BuzzerCommand::Denied);
+		return false;
+	}
 
 	ModuleAutoController::start(FlightMode::AutoWaypoint);
 	if(!(osThreadFlagsWait(CMD_ACK, osFlagsWaitAny, 1000) & CMD_ACK)){

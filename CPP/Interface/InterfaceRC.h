@@ -27,12 +27,17 @@ private:
 
     static const uint16_t MOTOR_CALIBRATION_THROTLE = 1950;
 
-    static const uint16_t FLIGHT_ATTITUDE_MODE_THRSHOLD = 1900;
-    static const uint16_t FLIGHT_POSITION_MODE_THRSHOLD = 1700;
-    static const uint16_t FLIGHT_AUTO_MODE_THRSHOLD = 1500;
+//    static const uint16_t FLIGHT_ATTITUDE_MODE_THRSHOLD = 1900;
+//    static const uint16_t FLIGHT_POSITION_MODE_THRSHOLD = 1700;
+//    static const uint16_t FLIGHT_AUTO_MODE_THRSHOLD = 1500;
+//
+//    static const uint16_t FLIGHT_RTL_MODE_THRSHOLD = 1350;
+//    static const uint16_t FLIGHT_ALT_MODE_THRSHOLD = 950;
+    static const uint16_t FLIGHT_ATTITUDE_MODE_THRSHOLD = 1100;
+    static const uint16_t FLIGHT_ALT_MODE_THRSHOLD = 1500;
+    static const uint16_t FLIGHT_POSITION_MODE_THRSHOLD = 1900;
+    static const uint16_t FLIGHT_AUTO_MODE_THRSHOLD = 2100;
 
-    static const uint16_t FLIGHT_RTL_MODE_THRSHOLD = 1350;
-    static const uint16_t FLIGHT_ALT_MODE_THRSHOLD = 950;
 
     static const uint16_t ARMING_THRESHOLD = 1500;
     static const uint16_t TILTING_THRSHOLD = 1500;

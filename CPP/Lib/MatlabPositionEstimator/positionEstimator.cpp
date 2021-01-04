@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionEstimator'.
 //
-// Model version                  : 1.34
+// Model version                  : 1.37
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Sep 28 23:39:25 2020
+// C/C++ source code generated on : Fri Oct  9 22:04:49 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -1324,8 +1324,10 @@ void positionEstimatorModelClass::step()
 
   rtDW.alt = rtU.alt + rtU.HOME_lla[2];
 
-  // UnaryMinus: '<S46>/Ze2height'
-  rtDW.Pz = -rtDW.alt;
+  // Outport: '<Root>/GPSrawZ' incorporates:
+  //   UnaryMinus: '<S46>/Ze2height'
+
+  rtY.GPSrawZ = -rtDW.alt;
 
   // DataTypeConversion: '<S1>/DataTypeConversion_Enable1' incorporates:
   //   Inport: '<Root>/AhrsFlag'
@@ -1421,10 +1423,17 @@ void positionEstimatorModelClass::step()
 
   // End of Outputs for SubSystem: '<S1>/Correct1'
 
+  // DataTypeConversion: '<S1>/DataTypeConversion_Enable2' incorporates:
+  //   Constant: '<Root>/fuckgpsalt'
+
+  rtDW.DataTypeConversion_Enable2 = (rtP.fuckgpsalt_Value != 0.0);
+
   // Outputs for Enabled SubSystem: '<S1>/Correct2'
-  // Constant: '<S1>/R2'
-  Correct2(rtDW.LogicalOperator, rtDW.Pz, rtP.R2_Value_g, rtDW.blockOrdering_k,
-           &rtDW.Correct2_a, rtDW.P_i_m, rtDW.x);
+  // Outport: '<Root>/GPSrawZ' incorporates:
+  //   Constant: '<S1>/R2'
+
+  Correct2(rtDW.DataTypeConversion_Enable2, rtY.GPSrawZ, rtP.R2_Value_g,
+           rtDW.blockOrdering_k, &rtDW.Correct2_a, rtDW.P_i_m, rtDW.x);
 
   // End of Outputs for SubSystem: '<S1>/Correct2'
 

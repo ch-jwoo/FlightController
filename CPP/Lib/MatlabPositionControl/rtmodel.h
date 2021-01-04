@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'positionControl'.
 //
-// Model version                  : 1.19
+// Model version                  : 1.20
 // Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
-// C/C++ source code generated on : Mon Sep 21 22:15:56 2020
+// C/C++ source code generated on : Wed Oct  7 21:39:34 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex

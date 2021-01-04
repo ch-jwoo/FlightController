@@ -125,7 +125,7 @@ private:
 	uint8_t IIRFilter;
 	uint8_t SBy;
 
-	uint8_t buf[9];
+	uint8_t buf[8];
 	uint8_t  _dig_H1, _dig_H3, _dig_H6;
 	uint16_t _dig_T1, _dig_P1, _dig_H4, _dig_H5;
 	int16_t  _dig_T2, _dig_T3, _dig_P2, _dig_P3, _dig_P4, _dig_P5, _dig_P6, _dig_P7, _dig_P8, _dig_P9, _dig_H2;

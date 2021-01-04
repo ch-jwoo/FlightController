@@ -19,6 +19,7 @@
 #include <Module/Manager/ModuleCommander.h>
 #include <Module/Estimator/ModuleAHRS.h>
 #include <Module/Etc/ModuleBuzzer.h>
+#include <Peripherals/Etc/Winch.h>
 #include <Peripherals/Coms/Sbus.h>
 #include <Peripherals/Sensors/bme280.h>
 #include <Peripherals/Sensors/IST8310.h>
@@ -64,13 +65,13 @@ uint16_t pwm1, pwm2, pwm3, pwm4, pwm5, pwm6;
 float att_roll, att_pitch, att_yaw;
 uint16_t ctl_roll, ctl_pitch, ctl_yaw, ctl_throtle;
 float att_p, att_q, att_r;
-float baro_alt;
+float baro_alt,baro_pressure;
 float ned_ax, ned_ay, ned_az;
 
 float local_x, local_y, local_z;
 float local_vx, local_vy, local_vz;
 
-float gps_lat, gps_lon, gps_alt, local_gps_x, local_gps_y;
+float gps_lat, gps_lon, gps_alt, local_gps_x, local_gps_y,local_gps_z;
 float gps_velN,gps_velE;
 float body_ax, body_ay, body_az;
 float body_gx, body_gy, body_gz;
@@ -135,9 +136,11 @@ void Debug_StartTask(void *argument){
 	struct AirSpeed airSpeed;
 
 	while(1){
-		tick += 100;
+		tick += 5;
 		osDelayUntil(tick);
 		debug_loop++;
+
+//		printf_("%u\r\n", sbus.getChannelVal(6));
 
 		if(msgBus.getAirSpeed(&airSpeed)){
 			airspeed = airSpeed.TAS;
@@ -196,6 +199,7 @@ void Debug_StartTask(void *argument){
 		}
 		if(msgBus.getBarometer(&baro)){
 			baro_alt = baro.altitude;
+			baro_pressure=baro.pressure;
 		}
 
 		if(msgBus.getNedAccel(&nedAccel)){
@@ -222,6 +226,7 @@ void Debug_StartTask(void *argument){
 			local_vz = localPosition.vz;
 			local_gps_x=localPosition.gpsrawx;
 			local_gps_y=localPosition.gpsrawy;
+			local_gps_z=localPosition.gpsrawz;
 		}
 
 
@@ -263,7 +268,10 @@ void Debug_StartTask(void *argument){
 		voltageChecker.start();
 		voltage = voltageChecker.voltage;
 
-		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f %f \n\r",local_x,local_y,sp_roll,sp_pitch,att_yaw,sp_throtle,gps.hdop);
+//		int len= sprintf_((char*)telemBuffer,"%f %f \n\r", local_z, local_vz);
+//		telem.send(telemBuffer,len);
+//		printf_("SR: %f SP: %f SY: %f ST: %f %f \n\r",sp_roll,sp_pitch,att_yaw,sp_throtle,gps.hdop);
+//		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f %f \n\r",local_x,local_y,sp_roll,sp_pitch,att_yaw,sp_throtle,gps.hdop);
 //		int len= sprintf_((char*)telemBuffer,"%f %f %f %d %d \n\r",gps.lat,gps.lon,gps.hdop,gps.usedSatellites,gps.visibleSatellites);
 
 //		int len= sprintf_((char*)telemBuffer,"%f %f %f %f %f %f  \n\r",local_x,local_y,local_vx,local_vy, gps_velN, gps_velE);
@@ -333,13 +341,13 @@ void BME280_StartTask(void *argument){
 	 * Filter bandwidth : 1.75 Hz
 	 * response time : 0.3s
 	 */
-	BME280 bme280(&rtosI2C2, P_OSR_04, H_OSR_00, T_OSR_01, normal, full,t_00_5ms);
+	BME280 bme280(&rtosI2C2, P_OSR_16, H_OSR_00, T_OSR_01, normal, BW0_092ODR,t_00_5ms);
 	bme280.init();
 
 	bme280.update();
 	bme280.update();
 	while(1){
-		tick += 15;
+		tick += 10;
 		osDelayUntil(tick);		/* 66.6hz */
 
 		if(bme280.update()){
@@ -376,6 +384,7 @@ void Commander_StartTask(void *argument){
 
 void Buzzer_StartTask(void *argument){
 	ModuleBuzzer::main();
+//	while(1){osDelay(10000);}
 }
 
 void AC_StartTask(void *argument){
@@ -431,37 +440,59 @@ void GPS_StartTask(void *argument){
 }
 
 void SBUS_StartTask(void *argument){
-
+	bool winchFlag = false;
+	uint32_t startTime;
 	while(1){
 		/*
 		 *  dma sbus update
 		 */
 		if(sbus.update()){
-			interfaceRC.setRC(sbus.getChannelVal(2),	/* roll */
-						 	  sbus.getChannelVal(3),	/* pitch */
-							  sbus.getChannelVal(4), 	/* yaw */
-							  sbus.getChannelVal(1),	/* throttle */
-							  sbus.getChannelVal(11),	/* arming */
-							  sbus.getChannelVal(5),	/* mode change */
-							  sbus.getChannelVal(9));	/* tilting */
+//			interfaceRC.setRC(sbus.getChannelVal(2),	/* roll */
+//						 	  sbus.getChannelVal(3),	/* pitch */
+//							  sbus.getChannelVal(4), 	/* yaw */
+//							  sbus.getChannelVal(1),	/* throttle */
+//							  sbus.getChannelVal(11),	/* arming */
+//							  sbus.getChannelVal(5),	/* mode change */
+//							  sbus.getChannelVal(9));	/* tilting */
+			interfaceRC.setRC(sbus.getChannelVal(4),	/* roll */
+						 	  sbus.getChannelVal(2),	/* pitch */
+							  sbus.getChannelVal(1), 	/* yaw */
+							  sbus.getChannelVal(3),	/* throttle */
+							  sbus.getChannelVal(5),	/* arming */
+							  sbus.getChannelVal(6),	/* mode change */
+							  1000);					/* tilting */
+
+			if(!winchFlag && sbus.getChannelVal(7) > 1500){
+				winchFlag = true;
+				startTime = osKernelGetTickCount();
+				winch.set();
+				printf_("winch start\r\n");
+			}
+			if(winchFlag && osKernelGetTickCount() - startTime > 1000){
+				winchFlag = false;
+				winch.reset();
+				printf_("winch high\r\n");
+			}
+
 		}
 	}
 }
 
 
 void MS4525D_StartTask(void *argument){
-	uint32_t tick;
-	MS4525DO ms4525(&rtosI2C2);
-
-	tick = osKernelGetTickCount();
-	while(1){
-		tick += 10;
-		osDelayUntil(tick);		/* 100hz */
-
-		if(ms4525.update()){
-			interfaceAirSpeed.setAirSpeed(ms4525.diffPressure);
-		}
-	}
+	while(1) osDelay(10000);
+//	uint32_t tick;
+//	MS4525DO ms4525(&rtosI2C2);
+//
+//	tick = osKernelGetTickCount();
+//	while(1){
+//		tick += 10;
+//		osDelayUntil(tick);		/* 100hz */
+//
+//		if(ms4525.update()){
+//			interfaceAirSpeed.setAirSpeed(ms4525.diffPressure);
+//		}
+//	}
 }
 
 void cppMain(){
@@ -556,9 +587,9 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	if(GPIO_Pin == GPIO_PIN_13){
-//		if(interfaceMag.startCalibrationFlag == false)
-//			interfaceMag.startCalibration();
-//		else interfaceMag.endCalibration();
+		if(interfaceMag.startCalibrationFlag == false)
+			interfaceMag.startCalibration();
+		else interfaceMag.endCalibration();
 		accelCalibration = true;
 		if(ModuleINS::calGpsHomeFlag == false){
 			ModuleINS::setAvgLLA();
